@@ -1,0 +1,30 @@
+==================================================
+REPORT DI TRAINING - ResNetLight
+==================================================
+
+Modello: ResNetLight
+Dataset: CIFAR-10
+Parametri totali: 121,434
+
+Configurazione Training:
+  - Epoche: 50
+  - Batch size: 128
+  - Base LR: 0.001
+  - Max LR: 0.01
+  - Weight decay: 0.0001
+  - Cutout length: 16
+  - Dispositivo: cuda
+
+Data Augmentation:
+  - RandomCrop(32, padding=4)
+  - RandomHorizontalFlip
+  - RandomRotation(10)
+  - ColorJitter
+  - Cutout(16)
+
+Risultati Finali:
+  - Training Accuracy: 83.53%
+  - Validation Accuracy: 87.89%
+  - Best Validation Accuracy: 87.93%
+
+==================================================
