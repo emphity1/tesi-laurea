@@ -1,0 +1,26 @@
+==================================================
+REPORT DI TRAINING - ResNetSE + Pruning (check2)
+==================================================
+
+Architettura: ResNetSE (36→72→128) + SE Attention
+Dataset: CIFAR-10
+Parametri totali: 757,730
+Parametri attivi (dopo pruning): 757,730
+Sparsity: 0.0%
+
+Configurazione Training:
+  - Epoche: 50
+  - Batch size: 128
+  - Base LR: 0.002
+  - Max LR: 0.025
+  - Weight decay: 0.0001
+  - Label Smoothing: 0.1
+  - Pruning amount: 0.3
+  - Dispositivo: cuda
+
+Risultati Finali:
+  - Training Accuracy: 89.18%
+  - Validation Accuracy: 91.81%
+  - Best Validation Accuracy: 91.89%
+
+==================================================
