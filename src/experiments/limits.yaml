@@ -1,0 +1,11 @@
+limits:
+  - params: 10000
+    flops: 5000000
+  - params: 20000  # 20K
+    flops: 4000000  # 5M
+  - params: 30000  # 30K
+    flops: 4000000  # 6M
+  - params: 40000
+    flops: 5000000
+  - params: 50000  # 50K
+    flops: 5000000  # 5M

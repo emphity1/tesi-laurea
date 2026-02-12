@@ -1,0 +1,6 @@
+Host subnet31
+  HostName 213.173.98.202
+  User root
+  Port 45271
+  IdentityFile ~/.ssh/id_ed25519
+

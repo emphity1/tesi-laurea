@@ -1,0 +1,8 @@
+# File grandi - NON committare
+mutex-wandb/
+wandb/
+models/*.pt
+*.pdf
+data/
+.DS_Store
+__pycache__/
