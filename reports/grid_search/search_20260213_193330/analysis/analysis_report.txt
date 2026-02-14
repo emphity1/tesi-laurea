@@ -1,0 +1,61 @@
+======================================================================
+GRID SEARCH ANALYSIS REPORT
+======================================================================
+
+BEST CONFIGURATION:
+  lr: 0.05
+  width_mult: 0.5
+  batch_size: 128
+  weight_decay: 0.0005
+
+Best Validation Accuracy: 91.47%
+Best Run ID: 27
+
+TOP 5 CONFIGURATIONS:
+----------------------------------------------------------------------
+
+Rank 27 (Run 27.0):
+  Validation Accuracy: 91.47%
+  lr=0.05, width_mult=0.5, weight_decay=0.0005
+  Converged at epoch 49.0/50
+
+Rank 18 (Run 18.0):
+  Validation Accuracy: 91.31%
+  lr=0.025, width_mult=0.5, weight_decay=0.0005
+  Converged at epoch 50.0/50
+
+Rank 26 (Run 26.0):
+  Validation Accuracy: 90.73%
+  lr=0.05, width_mult=0.5, weight_decay=0.0003
+  Converged at epoch 48.0/50
+
+Rank 24 (Run 24.0):
+  Validation Accuracy: 90.62%
+  lr=0.05, width_mult=0.42, weight_decay=0.0005
+  Converged at epoch 50.0/50
+
+Rank 17 (Run 17.0):
+  Validation Accuracy: 90.11%
+  lr=0.025, width_mult=0.5, weight_decay=0.0003
+  Converged at epoch 50.0/50
+
+======================================================================
+HYPERPARAMETER INSIGHTS:
+----------------------------------------------------------------------
+
+LR:
+  0.01: mean=86.98%, max=88.71%, std=1.13%
+  0.025: mean=89.53%, max=91.31%, std=0.98%
+  0.05: mean=89.94%, max=91.47%, std=0.86%
+
+WIDTH MULT:
+  0.35: mean=87.94%, max=89.94%, std=1.74%
+  0.42: mean=88.87%, max=90.62%, std=1.45%
+  0.5: mean=89.64%, max=91.47%, std=1.42%
+
+WEIGHT DECAY:
+  0.0001: mean=88.12%, max=89.61%, std=1.50%
+  0.0003: mean=88.78%, max=90.73%, std=1.67%
+  0.0005: mean=89.55%, max=91.47%, std=1.61%
+
+======================================================================

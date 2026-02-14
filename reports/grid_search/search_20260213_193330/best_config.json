@@ -1,0 +1,12 @@
+{
+  "epochs": 50,
+  "lr_scale": 1.54,
+  "momentum": 0.9,
+  "num_workers": 2,
+  "save_dir": "",
+  "log_dir": "",
+  "lr": 0.05,
+  "width_mult": 0.5,
+  "batch_size": 128,
+  "weight_decay": 0.0005
+}

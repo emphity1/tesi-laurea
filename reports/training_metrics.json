@@ -1,0 +1,64 @@
+{
+  "config": {
+    "width_mult": 0.42,
+    "lr_scale": 1.54,
+    "epochs": 5,
+    "batch_size": 128,
+    "lr": 0.025,
+    "momentum": 0.9,
+    "weight_decay": 0.0003,
+    "num_workers": 2,
+    "save_dir": "../../models",
+    "log_dir": "../../reports"
+  },
+  "epochs": [
+    {
+      "epoch": 1,
+      "train_acc": 38.15,
+      "train_loss": 1.6907,
+      "val_acc": 48.98,
+      "val_loss": 1.4246,
+      "lr": 0.022612712429686845,
+      "time": 8.6
+    },
+    {
+      "epoch": 2,
+      "train_acc": 59.43,
+      "train_loss": 1.137,
+      "val_acc": 62.15,
+      "val_loss": 1.0598,
+      "lr": 0.016362712429686843,
+      "time": 8.1
+    },
+    {
+      "epoch": 3,
+      "train_acc": 67.92,
+      "train_loss": 0.9091,
+      "val_acc": 68.59,
+      "val_loss": 0.8858,
+      "lr": 0.008637287570313158,
+      "time": 8.2
+    },
+    {
+      "epoch": 4,
+      "train_acc": 73.08,
+      "train_loss": 0.7639,
+      "val_acc": 73.47,
+      "val_loss": 0.7566,
+      "lr": 0.0023872875703131583,
+      "time": 8.2
+    },
+    {
+      "epoch": 5,
+      "train_acc": 76.48,
+      "train_loss": 0.6767,
+      "val_acc": 76.79,
+      "val_loss": 0.668,
+      "lr": 0.0,
+      "time": 8.2
+    }
+  ],
+  "best_val_acc": 76.79,
+  "best_epoch": 5,
+  "total_time_minutes": 0.69
+}
