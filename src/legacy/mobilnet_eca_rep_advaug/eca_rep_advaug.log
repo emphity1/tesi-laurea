@@ -1,0 +1,225 @@
+nohup: ignoring input
+Seed set to 42
+Files already downloaded and verified
+Files already downloaded and verified
+
+======================================================================
+MODELLO ADVANCED AUGMENTATION (AutoAugment + Cutout)
+Target Epochs: 200
+======================================================================
+
+
+======================================================================
+MODELLO REPARAMETERIZED 200 EPOCHS RUN
+Parametri Training: 84.7k
+======================================================================
+
+Epoca 001/200 - Loss: 1.8531 | Train: 30.39% | Val: 48.34% (Best: 48.34%) | LR: 0.049997
+Epoca 002/200 - Loss: 1.4414 | Train: 47.58% | Val: 59.52% (Best: 59.52%) | LR: 0.049988
+Epoca 003/200 - Loss: 1.2564 | Train: 54.85% | Val: 60.20% (Best: 60.20%) | LR: 0.049972
+Epoca 004/200 - Loss: 1.1554 | Train: 58.71% | Val: 67.27% (Best: 67.27%) | LR: 0.049951
+Epoca 005/200 - Loss: 1.0750 | Train: 61.62% | Val: 67.64% (Best: 67.64%) | LR: 0.049923
+Epoca 006/200 - Loss: 1.0269 | Train: 63.35% | Val: 70.39% (Best: 70.39%) | LR: 0.049889
+Epoca 007/200 - Loss: 0.9749 | Train: 65.32% | Val: 72.49% (Best: 72.49%) | LR: 0.049849
+Epoca 008/200 - Loss: 0.9364 | Train: 66.85% | Val: 76.58% (Best: 76.58%) | LR: 0.049803
+Epoca 009/200 - Loss: 0.8757 | Train: 69.18% | Val: 74.85% (Best: 76.58%) | LR: 0.049751
+Epoca 010/200 - Loss: 0.8410 | Train: 70.70% | Val: 78.50% (Best: 78.50%) | LR: 0.049692
+Epoca 011/200 - Loss: 0.8211 | Train: 71.42% | Val: 79.30% (Best: 79.30%) | LR: 0.049628
+Epoca 012/200 - Loss: 0.7959 | Train: 72.43% | Val: 77.48% (Best: 79.30%) | LR: 0.049557
+Epoca 013/200 - Loss: 0.7712 | Train: 72.88% | Val: 78.70% (Best: 79.30%) | LR: 0.049481
+Epoca 014/200 - Loss: 0.7599 | Train: 73.49% | Val: 78.33% (Best: 79.30%) | LR: 0.049398
+Epoca 015/200 - Loss: 0.7494 | Train: 73.79% | Val: 79.68% (Best: 79.68%) | LR: 0.049309
+Epoca 016/200 - Loss: 0.7361 | Train: 74.26% | Val: 82.02% (Best: 82.02%) | LR: 0.049215
+Epoca 017/200 - Loss: 0.7278 | Train: 74.56% | Val: 82.17% (Best: 82.17%) | LR: 0.049114
+Epoca 018/200 - Loss: 0.7118 | Train: 75.21% | Val: 81.37% (Best: 82.17%) | LR: 0.049007
+Epoca 019/200 - Loss: 0.7146 | Train: 75.23% | Val: 82.36% (Best: 82.36%) | LR: 0.048895
+Epoca 020/200 - Loss: 0.7065 | Train: 75.42% | Val: 81.74% (Best: 82.36%) | LR: 0.048776
+Epoca 021/200 - Loss: 0.6922 | Train: 75.95% | Val: 82.27% (Best: 82.36%) | LR: 0.048652
+Epoca 022/200 - Loss: 0.6887 | Train: 75.96% | Val: 82.12% (Best: 82.36%) | LR: 0.048522
+Epoca 023/200 - Loss: 0.6814 | Train: 76.41% | Val: 81.15% (Best: 82.36%) | LR: 0.048386
+Epoca 024/200 - Loss: 0.6826 | Train: 76.16% | Val: 82.46% (Best: 82.46%) | LR: 0.048244
+Epoca 025/200 - Loss: 0.6780 | Train: 76.50% | Val: 82.89% (Best: 82.89%) | LR: 0.048097
+Epoca 026/200 - Loss: 0.6761 | Train: 76.76% | Val: 82.69% (Best: 82.89%) | LR: 0.047944
+Epoca 027/200 - Loss: 0.6625 | Train: 76.90% | Val: 83.49% (Best: 83.49%) | LR: 0.047785
+Epoca 028/200 - Loss: 0.6622 | Train: 77.00% | Val: 84.02% (Best: 84.02%) | LR: 0.047621
+Epoca 029/200 - Loss: 0.6502 | Train: 77.43% | Val: 84.17% (Best: 84.17%) | LR: 0.047451
+Epoca 030/200 - Loss: 0.6485 | Train: 77.62% | Val: 83.12% (Best: 84.17%) | LR: 0.047275
+Epoca 031/200 - Loss: 0.6480 | Train: 77.53% | Val: 83.33% (Best: 84.17%) | LR: 0.047094
+Epoca 032/200 - Loss: 0.6408 | Train: 77.65% | Val: 83.79% (Best: 84.17%) | LR: 0.046908
+Epoca 033/200 - Loss: 0.6363 | Train: 77.95% | Val: 84.82% (Best: 84.82%) | LR: 0.046716
+Epoca 034/200 - Loss: 0.6401 | Train: 77.85% | Val: 83.64% (Best: 84.82%) | LR: 0.046519
+Epoca 035/200 - Loss: 0.6298 | Train: 78.08% | Val: 83.48% (Best: 84.82%) | LR: 0.046316
+Epoca 036/200 - Loss: 0.6310 | Train: 78.20% | Val: 81.01% (Best: 84.82%) | LR: 0.046108
+Epoca 037/200 - Loss: 0.6287 | Train: 78.00% | Val: 83.52% (Best: 84.82%) | LR: 0.045895
+Epoca 038/200 - Loss: 0.6230 | Train: 78.20% | Val: 84.58% (Best: 84.82%) | LR: 0.045677
+Epoca 039/200 - Loss: 0.6212 | Train: 78.53% | Val: 84.59% (Best: 84.82%) | LR: 0.045454
+Epoca 040/200 - Loss: 0.6153 | Train: 78.70% | Val: 85.28% (Best: 85.28%) | LR: 0.045225
+Epoca 041/200 - Loss: 0.6160 | Train: 78.66% | Val: 83.84% (Best: 85.28%) | LR: 0.044992
+Epoca 042/200 - Loss: 0.6151 | Train: 78.48% | Val: 85.40% (Best: 85.40%) | LR: 0.044754
+Epoca 043/200 - Loss: 0.6121 | Train: 78.71% | Val: 83.88% (Best: 85.40%) | LR: 0.044511
+Epoca 044/200 - Loss: 0.6075 | Train: 79.04% | Val: 84.31% (Best: 85.40%) | LR: 0.044263
+Epoca 045/200 - Loss: 0.6060 | Train: 79.06% | Val: 84.57% (Best: 85.40%) | LR: 0.044010
+Epoca 046/200 - Loss: 0.6078 | Train: 79.05% | Val: 84.80% (Best: 85.40%) | LR: 0.043753
+Epoca 047/200 - Loss: 0.6114 | Train: 78.79% | Val: 85.29% (Best: 85.40%) | LR: 0.043491
+Epoca 048/200 - Loss: 0.6032 | Train: 79.08% | Val: 86.06% (Best: 86.06%) | LR: 0.043224
+Epoca 049/200 - Loss: 0.5988 | Train: 79.30% | Val: 86.68% (Best: 86.68%) | LR: 0.042953
+Epoca 050/200 - Loss: 0.5943 | Train: 79.32% | Val: 86.05% (Best: 86.68%) | LR: 0.042678
+Epoca 051/200 - Loss: 0.5988 | Train: 79.19% | Val: 85.14% (Best: 86.68%) | LR: 0.042398
+Epoca 052/200 - Loss: 0.5930 | Train: 79.40% | Val: 85.58% (Best: 86.68%) | LR: 0.042114
+Epoca 053/200 - Loss: 0.5878 | Train: 79.75% | Val: 84.59% (Best: 86.68%) | LR: 0.041825
+Epoca 054/200 - Loss: 0.5890 | Train: 79.58% | Val: 85.44% (Best: 86.68%) | LR: 0.041533
+Epoca 055/200 - Loss: 0.5819 | Train: 79.78% | Val: 85.54% (Best: 86.68%) | LR: 0.041236
+Epoca 056/200 - Loss: 0.5908 | Train: 79.41% | Val: 85.76% (Best: 86.68%) | LR: 0.040936
+Epoca 057/200 - Loss: 0.5833 | Train: 79.59% | Val: 86.01% (Best: 86.68%) | LR: 0.040631
+Epoca 058/200 - Loss: 0.5847 | Train: 79.62% | Val: 85.93% (Best: 86.68%) | LR: 0.040323
+Epoca 059/200 - Loss: 0.5741 | Train: 80.12% | Val: 84.85% (Best: 86.68%) | LR: 0.040011
+Epoca 060/200 - Loss: 0.5790 | Train: 79.91% | Val: 85.57% (Best: 86.68%) | LR: 0.039695
+Epoca 061/200 - Loss: 0.5739 | Train: 79.97% | Val: 84.89% (Best: 86.68%) | LR: 0.039375
+Epoca 062/200 - Loss: 0.5702 | Train: 80.17% | Val: 84.77% (Best: 86.68%) | LR: 0.039052
+Epoca 063/200 - Loss: 0.5740 | Train: 79.94% | Val: 85.95% (Best: 86.68%) | LR: 0.038726
+Epoca 064/200 - Loss: 0.5671 | Train: 80.13% | Val: 85.03% (Best: 86.68%) | LR: 0.038396
+Epoca 065/200 - Loss: 0.5624 | Train: 80.38% | Val: 86.12% (Best: 86.68%) | LR: 0.038062
+Epoca 066/200 - Loss: 0.5661 | Train: 80.20% | Val: 86.12% (Best: 86.68%) | LR: 0.037726
+Epoca 067/200 - Loss: 0.5682 | Train: 80.18% | Val: 86.06% (Best: 86.68%) | LR: 0.037386
+Epoca 068/200 - Loss: 0.5594 | Train: 80.51% | Val: 86.42% (Best: 86.68%) | LR: 0.037044
+Epoca 069/200 - Loss: 0.5627 | Train: 80.29% | Val: 86.73% (Best: 86.73%) | LR: 0.036698
+Epoca 070/200 - Loss: 0.5610 | Train: 80.53% | Val: 84.26% (Best: 86.73%) | LR: 0.036350
+Epoca 071/200 - Loss: 0.5567 | Train: 80.58% | Val: 86.23% (Best: 86.73%) | LR: 0.035998
+Epoca 072/200 - Loss: 0.5541 | Train: 80.72% | Val: 85.40% (Best: 86.73%) | LR: 0.035644
+Epoca 073/200 - Loss: 0.5503 | Train: 80.92% | Val: 87.16% (Best: 87.16%) | LR: 0.035288
+Epoca 074/200 - Loss: 0.5513 | Train: 80.86% | Val: 86.70% (Best: 87.16%) | LR: 0.034929
+Epoca 075/200 - Loss: 0.5525 | Train: 80.74% | Val: 87.20% (Best: 87.20%) | LR: 0.034567
+Epoca 076/200 - Loss: 0.5471 | Train: 81.17% | Val: 87.39% (Best: 87.39%) | LR: 0.034203
+Epoca 077/200 - Loss: 0.5528 | Train: 80.89% | Val: 86.53% (Best: 87.39%) | LR: 0.033837
+Epoca 078/200 - Loss: 0.5476 | Train: 81.03% | Val: 87.92% (Best: 87.92%) | LR: 0.033468
+Epoca 079/200 - Loss: 0.5438 | Train: 81.16% | Val: 87.60% (Best: 87.92%) | LR: 0.033098
+Epoca 080/200 - Loss: 0.5371 | Train: 81.34% | Val: 84.92% (Best: 87.92%) | LR: 0.032725
+Epoca 081/200 - Loss: 0.5355 | Train: 81.34% | Val: 87.41% (Best: 87.92%) | LR: 0.032351
+Epoca 082/200 - Loss: 0.5370 | Train: 81.46% | Val: 86.21% (Best: 87.92%) | LR: 0.031975
+Epoca 083/200 - Loss: 0.5324 | Train: 81.50% | Val: 86.42% (Best: 87.92%) | LR: 0.031597
+Epoca 084/200 - Loss: 0.5276 | Train: 81.84% | Val: 88.15% (Best: 88.15%) | LR: 0.031217
+Epoca 085/200 - Loss: 0.5300 | Train: 81.49% | Val: 85.53% (Best: 88.15%) | LR: 0.030836
+Epoca 086/200 - Loss: 0.5324 | Train: 81.41% | Val: 87.25% (Best: 88.15%) | LR: 0.030454
+Epoca 087/200 - Loss: 0.5202 | Train: 81.94% | Val: 87.10% (Best: 88.15%) | LR: 0.030070
+Epoca 088/200 - Loss: 0.5247 | Train: 81.87% | Val: 87.09% (Best: 88.15%) | LR: 0.029685
+Epoca 089/200 - Loss: 0.5241 | Train: 81.76% | Val: 86.86% (Best: 88.15%) | LR: 0.029298
+Epoca 090/200 - Loss: 0.5225 | Train: 81.77% | Val: 87.06% (Best: 88.15%) | LR: 0.028911
+Epoca 091/200 - Loss: 0.5238 | Train: 81.76% | Val: 89.21% (Best: 89.21%) | LR: 0.028523
+Epoca 092/200 - Loss: 0.5189 | Train: 82.20% | Val: 87.01% (Best: 89.21%) | LR: 0.028133
+Epoca 093/200 - Loss: 0.5137 | Train: 82.22% | Val: 88.27% (Best: 89.21%) | LR: 0.027743
+Epoca 094/200 - Loss: 0.5156 | Train: 82.16% | Val: 87.78% (Best: 89.21%) | LR: 0.027353
+Epoca 095/200 - Loss: 0.5088 | Train: 82.43% | Val: 87.50% (Best: 89.21%) | LR: 0.026961
+Epoca 096/200 - Loss: 0.5104 | Train: 82.32% | Val: 87.99% (Best: 89.21%) | LR: 0.026570
+Epoca 097/200 - Loss: 0.5117 | Train: 82.23% | Val: 87.62% (Best: 89.21%) | LR: 0.026178
+Epoca 098/200 - Loss: 0.5113 | Train: 82.30% | Val: 88.07% (Best: 89.21%) | LR: 0.025785
+Epoca 099/200 - Loss: 0.5030 | Train: 82.55% | Val: 88.04% (Best: 89.21%) | LR: 0.025393
+Epoca 100/200 - Loss: 0.5008 | Train: 82.58% | Val: 87.89% (Best: 89.21%) | LR: 0.025000
+Epoca 101/200 - Loss: 0.4975 | Train: 82.78% | Val: 88.84% (Best: 89.21%) | LR: 0.024607
+Epoca 102/200 - Loss: 0.4926 | Train: 82.87% | Val: 87.61% (Best: 89.21%) | LR: 0.024215
+Epoca 103/200 - Loss: 0.4949 | Train: 82.81% | Val: 89.04% (Best: 89.21%) | LR: 0.023822
+Epoca 104/200 - Loss: 0.4937 | Train: 82.87% | Val: 88.71% (Best: 89.21%) | LR: 0.023430
+Epoca 105/200 - Loss: 0.4918 | Train: 82.75% | Val: 88.13% (Best: 89.21%) | LR: 0.023039
+Epoca 106/200 - Loss: 0.4877 | Train: 83.08% | Val: 89.48% (Best: 89.48%) | LR: 0.022647
+Epoca 107/200 - Loss: 0.4878 | Train: 83.05% | Val: 88.05% (Best: 89.48%) | LR: 0.022257
+Epoca 108/200 - Loss: 0.4852 | Train: 83.14% | Val: 88.26% (Best: 89.48%) | LR: 0.021867
+Epoca 109/200 - Loss: 0.4837 | Train: 83.23% | Val: 88.94% (Best: 89.48%) | LR: 0.021477
+Epoca 110/200 - Loss: 0.4780 | Train: 83.27% | Val: 88.80% (Best: 89.48%) | LR: 0.021089
+Epoca 111/200 - Loss: 0.4774 | Train: 83.53% | Val: 88.78% (Best: 89.48%) | LR: 0.020702
+Epoca 112/200 - Loss: 0.4714 | Train: 83.71% | Val: 88.29% (Best: 89.48%) | LR: 0.020315
+Epoca 113/200 - Loss: 0.4764 | Train: 83.47% | Val: 88.83% (Best: 89.48%) | LR: 0.019930
+Epoca 114/200 - Loss: 0.4695 | Train: 83.68% | Val: 88.97% (Best: 89.48%) | LR: 0.019546
+Epoca 115/200 - Loss: 0.4705 | Train: 83.68% | Val: 88.66% (Best: 89.48%) | LR: 0.019164
+Epoca 116/200 - Loss: 0.4685 | Train: 83.65% | Val: 88.62% (Best: 89.48%) | LR: 0.018783
+Epoca 117/200 - Loss: 0.4653 | Train: 83.67% | Val: 89.61% (Best: 89.61%) | LR: 0.018403
+Epoca 118/200 - Loss: 0.4578 | Train: 84.13% | Val: 89.63% (Best: 89.63%) | LR: 0.018025
+Epoca 119/200 - Loss: 0.4615 | Train: 83.84% | Val: 88.46% (Best: 89.63%) | LR: 0.017649
+Epoca 120/200 - Loss: 0.4534 | Train: 84.25% | Val: 90.48% (Best: 90.48%) | LR: 0.017275
+Epoca 121/200 - Loss: 0.4566 | Train: 84.05% | Val: 90.04% (Best: 90.48%) | LR: 0.016902
+Epoca 122/200 - Loss: 0.4542 | Train: 84.08% | Val: 89.92% (Best: 90.48%) | LR: 0.016532
+Epoca 123/200 - Loss: 0.4495 | Train: 84.40% | Val: 90.41% (Best: 90.48%) | LR: 0.016163
+Epoca 124/200 - Loss: 0.4488 | Train: 84.53% | Val: 90.18% (Best: 90.48%) | LR: 0.015797
+Epoca 125/200 - Loss: 0.4492 | Train: 84.39% | Val: 89.76% (Best: 90.48%) | LR: 0.015433
+Epoca 126/200 - Loss: 0.4473 | Train: 84.41% | Val: 88.36% (Best: 90.48%) | LR: 0.015071
+Epoca 127/200 - Loss: 0.4353 | Train: 84.87% | Val: 89.79% (Best: 90.48%) | LR: 0.014712
+Epoca 128/200 - Loss: 0.4365 | Train: 84.89% | Val: 90.10% (Best: 90.48%) | LR: 0.014356
+Epoca 129/200 - Loss: 0.4342 | Train: 84.77% | Val: 90.07% (Best: 90.48%) | LR: 0.014002
+Epoca 130/200 - Loss: 0.4287 | Train: 85.11% | Val: 90.41% (Best: 90.48%) | LR: 0.013650
+Epoca 131/200 - Loss: 0.4258 | Train: 85.11% | Val: 89.69% (Best: 90.48%) | LR: 0.013302
+Epoca 132/200 - Loss: 0.4272 | Train: 85.10% | Val: 89.75% (Best: 90.48%) | LR: 0.012956
+Epoca 133/200 - Loss: 0.4218 | Train: 85.41% | Val: 90.57% (Best: 90.57%) | LR: 0.012614
+Epoca 134/200 - Loss: 0.4226 | Train: 85.30% | Val: 90.13% (Best: 90.57%) | LR: 0.012274
+Epoca 135/200 - Loss: 0.4194 | Train: 85.33% | Val: 90.36% (Best: 90.57%) | LR: 0.011938
+Epoca 136/200 - Loss: 0.4156 | Train: 85.64% | Val: 90.13% (Best: 90.57%) | LR: 0.011604
+Epoca 137/200 - Loss: 0.4140 | Train: 85.67% | Val: 90.14% (Best: 90.57%) | LR: 0.011274
+Epoca 138/200 - Loss: 0.4129 | Train: 85.57% | Val: 90.10% (Best: 90.57%) | LR: 0.010948
+Epoca 139/200 - Loss: 0.4168 | Train: 85.63% | Val: 90.49% (Best: 90.57%) | LR: 0.010625
+Epoca 140/200 - Loss: 0.4064 | Train: 85.94% | Val: 90.18% (Best: 90.57%) | LR: 0.010305
+Epoca 141/200 - Loss: 0.4045 | Train: 86.07% | Val: 90.36% (Best: 90.57%) | LR: 0.009989
+Epoca 142/200 - Loss: 0.3987 | Train: 86.22% | Val: 90.80% (Best: 90.80%) | LR: 0.009677
+Epoca 143/200 - Loss: 0.3975 | Train: 86.09% | Val: 90.71% (Best: 90.80%) | LR: 0.009369
+Epoca 144/200 - Loss: 0.3932 | Train: 86.29% | Val: 90.20% (Best: 90.80%) | LR: 0.009064
+Epoca 145/200 - Loss: 0.4012 | Train: 85.94% | Val: 91.25% (Best: 91.25%) | LR: 0.008764
+Epoca 146/200 - Loss: 0.3913 | Train: 86.41% | Val: 91.81% (Best: 91.81%) | LR: 0.008467
+Epoca 147/200 - Loss: 0.3912 | Train: 86.57% | Val: 91.23% (Best: 91.81%) | LR: 0.008175
+Epoca 148/200 - Loss: 0.3865 | Train: 86.64% | Val: 91.35% (Best: 91.81%) | LR: 0.007886
+Epoca 149/200 - Loss: 0.3781 | Train: 86.78% | Val: 91.34% (Best: 91.81%) | LR: 0.007602
+Epoca 150/200 - Loss: 0.3734 | Train: 87.07% | Val: 91.37% (Best: 91.81%) | LR: 0.007322
+Epoca 151/200 - Loss: 0.3773 | Train: 86.93% | Val: 91.32% (Best: 91.81%) | LR: 0.007047
+Epoca 152/200 - Loss: 0.3701 | Train: 87.13% | Val: 91.44% (Best: 91.81%) | LR: 0.006776
+Epoca 153/200 - Loss: 0.3672 | Train: 87.23% | Val: 91.68% (Best: 91.81%) | LR: 0.006509
+Epoca 154/200 - Loss: 0.3675 | Train: 87.16% | Val: 91.35% (Best: 91.81%) | LR: 0.006247
+Epoca 155/200 - Loss: 0.3592 | Train: 87.42% | Val: 91.85% (Best: 91.85%) | LR: 0.005990
+Epoca 156/200 - Loss: 0.3600 | Train: 87.49% | Val: 91.90% (Best: 91.90%) | LR: 0.005737
+Epoca 157/200 - Loss: 0.3559 | Train: 87.66% | Val: 91.45% (Best: 91.90%) | LR: 0.005489
+Epoca 158/200 - Loss: 0.3542 | Train: 87.68% | Val: 92.14% (Best: 92.14%) | LR: 0.005246
+Epoca 159/200 - Loss: 0.3492 | Train: 87.89% | Val: 92.00% (Best: 92.14%) | LR: 0.005008
+Epoca 160/200 - Loss: 0.3436 | Train: 88.20% | Val: 91.91% (Best: 92.14%) | LR: 0.004775
+Epoca 161/200 - Loss: 0.3478 | Train: 87.97% | Val: 92.12% (Best: 92.14%) | LR: 0.004546
+Epoca 162/200 - Loss: 0.3421 | Train: 88.29% | Val: 92.18% (Best: 92.18%) | LR: 0.004323
+Epoca 163/200 - Loss: 0.3409 | Train: 88.12% | Val: 92.45% (Best: 92.45%) | LR: 0.004105
+Epoca 164/200 - Loss: 0.3330 | Train: 88.50% | Val: 92.01% (Best: 92.45%) | LR: 0.003892
+Epoca 165/200 - Loss: 0.3313 | Train: 88.52% | Val: 92.66% (Best: 92.66%) | LR: 0.003684
+Epoca 166/200 - Loss: 0.3263 | Train: 88.61% | Val: 92.54% (Best: 92.66%) | LR: 0.003481
+Epoca 167/200 - Loss: 0.3301 | Train: 88.59% | Val: 92.09% (Best: 92.66%) | LR: 0.003284
+Epoca 168/200 - Loss: 0.3136 | Train: 89.18% | Val: 92.40% (Best: 92.66%) | LR: 0.003092
+Epoca 169/200 - Loss: 0.3172 | Train: 88.98% | Val: 92.56% (Best: 92.66%) | LR: 0.002906
+Epoca 170/200 - Loss: 0.3157 | Train: 89.18% | Val: 92.16% (Best: 92.66%) | LR: 0.002725
+Epoca 171/200 - Loss: 0.3152 | Train: 89.01% | Val: 92.52% (Best: 92.66%) | LR: 0.002549
+Epoca 172/200 - Loss: 0.3084 | Train: 89.49% | Val: 92.76% (Best: 92.76%) | LR: 0.002379
+Epoca 173/200 - Loss: 0.3133 | Train: 89.14% | Val: 92.51% (Best: 92.76%) | LR: 0.002215
+Epoca 174/200 - Loss: 0.3083 | Train: 89.28% | Val: 92.74% (Best: 92.76%) | LR: 0.002056
+Epoca 175/200 - Loss: 0.2993 | Train: 89.67% | Val: 92.83% (Best: 92.83%) | LR: 0.001903
+Epoca 176/200 - Loss: 0.3015 | Train: 89.66% | Val: 93.09% (Best: 93.09%) | LR: 0.001756
+Epoca 177/200 - Loss: 0.2989 | Train: 89.60% | Val: 92.88% (Best: 93.09%) | LR: 0.001614
+Epoca 178/200 - Loss: 0.2952 | Train: 89.83% | Val: 93.06% (Best: 93.09%) | LR: 0.001478
+Epoca 179/200 - Loss: 0.2892 | Train: 90.08% | Val: 92.99% (Best: 93.09%) | LR: 0.001348
+Epoca 180/200 - Loss: 0.2870 | Train: 90.08% | Val: 93.10% (Best: 93.10%) | LR: 0.001224
+Epoca 181/200 - Loss: 0.2901 | Train: 90.01% | Val: 93.09% (Best: 93.10%) | LR: 0.001105
+Epoca 182/200 - Loss: 0.2827 | Train: 90.22% | Val: 93.30% (Best: 93.30%) | LR: 0.000993
+Epoca 183/200 - Loss: 0.2857 | Train: 90.13% | Val: 93.16% (Best: 93.30%) | LR: 0.000886
+Epoca 184/200 - Loss: 0.2781 | Train: 90.45% | Val: 93.24% (Best: 93.30%) | LR: 0.000785
+Epoca 185/200 - Loss: 0.2757 | Train: 90.42% | Val: 93.08% (Best: 93.30%) | LR: 0.000691
+Epoca 186/200 - Loss: 0.2793 | Train: 90.27% | Val: 93.26% (Best: 93.30%) | LR: 0.000602
+Epoca 187/200 - Loss: 0.2748 | Train: 90.41% | Val: 93.20% (Best: 93.30%) | LR: 0.000519
+Epoca 188/200 - Loss: 0.2706 | Train: 90.61% | Val: 93.21% (Best: 93.30%) | LR: 0.000443
+Epoca 189/200 - Loss: 0.2690 | Train: 90.64% | Val: 93.31% (Best: 93.31%) | LR: 0.000372
+Epoca 190/200 - Loss: 0.2695 | Train: 90.71% | Val: 93.23% (Best: 93.31%) | LR: 0.000308
+Epoca 191/200 - Loss: 0.2664 | Train: 90.82% | Val: 93.50% (Best: 93.50%) | LR: 0.000249
+Epoca 192/200 - Loss: 0.2636 | Train: 90.98% | Val: 93.38% (Best: 93.50%) | LR: 0.000197
+Epoca 193/200 - Loss: 0.2655 | Train: 90.91% | Val: 93.43% (Best: 93.50%) | LR: 0.000151
+Epoca 194/200 - Loss: 0.2617 | Train: 90.92% | Val: 93.33% (Best: 93.50%) | LR: 0.000111
+Epoca 195/200 - Loss: 0.2630 | Train: 91.03% | Val: 93.38% (Best: 93.50%) | LR: 0.000077
+Epoca 196/200 - Loss: 0.2637 | Train: 90.78% | Val: 93.43% (Best: 93.50%) | LR: 0.000049
+Epoca 197/200 - Loss: 0.2631 | Train: 90.85% | Val: 93.48% (Best: 93.50%) | LR: 0.000028
+Epoca 198/200 - Loss: 0.2658 | Train: 90.89% | Val: 93.45% (Best: 93.50%) | LR: 0.000012
+Epoca 199/200 - Loss: 0.2618 | Train: 90.87% | Val: 93.43% (Best: 93.50%) | LR: 0.000003
+/workspace/tesi-laurea/src/legacy/MobileNetEca_Rep_AdvAug.py:301: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  modello.load_state_dict(torch.load(os.path.join(OUTPUT_DIR, 'best_model_training.pth')))
+Epoca 200/200 - Loss: 0.2623 | Train: 90.99% | Val: 93.40% (Best: 93.50%) | LR: 0.000000
+
+Training Completato in 43.5 min.
+Caricamento Best Model per Deploy...
+Deploying...
+Parametri Finali (Deploy): 76.6k
+Accuratezza Finale Deployed: 93.49%
+Modelli salvati in /workspace/tesi-laurea/reports/adv_aug_test

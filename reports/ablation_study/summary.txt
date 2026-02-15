@@ -1,0 +1,3 @@
+Baseline (ReLU, No ECA): 90.43% (84594 params)
+Variant A (GELU, No ECA): 90.94% (84594 params)
+Variant B (ReLU + ECA): 91.59% (84674 params)

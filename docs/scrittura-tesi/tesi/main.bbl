@@ -1,8 +1,8 @@
 \begin{thebibliography}{1}
 
 \bibitem{krizhevsky2009learning}
-A.~Krizhevsky and G.~Hinton, ``Learning multiple layers of features from tiny
-  images,'' 2009.
+A.~Krizhevsky, G.~Hinton, {\em et~al.}, ``Learning multiple layers of features
+  from tiny images,'' 2009.
 
 \bibitem{he2016deep}
 K.~He, X.~Zhang, S.~Ren, and J.~Sun, ``Deep residual learning for image
@@ -10,9 +10,9 @@ K.~He, X.~Zhang, S.~Ren, and J.~Sun, ``Deep residual learning for image
   and pattern recognition}, pp.~770--778, 2016.
 
 \bibitem{howard2017mobilenets}
-A.~G. Howard, M.~Zhu, B.~Chen, D.~Kalenichenko, W.~Wang, T.~Weyand,
-  M.~Andreetto, and H.~Adam, ``Mobilenets: Efficient convolutional neural
-  networks for mobile vision applications,'' 2017.
+A.~G. Howard, M.~Zhu, B.~Chen, D.~Kalenichenko, W.~Wang, {\em et~al.},
+  ``Mobilenets: Efficient convolutional neural networks for mobile vision
+  applications,'' {\em arXiv preprint arXiv:1704.04861}, 2017.
 
 \bibitem{sandler2018mobilenetv2}
 M.~Sandler, A.~Howard, M.~Zhu, A.~Zhmoginov, and L.-C. Chen, ``Mobilenetv2:
@@ -29,5 +29,11 @@ Q.~Wang, B.~Wu, P.~Zhu, P.~Li, W.~Zuo, and Q.~Hu, ``Eca-net: Efficient channel
   attention for deep convolutional neural networks,'' in {\em Proceedings of
   the IEEE/CVF conference on computer vision and pattern recognition},
   pp.~11534--11542, 2020.
+
+\bibitem{ding2021repvgg}
+X.~Ding, X.~Zhang, N.~Ma, J.~Han, G.~Ding, and J.~Sun, ``Repvgg: Making
+  vgg-style convnets great again,'' in {\em Proceedings of the IEEE/CVF
+  conference on computer vision and pattern recognition}, pp.~13733--13742,
+  2021.
 
 \end{thebibliography}

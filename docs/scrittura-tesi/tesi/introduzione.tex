@@ -1,3 +1,4 @@
+% !TeX spellcheck = it_IT
 %\section*{Introduzione}
 
 Il lavoro documentato in questo elaborato di tesi è consistito nello sviluppo e nell'ottimizzazione di architetture neurali compatte per la classificazione di immagini, con particolare focus sul trade-off tra efficienza computazionale e accuratezza. L'obiettivo principale è stato quello di esplorare come l'integrazione di meccanismi di attenzione moderni possa migliorare le prestazioni di reti neurali ultra-leggere, rendendole adatte al deploy su dispositivi con risorse limitate (edge devices, smartphone, sistemi embedded).
@@ -10,7 +11,7 @@ L'approccio adottato si è articolato in diverse fasi metodologiche:
 \begin{itemize}
     \item \textbf{Progettazione architetturale}: Implementazione di MobileNetECA con blocchi residuali invertiti, attenzione ECA, e funzioni di attivazione GELU per una migliore stabilità del training.
     
-    \item \textbf{Grid search sistematica}: Esplorazione di {NUMERO\_TOTALE\_CONFIGURAZIONI} configurazioni di iperparametri (learning rate, width multiplier, weight decay) per identificare empiricamente la combinazione ottimale.
+    \item \textbf{Grid search sistematica}: Esplorazione di 210 configurazioni di iperparametri (learning rate, width multiplier, weight decay) per identificare empiricamente la combinazione ottimale.
     
     \item \textbf{Training finale}: Allenamento del modello ottimizzato per 200 epoche utilizzando ottimizzatore SGD con momentum e Cosine Annealing learning rate schedule.
     
@@ -19,6 +20,6 @@ L'approccio adottato si è articolato in diverse fasi metodologiche:
     \item \textbf{Confronto con lo stato dell'arte}: Benchmark con modelli della letteratura (MobileNetV2, ResNet, ShuffleNet) per posizionare MobileNetECA nella frontiera efficienza-accuratezza.
 \end{itemize}
 
-I risultati ottenuti dimostrano che MobileNetECA raggiunge un'accuratezza di \textbf{{ACCURATEZZA\_FINALE}\%} sul test set con solamente \textbf{54,000 parametri} e \textbf{~7M FLOPs}, posizionandosi competitivamente rispetto a modelli con 10-40× più parametri. L'ablation study condotta ha quantificato il contributo dei blocchi ECA, mostrando un miglioramento di \textbf{+{DELTA\_ECA}\%} rispetto alla baseline senza attenzione, con un overhead di meno di 500 parametri aggiuntivi.
+I risultati ottenuti dimostrano che MobileNetECA raggiunge un'accuratezza di \textbf{92.47\%} sul test set con solamente \textbf{76,600 parametri} e \textbf{~11M FLOPs}, posizionandosi competitivamente rispetto a modelli con 10-40× più parametri. L'ablation study condotta ha quantificato il contributo dei blocchi ECA, mostrando un miglioramento di \textbf{+1.16\%} rispetto alla baseline senza attenzione, con un overhead di meno di 500 parametri aggiuntivi.
 
 Nel complesso, il lavoro rappresenta un contributo nell'ambito dell'efficienza delle reti neurali, dimostrando come architetture ultra-compatte possano raggiungere prestazioni competitive attraverso l'integrazione di meccanismi di attenzione leggeri e un'ottimizzazione sistematica degli iperparametri. Questo tipo di modelli è particolarmente rilevante per applicazioni dove i vincoli di memoria, latenza ed energia sono critici, come nel caso di dispositivi edge, sistemi IoT, o scenari di privacy-preserving machine learning con inferenza on-device.

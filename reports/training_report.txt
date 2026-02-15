@@ -4,4 +4,4 @@ REPORT DI ALLENAMENTO
 
 Modello: MobileNetECA
 Dataset: CIFAR-10
-Parametri: 77.0k (77000)
+Parametri: 77.3k (77294)

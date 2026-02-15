@@ -1,3 +1,4 @@
+% !TeX spellcheck = it_IT
 \section{Convolutional Neural Networks}
 
 \subsection{Operazione di Convoluzione}
@@ -153,7 +154,7 @@ Per $C_{out}=64$ e $K=3$: riduzione di $\sim$8-9×!
 
 \textbf{Linear Bottleneck}: No activation dopo projection per preservare informazione.
 
-{AGGIUNGERE\_DIAGRAMMA\_INVERTED\_RESIDUAL}
+\textbf{[AGGIUNGERE DIAGRAMMA INVERTED RESIDUAL]}
 
 \subsection{Motivazione Teorica}
 MobileNetV2 ipotizza che le informazioni importanti stiano in un \textit{manifold di bassa dimensione}. Mantenere rappresentazioni compatte (low-dim) previene perdita di informazione causata da ReLU (che ``taglia'' valori negativi).
@@ -210,7 +211,7 @@ ECA \cite{wang2020eca} semplifica SE rimuovendo le FC layers:
     \item Performance: +1-2\% accuracy, overhead quasi zero
 \end{itemize}
 
-{AGGIUNGERE\_DIAGRAMMA\_ECA\_VS\_SE}
+\textbf{[AGGIUNGERE DIAGRAMMA ECA VS SE]}
 
 \section{Gradient Scaling e Stabilità del Training}
 
@@ -231,4 +232,9 @@ Dove:
 
 \textbf{Effetto}: Riduce la magnitudine dei gradienti che fluiscono attraverso attention, stabilizzando il training.
 
-{AGGIUNGERE\_GRAFICO\_TRAINING\_STABILITY\_LOSS\_CURVE}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figure/loss_curve_200.png}
+    \caption{Curva della Loss durante il training. L'uso di GELU e BN assicura una convergenza fluida senza instabilità.}
+    \label{fig:loss_stability}
+\end{figure}

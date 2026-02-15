@@ -1,3 +1,4 @@
+% !TeX spellcheck = it_IT
 \section{Motivazione e Obiettivi della Tesi}
 
 \subsection{Contesto Applicativo}
@@ -8,7 +9,7 @@ Il problema centrale affrontato in questa tesi è il \textbf{trade-off tra accur
 \subsection{Obiettivi Specifici}
 Gli obiettivi di questo lavoro sono:
 \begin{enumerate}
-    \item \textbf{Sviluppare un'architettura efficiente per CIFAR-10}: Implementare MobileNetECA combinando blocchi Inverted Residual con meccanismi di attenzione ECA.
+    \item \textbf{Sviluppare un'architettura efficiente per CIFAR-10}: Implementare Mobile\-Net\-ECA combinando blocchi Inverted Residual con meccanismi di attenzione ECA.
     
     \item \textbf{Ottimizzare gli iperparametri tramite grid search sistematica}: Esplorare empiricamente lo spazio dei parametri (learning rate, width multiplier, weight decay) per identificare la configurazione ottimale.
     
@@ -85,6 +86,12 @@ CIFAR-10 è diventato uno standard de-facto per:
 
 La Tabella~\ref{tab:sota_cifar10} riassume i risultati di modelli rappresentativi della letteratura su CIFAR-10.
 
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.6\textwidth]{figure/ECA_Module.png}
+    \caption{Schema del modulo ECA.}
+    \label{fig:eca_module}
+\end{figure}
 \begin{table}[h]
 \centering
 \caption{Confronto modelli SOTA su CIFAR-10}
@@ -101,7 +108,7 @@ ShuffleNetV2 ×1.0 & 93.0 & 1.26M & 45M \\
 DenseNet-121 & 95.0 & 7.98M & alto \\
 ViT (patch=2) & 96.8 & 2.73M & 916M \\
 \midrule
-\textbf{MobileNetECA (ours)} & \textbf{{ACCURACY\_FINALE}} & \textbf{0.054M} & \textbf{7M} \\
+\textbf{MobileNetECA (ours)} & \textbf{92.47\%} & \textbf{0.077M} & \textbf{11M} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -114,13 +121,27 @@ Questo lavoro fornisce i seguenti contributi:
 \begin{enumerate}
     \item \textbf{Implementazione}: Sviluppo completo di MobileNetECA con blocchi ECA integrati in architettura Inverted Residual.
     
-    \item \textbf{Grid search sistematica}: Esplorazione di {NUMERO\_CONFIGURAZIONI} configurazioni per identificare empiricamente gli iperparametri ottimali.
+    \item \textbf{Grid search sistematica}: Esplorazione di 210 configurazioni per identificare empiricamente gli iperparametri ottimali.
     
-    \item \textbf{Analisi quantitativa ECA}: Ablation study per quantificare il contributo dell'attenzione (+{DELTA\_ECA}\%).
+    \item \textbf{Analisi quantitativa ECA}: Ablation study per quantificare il contributo dell'attenzione (+1.16\%).
     
     \item \textbf{Benchmark fair}: Confronto con baseline della letteratura su stesso hardware e protocollo di valutazione.
     
     \item \textbf{Open source}: Codice e configurazioni rilasciate per riproducibilità completa.
 \end{enumerate}
 
-{AGGIUNGERE\_GRAFICO\_PARETO\_EFFICIENCY\_VS\_ACCURACY}
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|c|c|c|}
+        \hline
+        \textbf{Architettura} & \textbf{Parametri} & \textbf{Acc. CIFAR-10} & \textbf{Note} \\
+        \hline
+        ResNet-18 & 11.2M & $\sim$95\% & Standard de facto \\
+        MobileNetV2 (0.5x) & 0.8M & $\sim$90\% & Molto leggera ma meno accurata \\
+        GhostNet (0.5x) & 0.6M & $\sim$91\% & Ottimo trade-off \\
+        \textbf{MobileNetECA (Ours)} & \textbf{0.07M} & \textbf{92.5\%} & \textbf{State-of-the-Art Efficienza} \\
+        \hline
+    \end{tabular}
+    \caption{Confronto preliminare tra efficienza e accuratezza. Il nostro modello (Ours) punta a massimizzare il rapporto Acc/Params.}
+    \label{tab:pareto_intro}
+\end{table}

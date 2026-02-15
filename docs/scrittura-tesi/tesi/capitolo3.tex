@@ -1,6 +1,47 @@
+% !TeX spellcheck = it_IT
+\chapter{Architettura MobileNetECA}
+\label{chap:mobileneteca}
+
+In questo capitolo analizziamo l'architettura proposta, partendo dal design complessivo e approfondendo le componenti chiave: il blocco inverso residuo modificato, il meccanismo di attenzione ECA e la tecnica di Structural Reparameterization.
+
 \section{Design Complessivo dell'Architettura}
 
-MobileNetECA è un'architettura convoluzionale compatta progettata specificatamente per CIFAR-10 (immagini 32×32). Combina l'efficienza di MobileNetV2 con il meccanismo di attenzione leggero ECA.
+MobileNetECA è un'architettura convoluzionale compatta progettata specificatamente per CIFAR-10 (immagini 32×32). Combina l'efficienza di MobileNetV2 con il meccanismo di attenzione leggero ECA e sfrutta la ri-parametrizzazione strutturale per migliorare le prestazioni.
+
+\section{Structural Reparameterization}
+Una delle innovazioni chiave adottate in questo lavoro per spingere l'accuratezza oltre il 92\% senza aumentare il costo computazionale all'inferenza è la \textbf{Structural Reparameterization}, ispirata da RepVGG~\cite{ding2021repvgg}.
+
+\subsection{Concetto Chiave: Training vs Inference}
+L'idea fondamentale è disaccoppiare l'architettura usata durante il training da quella usata per l'inferenza (deploy).
+\begin{itemize}
+    \item \textbf{Training (Multi-Branch)}: Ogni blocco convoluzionale è arricchito con rami paralleli (es. 1x1 conv, identity mapping). Questo facilita il flusso dei gradienti, agendo come un ensemble implicito e facilitando l'ottimizzazione (niente "dead zones").
+    \item \textbf{Inference (Single-Branch)}: Prima del deploy, i rami paralleli vengono matematicamente "fusi" in un unico kernel 3x3. Il risultato è una rete piana (VGG-style) o un blocco MobileNet standard, estremamente veloce.
+\end{itemize}
+
+\subsection{Fusione Matematica dei Kernel}
+Consideriamo un input $X$ e tre rami paralleli che computano l'output $Y$:
+\begin{enumerate}
+    \item Conv 3x3 ($W^{(3)}$, biases $\mu^{(3)}, \sigma^{(3)}, \gamma^{(3)}, \beta^{(3)}$ di BN)
+    \item Conv 1x1 ($W^{(1)}$, biases $\mu^{(1)}, \dots$)
+    \item Identity (se dimensioni matchano)
+\end{enumerate}
+
+Poiché la convoluzione è un operatore lineare, possiamo sommare i kernel.
+Per prima cosa, trasformiamo ogni conv+BN in un singolo kernel con bias:
+\begin{equation}
+W'_{i} = W_i \cdot \frac{\gamma_i}{\sigma_i}, \quad b'_i = \beta_i - \mu_i \frac{\gamma_i}{\sigma_i}
+\end{equation}
+
+Successivamente, facciamo il padding del kernel 1x1 (diventa 3x3 con zeri attorno) e dell'identità (matrice identità al centro, zeri altrove).
+Il kernel finale $W_{final}$ sarà semplicemente:
+\begin{equation}
+W_{final} = W'^{(3)} + \text{pad}(W'^{(1)}) + \text{weight}(\text{identity})
+\end{equation}
+
+Otteniamo così un singolo strato convoluzionale $Y = W_{final} * X + b_{final}$ matematicamente equivalente alla somma dei tre rami, ma molto più efficiente.
+
+\subsection{Perché l'abbiamo usata?}
+La baseline MobileNetV2 standard faticava a superare il 91.5\% a causa della sua profondità e "sottigliezza" (pochi canali). L'aggiunta dei rami di re-parametrizzazione ha permesso di addestrare una rete virtualmente più capace, catturando feature più ricche, per poi "collassarla" nella forma compatta originale. Questo ci ha regalato circa uno \textbf{0.5-0.8\% di accuratezza "gratuita"} (costo zero all'inferenza).
 
 \subsection{Pipeline Architetturale}
 L'architettura è composta da 4 stage principali:
@@ -12,7 +53,13 @@ L'architettura è composta da 4 stage principali:
     \item \textbf{Classifier}: Linear layer (10 classi)
 \end{enumerate}
 
-{AGGIUNGERE\_DIAGRAMMA\_ARCHITETTURA\_COMPLETA}
+L'architettura completa è composta da:
+\begin{enumerate}
+    \item Un layer convoluzionale iniziale (Conv2d 3x3).
+    \item 12 blocchi Inverted Residual che incrementano progressivamente il numero di canali.
+    \item I blocchi ECA vengono inseriti dopo le espansioni, per calibrare le feature map intermedie.
+    \item Un layer di classificazione finale (Linear) dopo un Global Average Pooling.
+\end{enumerate}
 
 \subsection{Tabella di Configurazione}
 La Tabella~\ref{tab:block_config} descrive la configurazione dei blocchi.
@@ -95,51 +142,43 @@ Output (C_out channels, H/s × W/s spatial)
 \subsection{Implementazione Codice}
 Estratto semplificato da \texttt{model.py}:
 
-\begin{lstlisting}[language=Python, caption=InvertedResidual con ECA]
+\begin{lstlisting}[language=Python, caption=InvertedResidual con ECA, basicstyle=\footnotesize\ttfamily, lineskip=-1pt]
 class InvertedResidual(nn.Module):
-    def __init__(self, inp, oup, stride, expand_ratio, 
-                 use_eca=False, lr_scale=1.6):
+    def __init__(self, inp, oup, stride, expand_ratio, use_eca=False):
         super().__init__()
-        self.lr_scale = lr_scale
         hidden_dim = int(inp * expand_ratio)
         self.use_res_connect = (stride == 1 and inp == oup)
-
         layers = []
+        
         # Expansion
         if expand_ratio != 1:
-            layers += [
+            layers.extend([
                 nn.Conv2d(inp, hidden_dim, 1, bias=False),
                 nn.BatchNorm2d(hidden_dim),
                 nn.GELU()
-            ]
+            ])
         
         # Depthwise
-        layers += [
-            nn.Conv2d(hidden_dim, hidden_dim, 3, stride, 1,
-                     groups=hidden_dim, bias=False),
+        layers.extend([
+            nn.Conv2d(hidden_dim, hidden_dim, 3, stride, 1, groups=hidden_dim, bias=False),
             nn.BatchNorm2d(hidden_dim),
             nn.GELU()
-        ]
+        ])
         
         # ECA Attention
-        if use_eca:
-            layers.append(ECABlock(hidden_dim, lr_scale=lr_scale))
+        if use_eca: layers.append(ECABlock(hidden_dim))
         
-        # Projection (linear bottleneck)
-        layers += [
+        # Projection
+        layers.extend([
             nn.Conv2d(hidden_dim, oup, 1, bias=False),
             nn.BatchNorm2d(oup)
-        ]
+        ])
         
         self.conv = nn.Sequential(*layers)
 
     def forward(self, x):
-        out = self.conv(x)
-        # Gradient scaling
-        out = out * self.lr_scale + out.detach() * (1 - self.lr_scale)
-        if self.use_res_connect:
-            return x + out
-        return out
+        if self.use_res_connect: return x + self.conv(x)
+        return self.conv(x)
 \end{lstlisting}
 
 \section{ECA Block: Implementazione Dettagliata}
@@ -209,38 +248,25 @@ Con parametri default: $b=12$, $\gamma=3$.
 \end{enumerate}
 
 \subsection{Codice Implementazione}
-\begin{lstlisting}[language=Python, caption=ECA Block]
+\begin{lstlisting}[language=Python, caption=ECA Block, basicstyle=\footnotesize\ttfamily, lineskip=-1pt]
 class ECABlock(nn.Module):
-    def __init__(self, channels, gamma=3, b=12, lr_scale=1.6):
+    def __init__(self, channels, gamma=3, b=12):
         super().__init__()
-        self.lr_scale = lr_scale
-        
         # Adaptive kernel size
         t = int(abs((math.log(channels, 2) + b) / gamma))
-        kernel_size = t if t % 2 else t + 1
+        k = t if t % 2 else t + 1
         
         self.avg_pool = nn.AdaptiveAvgPool2d(1)
-        self.conv = nn.Conv1d(1, 1, kernel_size=kernel_size,
-                             padding=(kernel_size - 1) // 2,
-                             bias=False)
+        self.conv = nn.Conv1d(1, 1, kernel_size=k, padding=(k - 1) // 2, bias=False)
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
-        # Squeeze
-        y = self.avg_pool(x)  # [B, C, H, W] -> [B, C, 1, 1]
+        # Squeeze [B, C, H, W] -> [B, C, 1, 1]
+        y = self.avg_pool(x)
         
-        # Reshape for Conv1D
-        y = y.squeeze(-1).transpose(-1, -2)  # [B, 1, C]
-        
-        # Excitation
-        y = self.conv(y)
+        # Excitation (con Conv1D efficiente)
+        y = self.conv(y.squeeze(-1).transpose(-1, -2)).transpose(-1, -2).unsqueeze(-1)
         y = self.sigmoid(y)
-        
-        # Reshape back
-        y = y.transpose(-1, -2).unsqueeze(-1)  # [B, C, 1, 1]
-        
-        # Gradient scaling
-        y = y * self.lr_scale + y.detach() * (1 - self.lr_scale)
         
         # Scale
         return x * y.expand_as(x)
@@ -249,40 +275,40 @@ class ECABlock(nn.Module):
 \section{Analisi della Complessità}
 
 \subsection{Parametri}
-Per width\_mult = 0.5:
+Per width\_mult = 0.5 (configurazione finale):
 \begin{itemize}
-    \item \textbf{Totale parametri}: ~54,000
-    \item Stem: ~864
-    \item Inverted Residual Blocks: ~50k
-    \item ECA Blocks: ~2k (totale, ~500 per stage)
-    \item Classifier: ~1.4k
+    \item \textbf{Parametri Training}: \textasciitilde 84,700 (dovuti ai branch paralleli)
+    \item \textbf{Parametri Inference}: \textasciitilde 76,600 (dopo re-parameterization)
+    \item Stem: \textasciitilde 1.5k
+    \item Inverted Residual Blocks: \textasciitilde 70k
+    \item ECA Blocks: \textasciitilde 3k
+    \item Classifier: \textasciitilde 1.5k
 \end{itemize}
 
 \subsection{FLOPs}
-\textbf{Multiply-Accumulate Operations (MACs)}: ~7-8M
+\textbf{Multiply-Accumulate Operations (MACs)}: \textasciitilde 10-12M
 
 Breakdown approssimativo:
 \begin{itemize}
-    \item Depthwise convs: ~60\%
-    \item Pointwise convs: ~35\%
-    \item ECA blocks: ~1\%
-    \item Altri: ~4\%
+    \item Depthwise convs: \textasciitilde 60\%
+    \item Pointwise convs: \textasciitilde 35\%
+    \item ECA blocks: <1\% (trascurabile)
 \end{itemize}
 
 \subsection{Confronto con Altri Modelli}
 \begin{table}[h]
 \centering
-\caption{Confronto complessità computazionale}
+\caption{Confronto complessità computazionale (Inference)}
 \label{tab:complexity}
 \begin{tabular}{lccc}
 \toprule
-\textbf{Modello} & \textbf{Params} & \textbf{FLOPs} & \textbf{Size (KB)} \\
+\textbf{Modello} & \textbf{Params} & \textbf{MACs} & \textbf{Size (KB)} \\
 \midrule
-MobileNetECA (ours) & 54k & 7M & 216 \\
-MobileNetV2 ×0.5 & 700k & 28M & 2,800 \\
-MobileNetV2 ×1.0 & 2.24M & 88M & 8,960 \\
+\textbf{MobileNetECA (ours)} & \textbf{76.6k} & \textbf{\textasciitilde 11M} & \textbf{\textasciitilde 300} \\
+MobileNetV2 $\times$0.5 & 700k & 28M & 2,800 \\
+MobileNetV2 $\times$1.0 & 2.24M & 88M & 8,960 \\
 ResNet-20 & 270k & 41M & 1,080 \\
-ResNet-32 & 470k & 69M & 1,880 \\
+ShuffleNetV2 $\times$0.5 & 350k & 10M & 1,400 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -329,7 +355,12 @@ dove $t$ è l'epoca corrente, $T$ è il totale epoche.
     \item No hyperparameter (solo $T$)
 \end{itemize}
 
-{AGGIUNGERE\_GRAFICO\_COSINE\_ANNEALING\_LR}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figure/lr_schedule_200.png}
+    \caption{Learning Rate Schedule: Cosine Annealing. Il tasso di apprendimento decresce da 0.05 a 0 in modo graduale.}
+    \label{fig:lr_schedule}
+\end{figure}
 
 \subsection{Weight Decay}
 Regolarizzazione L2:
@@ -349,7 +380,7 @@ Valori testati: $\lambda \in \{10^{-4}, 2 \times 10^{-4}, 3 \times 10^{-4}, 5 \t
 
 \textbf{Test}: SOLO Normalize (NO augmentation!)
 
-\textbf{CRITICAL}: Augmentation su test invalida i risultati!
+
 
 \subsection{Gradient Clipping}
 \begin{equation}
@@ -360,4 +391,4 @@ Con max\_norm = 5.0.
 
 \textbf{Previene}: Esplosione dei gradienti durante training.
 
-{AGGIUNGERE\_DIAGRAMMA\_TRAINING\_PIPELINE}
+\textbf{[AGGIUNGERE DIAGRAMMA TRAINING PIPELINE]}

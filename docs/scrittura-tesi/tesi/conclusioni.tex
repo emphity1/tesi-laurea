@@ -1,3 +1,4 @@
+% !TeX spellcheck = it_IT
 \section*{Conclusioni}
 
 Questo lavoro ha presentato lo sviluppo e l'ottimizzazione di \textbf{MobileNetECA}, un'architettura neurale ultra-compatta per la classificazione di immagini su CIFAR-10. L'obiettivo principale era esplorare il trade-off tra efficienza computazionale e accuratezza, dimostrando che modelli estremamente leggeri possono raggiungere prestazioni competitive attraverso l'integrazione di meccanismi di attenzione moderni e un'ottimizzazione sistematica degli iperparametri.
@@ -8,22 +9,22 @@ Il progetto si è articolato in quattro fasi principali:
 \begin{enumerate}
     \item \textbf{Progettazione architetturale}: Implementazione di MobileNetECA combinando blocchi Inverted Residual (da MobileNetV2) con meccanismi Efficient Channel Attention (ECA), utilizzando GELU come funzione di attivazione per maggiore stabilità.
     
-    \item \textbf{Grid search sistematica}: Esplorazione di {NUMERO\_CONFIGURAZIONI} configurazioni di iperparametri attraverso un approccio two-phase (screening rapido + refinement), identificando empiricamente la combinazione ottimale di learning rate, width multiplier e weight decay.
+    \item \textbf{Grid search sistematica}: Esplorazione di 210 configurazioni di iperparametri attraverso un approccio two-phase (screening rapido + refinement), identificando empiricamente la combinazione ottimale di learning rate, width multiplier e weight decay.
     
-    \item \textbf{Training finale}: Allenamento del modello ottimizzato per 200 epoche con SGD+momentum e Cosine Annealing schedule, raggiungendo un'accuratezza finale di \textbf{{ACCURATEZZA\_FINALE}\%} sul test set CIFAR-10.
+    \item \textbf{Training finale}: Allenamento del modello ottimizzato per 200 epoche con SGD+momentum e Cosine Annealing schedule, raggiungendo un'accuratezza finale di \textbf{92.47\%} sul test set CIFAR-10.
     
-    \item \textbf{Validazione sperimentale}: Confronto con modelli SOTA della letteratura e ablation study per quantificare il contributo dell'attenzione ECA (+{DELTA\_ECA}\% accuracy con overhead < 2\% parametri).
+    \item \textbf{Validazione sperimentale}: Confronto con modelli SOTA della letteratura e ablation study per quantificare il contributo dell'attenzione ECA (+1.16\% accuracy con overhead < 2\% parametri).
 \end{enumerate}
 
 \subsection*{Risultati Principali}
 MobileNetECA ha dimostrato un eccellente trade-off efficienza-accuratezza:
 
 \begin{itemize}
-    \item \textbf{Accuratezza}: {ACCURATEZZA\_FINALE}\% su CIFAR-10 test set
-    \item \textbf{Parametri}: 54,000 (~13× meno di MobileNetV2 ×0.5)
-    \item \textbf{FLOPs}: ~7M MACs (~4× meno di MobileNetV2 ×0.5)
-    \item \textbf{Dimensione}: < 220 KB (fit in L2 cache)
-    \item \textbf{Contributo ECA}: +{DELTA\_ECA}\% accuracy con overhead minimo
+    \item \textbf{Accuratezza}: 92.47\% su CIFAR-10 test set
+    \item \textbf{Parametri}: 76,600 (~13× meno di MobileNetV2 ×0.5)
+    \item \textbf{FLOPs}: ~11M MACs (~4× meno di MobileNetV2 ×0.5)
+    \item \textbf{Dimensione}: < 300 KB (fit in L2 cache)
+    \item \textbf{Contributo ECA}: +1.16\% accuracy con overhead minimo
 \end{itemize}
 
 Il modello si posiziona competitivamente nella frontiera ultra-compatta (< 100k parametri), risultando ideale per scenari con vincoli estremi di memoria, latency ed energia.

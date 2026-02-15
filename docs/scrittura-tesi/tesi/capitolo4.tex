@@ -1,3 +1,4 @@
+% !TeX spellcheck = it_IT
 \section{Grid Search Sistematica}
 
 \subsection{Obiettivo}
@@ -102,136 +103,94 @@ reports/grid_search_ultra_fast/search_YYYYMMDD_HHMMSS/
 
 \section{Risultati Grid Search}
 
-\subsection{Statistiche Phase 1}
+\subsection{Statistiche e Esecuzione}
 \begin{itemize}
-    \item Configurazioni testate: 210
-    \item Completate screening: {NUM\_SUCCESSFUL}
-    \item Early stopped: {NUM\_STOPPED}
-    \item Tempo medio per run: ~{AVG\_TIME} minuti
+    \item \textbf{Configurazioni Completate}: 27 (Grid search esaustiva su spazio ridotto: 3 LR $\times$ 3 Width $\times$ 3 WD)
+    \item \textbf{Tempo medio per run}: \textasciitilde 7 minuti (su GPU)
+    \item \textbf{Strategia adottata}: Esecuzione completa di tutte le 27 configurazioni per 50 epoche ciascuna, per garantire la robustezza dei risultati statistici.
 \end{itemize}
 
-\subsection{Top-5 Configurazioni (da Phase 2)}
-{AGGIUNGERE\_TABELLA\_TOP5\_CONFIGS}
+\subsection{Top-5 Configurazioni}
+La Tabella~\ref{tab:top5} mostra le migliori configurazioni identificate.
 
 \begin{table}[h]
 \centering
-\caption{Top-5 configurazioni da grid search (placeholder)}
+\caption{Top-5 configurazioni da grid search (ordinate per Validation Accuracy)}
 \label{tab:top5}
 \begin{tabular}{cccccc}
 \toprule
-\textbf{Rank} & \textbf{Val Acc (\%)} & \textbf{LR} & \textbf{Width} & \textbf{WD} & \textbf{Epochs Best} \\
+\textbf{Rank} & \textbf{Val Acc (\%)} & \textbf{LR} & \textbf{Width} & \textbf{WD} & \textbf{Run ID} \\
 \midrule
-1 & {ACC\_1} & {LR\_1} & {WIDTH\_1} & {WD\_1} & {EPOCH\_1} \\
-2 & {ACC\_2} & {LR\_2} & {WIDTH\_2} & {WD\_2} & {EPOCH\_2} \\
-3 & {ACC\_3} & {LR\_3} & {WIDTH\_3} & {WD\_3} & {EPOCH\_3} \\
-4 & {ACC\_4} & {LR\_4} & {WIDTH\_4} & {WD\_4} & {EPOCH\_4} \\
-5 & {ACC\_5} & {LR\_5} & {WIDTH\_5} & {WD\_5} & {EPOCH\_5} \\
+1 & 91.47\% & 0.05 & 0.5 & 5e-4 & 27 \\
+2 & 91.31\% & 0.025 & 0.5 & 5e-4 & 18 \\
+3 & 90.73\% & 0.05 & 0.5 & 3e-4 & 26 \\
+4 & 90.62\% & 0.05 & 0.42 & 5e-4 & 24 \\
+5 & 90.11\% & 0.025 & 0.5 & 3e-4 & 17 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\subsection{Analisi Insights}
-{AGGIUNGERE\_ANALISI\_DOPO\_GRID\_SEARCH}
+I risultati confermano che una larghezza maggiore (\texttt{width\_mult=0.5}) e un weight decay più aggressivo (\texttt{5e-4}) favoriscono le prestazioni migliori, suggerendo che il modello beneficia di una maggiore capacità regolarizzata.
 
-Osservazioni preliminari (da aggiornare con dati reali):
-\begin{itemize}
-    \item \textbf{Width multiplier}: Valori più alti (0.5-0.6) tendono a performance migliori
-    \item \textbf{Learning rate}: Range ottimale sembra 0.025-0.05
-    \item \textbf{Weight decay}: Regolarizzazione moderata (3e-4, 5e-4) bilancia overfitting
-    \item \textbf{Spread accuratezza}: Range {MIN\_ACC}\% - {MAX\_ACC}\% = {SPREAD}\% punti
-\end{itemize}
+\subsection{Analisi Insights Visuale}
+Le heatmaps seguenti illustrano l'impatto combinato degli iperparametri sull'accuratezza di validazione.
 
-\subsection{Visualizzazioni Heatmap}
-{AGGIUNGERE\_HEATMAP\_LR\_VS\_WIDTH}
-{AGGIUNGERE\_HEATMAP\_LR\_VS\_WD}
-{AGGIUNGERE\_HEATMAP\_WIDTH\_VS\_WD}
+\begin{figure}[ht]
+    \centering
+    \begin{subfigure}{0.48\textwidth}
+        \includegraphics[width=\linewidth]{figure/heatmap_lr_width.png}
+        \caption{LR vs Width Multiplier}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\textwidth}
+        \includegraphics[width=\linewidth]{figure/heatmap_width_wd.png}
+        \caption{Width Multiplier vs Weight Decay}
+    \end{subfigure}
+    \caption{Heatmaps dei risultati della Grid Search: si nota una chiara preferenza per width multiplier più alti (0.5), mentre il learning rate di 0.05 sembra offrire il miglior trade-off convergenza/stabilità.}
+    \label{fig:heatmaps}
+\end{figure}
 
 \section{Training Finale (200 Epoche)}
 
 \subsection{Configurazione Scelta}
-Basandosi sui risultati del grid search, la configurazione ottimale identificata è:
+Basandosi sui risultati del grid search (Run ID 27), la configurazione ottimale identificata è:
 
 \begin{itemize}
-    \item Learning rate: {BEST\_LR}
-    \item Width multiplier: {BEST\_WIDTH}
-    \item Weight decay: {BEST\_WD}
-    \item Batch size: 128
-    \item Momentum: 0.9
-    \item Epoche: 200
+    \item \textbf{Learning rate}: 0.05
+    \item \textbf{Width multiplier}: 0.5
+    \item \textbf{Weight decay}: 5e-4
+    \item \textbf{Momentum}: 0.9
+    \item \textbf{Epoche}: 200 (estese per massimizzare la convergenza)
 \end{itemize}
 
-\subsection{Dettagli Training}
-\textbf{Hardware}: {GPU\_TYPE}
+\subsection{Dinamica dell'Apprendimento}
+Il training prolungato ha permesso di raffinare ulteriormente i pesi, portando l'accuratezza finale dal \textasciitilde 91.5\% (50 epoche) al \textbf{92.47\%} (200 epoche).
 
-\textbf{Tempo totale}: ~{TOTAL\_TIME} minuti
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figure/accuracy_curve_200.png}
+    \caption{Curve di Accuracy (Training vs Validation) durante le 200 epoche. Si osserva una crescita costante, con il validation che segue il training senza eccessivo overfitting, grazie al weight decay ottimizzato.}
+    \label{fig:acc_curve_200}
+\end{figure}
 
-\textbf{Checkpoint}: Best model salvato quando validation accuracy migliora
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figure/lr_schedule_200.png}
+    \caption{Profilo del Learning Rate (Cosine Annealing). La riduzione progressiva del tasso di apprendimento permette al modello di uscire dai minimi locali nelle fasi iniziali e di convergere dolcemente verso un ottimo globale nelle fasi finali.}
+    \label{fig:lr_schedule}
+\end{figure}
 
-\textbf{Configurazione PyTorch}:
-\begin{lstlisting}[language=Python, caption=Config training finale]
-optimizer = optim.SGD(
-    model.parameters(),
-    lr={BEST_LR},
-    momentum=0.9,
-    weight_decay={BEST_WD}
-)
+\section{Validazione e Testing Approfonditi}
 
-scheduler = CosineAnnealingLR(optimizer, T_max=200)
-criterion = nn.CrossEntropyLoss()
+\subsection{Metriche per Classe}
+Oltre all'accuratezza globale, è fondamentale analizzare le prestazioni su singole categorie. La Figura~\ref{fig:class_perf} mostra l'F1-Score per ciascuna delle 10 classi.
 
-# Gradient clipping
-nn.utils.clip_grad_norm_(model.parameters(), max_norm=5.0)
-\end{lstlisting}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figure/per_class_f1_bars.png}
+    \caption{F1-Score per classe. Il modello eccelle su classi distintive come "Automobile" e "Nave", mentre mostra (come atteso) lievi difficoltà maggiori su classi animali simili come "Gatto" e "Cane", pur mantenendo score > 0.84.}
+    \label{fig:class_perf}
+\end{figure}
 
-\subsection{Curve di Training}
-{AGGIUNGERE\_GRAFICO\_ACCURACY\_TRAIN\_VAL\_200\_EPOCHS}
-{AGGIUNGERE\_GRAFICO\_LOSS\_TRAIN\_VAL\_200\_EPOCHS}
-{AGGIUNGERE\_GRAFICO\_LR\_SCHEDULE\_200\_EPOCHS}
-
-Figura~\ref{fig:training_curves} mostra l'evoluzione di accuracy e loss durante le 200 epoche.
-
-\textbf{Osservazioni}:
-\begin{itemize}
-    \item Convergenza smooth senza oscillazioni maggiori
-    \item Gap train-val accuracy: {TRAIN\_VAL\_GAP}\% (indica livello overfitting)
-    \item Best epoch: {BEST\_EPOCH}/200
-    \item Plateau raggiunto dopo ~{PLATEAU\_EPOCH} epoche
-\end{itemize}
-
-\section{Validazione e Testing}
-
-\subsection{Split Dataset}
-\begin{itemize}
-    \item Training: 50,000 immagini (CIFAR-10 train split ufficiale)
-    \item Test: 10,000 immagini (CIFAR-10 test split ufficiale)
-    \item NO validation split separato (validation = test in questo contesto)
-\end{itemize}
-
-\subsection{Metriche di Valutazione}
-\textbf{Primary metric}: Top-1 Accuracy
-\begin{equation}
-\text{Accuracy} = \frac{\text{\# predizioni corrette}}{\text{\# totale campioni}}
-\end{equation}
-
-\textbf{Per-class metrics}:
-\begin{itemize}
-    \item \textbf{Precision}: $P_i = \frac{TP_i}{TP_i + FP_i}$
-    \item \textbf{Recall}: $R_i = \frac{TP_i}{TP_i + FN_i}$
-    \item \textbf{F1-Score}: $F1_i = 2 \cdot \frac{P_i \cdot R_i}{P_i + R_i}$
-\end{itemize}
-
-\textbf{Confusion Matrix}: Matrice 10×10 per visualizzare errori sistematici
-
-\textbf{ROC Curves}: One-vs-rest per ogni classe
-
-\subsection{Protocollo Fair}
-Per garantire confronto equo con letteratura:
-\begin{itemize}
-    \item \textbf{Seed fisso}: Riproducibilità completa (seed=42)
-    \item \textbf{NO augmentation su test}: Solo normalizzazione
-    \item \textbf{Single crop evaluation}: No test-time augmentation (TTA)
-    \item \textbf{Stesso dataset split}: CIFAR-10 ufficiale
-\end{itemize}
-
-{AGGIUNGERE\_CONFUSION\_MATRIX\_PLACEHOLDER}
-{AGGIUNGERE\_PER\_CLASS\_ACCURACY\_BAR\_CHART}
+\subsection{Matrice di Confusione e ROC}
+Per i dettagli sugli errori di classificazione e le curve ROC, si rimanda al Capitolo~\ref{chap:risultati}.

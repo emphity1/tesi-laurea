@@ -1,0 +1,16 @@
+==================================================
+TEST RUN REPORT: Dima_NoECA
+==================================================
+
+Date: 2026-02-15 16:01:33.701414
+Configuration:
+  - ECA Enabled: False
+  - Activation: GELU
+  - Epochs: 50
+  - Seed: 50
+  - Parameters: 77216
+
+Results:
+  - Best Validation Acc: 90.47%
+  - Final Loss: 0.1231
+  - Total Time: 5.1 minutes

@@ -1,0 +1,16 @@
+==================================================
+TEST RUN REPORT: Dima_Standard
+==================================================
+
+Date: 2026-02-15 15:55:51.916958
+Configuration:
+  - ECA Enabled: True
+  - Activation: GELU
+  - Epochs: 50
+  - Seed: 50
+  - Parameters: 77294
+
+Results:
+  - Best Validation Acc: 91.05%
+  - Final Loss: 0.0865
+  - Total Time: 7.4 minutes

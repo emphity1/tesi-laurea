@@ -1,0 +1,16 @@
+==================================================
+TEST RUN REPORT: Dima_ReLU
+==================================================
+
+Date: 2026-02-15 16:11:39.914413
+Configuration:
+  - ECA Enabled: True
+  - Activation: ReLU
+  - Epochs: 50
+  - Seed: 50
+  - Parameters: 77294
+
+Results:
+  - Best Validation Acc: 90.25%
+  - Final Loss: 0.1403
+  - Total Time: 7.4 minutes

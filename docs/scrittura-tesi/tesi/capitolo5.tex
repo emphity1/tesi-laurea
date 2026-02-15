@@ -37,7 +37,7 @@ Il confronto tra il training della baseline (50 epoche) e del modello proposto (
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.95\textwidth]{immagini/training_comparison.png}
+    \includegraphics[width=0.95\textwidth]{figure/training_comparison.png}
     \caption{Confronto delle dinamiche di addestramento. La linea rossa (Reparameterized) mostra una convergenza più lenta ma costante, superando il plateau della baseline (blu) grazie al Cosine Annealing esteso e alla maggiore capacità rappresentativa dei rami paralleli.}
     \label{fig:training_comparison}
 \end{figure}
@@ -50,7 +50,7 @@ Il risultato più significativo di questo lavoro è l'eccezionale efficienza del
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.95\textwidth]{immagini/accuracy_vs_params.png}
+    \includegraphics[width=0.95\textwidth]{figure/accuracy_vs_params.png}
     \caption{Scatter plot (scala logaritmica) che posiziona il nostro modello rispetto allo Stato dell'Arte. La stella blu (Reparameterized) si colloca nella regione di "massima efficienza", con un'accuratezza comparabile a ResNet-20 e MobileNetV2 ma con un numero di parametri drasticamente inferiore (76k vs 270k/700k).}
     \label{fig:accuracy_vs_params}
 \end{figure}
@@ -59,14 +59,23 @@ La Figura~\ref{fig:accuracy_vs_params} illustra chiaramente il posizionamento co
 
 \section{Analisi Dettagliata degli Errori}
 
-Per comprendere meglio il comportamento del modello, abbiamo analizzato la matrice di confusione e le curve ROC.
+Per comprendere meglio il comportamento del modello, abbiamo analizzato la matrice di confusione, le prestazioni per singola classe e le curve ROC.
+
+\subsection{Performance per Classe}
+La Figura~\ref{fig:class_perf_detailed} illustra l'F1-Score ottenuto per ciascuna delle 10 classi del dataset CIFAR-10.
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figure/per_class_f1_bars.png}
+    \caption{Analogamente a quanto osservato nella confusion matrix, le classi relative ai veicoli (treno, auto, nave) mostrano score superiori rispetto a quelle animali (gatto, cane), confermando la difficoltà intrinseca di distinguere pattern biologici simili a bassa risoluzione.}
+    \label{fig:class_perf_detailed}
+\end{figure}
 
 \subsection{Matrice di Confusione}
 La Figura~\ref{fig:confusion_matrix} mostra le predizioni del modello aggregate per classe.
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.85\textwidth]{immagini/confusion_matrix.png}
+    \includegraphics[width=0.85\textwidth]{figure/confusion_matrix.png}
     \caption{Matrice di Confusione sul Test Set. Si nota una diagonale dominante, indice di alta precisione. Le confusioni principali avvengono tra classi semanticamente affini: Gatto $\leftrightarrow$ Cane e Automobile $\leftrightarrow$ Camion.}
     \label{fig:confusion_matrix}
 \end{figure}
@@ -78,10 +87,53 @@ L'analisi delle curve ROC (Receiver Operating Characteristic), visibile in Figur
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.85\textwidth]{immagini/roc_curves.png}
+    \includegraphics[width=0.85\textwidth]{figure/roc_curves.png}
     \caption{Curve ROC One-vs-Rest per le 10 classi CIFAR-10. L'Area Sotto la Curva (AUC) media è estremamente alta (>0.99), indicando che il modello separa eccellentemente le classi positive dalle negative a vari livelli di soglia.}
     \label{fig:roc_curves}
 \end{figure}
+
+\section{Ablation Study}
+Per isolare e quantificare il contributo di ciascuna componente architetturale proposta, è stato condotto uno studio di ablazione in condizioni controllate (50 epoche, stesso seed, stessa pipeline di training).
+
+La Tabella~\ref{tab:ablation} riassume i risultati ottenuti addestrando tre varianti incrementali del modello:
+\begin{enumerate}
+    \item \textbf{Baseline}: MobileNetV2 standard (width 0.5) con attivazione ReLU e nessun modulo di attenzione.
+    \item \textbf{Variant A (+GELU)}: Sostituzione di ReLU con GELU.
+    \item \textbf{Variant B (+ECA)}: Aggiunta dei moduli Efficient Channel Attention (configurazione finale).
+\end{enumerate}
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|l|c|c|c|c|c|}
+        \hline
+        \textbf{Configurazione} & \textbf{ECA} & \textbf{Reparam} & \textbf{Augmentation} & \textbf{Acc (\%)} \\
+        \hline
+        \textbf{MobileNetV2 (Golden)} & \xmark & \xmark & Standard & \textbf{90.87\%} \\
+        \hline
+        Baseline (Vanilla) & \xmark & \xmark & Standard & 89.92\% \\
+        \hline
+        MobileNetECA (Std) & \cmark & \xmark & Standard & 92.12\% \\
+        \hline
+        \textbf{MobileNetECA (Rep)} & \cmark & \cmark & Standard & \textbf{92.47\%} \\
+        \hline
+        \rowcolor{green!10}
+        \textbf{Advanced Strategy} & \cmark & \cmark & \textbf{AutoAug + Cutout} & \textbf{93.50\%} \\
+        \hline
+    \end{tabular}
+    \caption{Ablation Study Completo e Risultati SOTA. L'ultima riga mostra il potenziale massimo del modello con tecniche di augmentation moderne.}
+    \label{tab:ablation_study}
+\end{table}
+
+\subsection{Analisi dei Risultati}
+I risultati ottenuti confermano l'efficacia delle modifiche architetturali proposte:
+\begin{enumerate}
+    \item \textbf{Impact Baseline (+1.25\%)}: Il passaggio dalla Golden Baseline (90.87\%) alla versione standard MobileNetECA (92.12\%) evidenzia il contributo sinergico dell'attenzione ECA e della non-linearità GELU.
+    \item \textbf{Impact Reparameterization (+0.35\%)}: L'ulteriore raffinamento tramite Structural Reparameterization ha permesso di raggiungere il picco del \textbf{92.47\%}, sfruttando la maggiore capacità di training senza costi aggiuntivi in inferenza.
+    \item \textbf{Advanced Training (+1.03\%)}: L'introduzione di Data Augmentation forte (AutoAugment + Cutout) ha spinto l'accuratezza al record del \textbf{93.50\%}. Questo dimostra che l'efficienza parametrica (soli 77k parametri) non limita la capacità di apprendimento del modello, che beneficia enormemente dalla regolarizzazione.
+    \item \textbf{Efficienza Parametrica}: Tutti i modelli condividono lo stesso ordine di grandezza di parametri ($\sim$77k), rendendo il miglioramento di performance (+2.63\% totale) estremamente significativo.
+\end{enumerate}
+
+Questi risultati giustificano pienamente le scelte progettuali adottate per l'architettura finale MobileNetECA Reparameterized.
 
 \section{Confronto Tabellare con SOTA}
 

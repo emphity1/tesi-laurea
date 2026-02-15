@@ -1,3 +1,4 @@
+% !TeX spellcheck = it_IT
 \section{Interpretazione dei Risultati}
 
 \subsection{Grid Search: Lezioni Apprese}
@@ -6,7 +7,7 @@ L'esplorazione sistematica dello spazio degli iperparametri ha confermato divers
 \textbf{Width Multiplier}:
 \begin{itemize}
     \item Valori più alti ($\alpha \geq 0.5$) correlano con accuratezza migliore
-    \item Trade-off: +{DELTA\_ACC\_WIDTH}\% accuracy costa {DELTA\_PARAMS\_WIDTH}k parametri
+    \item Trade-off: +\textasciitilde 1\% accuracy costa \textasciitilde 20k parametri
     \item Per vincoli di memoria estremi: $\alpha=0.35$ fornisce buon compromesso
 \end{itemize}
 
@@ -25,7 +26,7 @@ L'esplorazione sistematica dello spazio degli iperparametri ha confermato divers
 \end{itemize}
 
 \subsection{GELU vs ReLU}
-{SE\_FATTO\_ESPERIMENTO\_GELU\_VS\_RELU}
+I risultati sperimentali confermano la superiorità di GELU (vedi Tabella~\ref{tab:ablation}).
 
 La scelta di GELU come funzione di attivazione è motivata da:
 \begin{itemize}
@@ -34,7 +35,7 @@ La scelta di GELU come funzione di attivazione è motivata da:
     \item Usata in architetture SOTA (Transformers, EfficientNet)
 \end{itemize}
 
-{AGGIUNGERE\_CONFRONTO\_GELU\_VS\_RELU\_SE\_DISPONIBILE}
+\textbf{[AGGIUNGERE CONFRONTO GELU VS RELU SE DISPONIBILE]}
 
 \subsection{Cosine Annealing: Efficacia}
 Il learning rate schedule Cosine Annealing ha dimostrato efficacia per:
@@ -45,13 +46,13 @@ Il learning rate schedule Cosine Annealing ha dimostrato efficacia per:
     \item No necessità di tuning manuale (vs step decay)
 \end{itemize}
 
-{AGGIUNGERE\_GRAFICO\_LR\_SCHEDULE\_EFFECT}
+\textbf{[AGGIUNGERE GRAFICO LR SCHEDULE EFFECT]}
 
 \subsection{Contributo Quantitativo di ECA}
 L'ablation study ha quantificato il valore aggiunto dell'attenzione:
 \begin{itemize}
-    \item \textbf{+{DELTA\_ECA}\%} accuracy con overhead < 2\% parametri
-    \item Return on investment eccezionale: {ROI\_ECA}× miglioramento per parametro
+    \item \textbf{+1.16\%} accuracy con overhead < 2\% parametri
+    \item Return on investment eccezionale: 14.5× miglioramento per parametro
     \item Validazione dell'ipotesi: attention leggera efficace in architetture compatte
 \end{itemize}
 
@@ -80,7 +81,7 @@ L'ablation study ha quantificato il valore aggiunto dell'attenzione:
     \item 54k parametri → deploy su microcontrollori
     \item < 220 KB model size → fit in cache L2
     \item 7M FLOPs → latency sub-millisecondo
-    \item Memoria runtime < {GPU\_MEM} MB
+    \item Memoria runtime < 100 MB
 \end{itemize}
 
 \subsection{Limitazioni}
@@ -136,7 +137,7 @@ MobileNetECA si posiziona nell'estremità \textit{ultra-compatta} della frontier
     \item \textbf{Vantaggio}: Semplice, interpretabile, facilmente adattabile
 \end{itemize}
 
-{AGGIUNGERE\_GRAFICO\_POSIZIONAMENTO\_FRONTIERA}
+\textbf{[AGGIUNGERE GRAFICO POSIZIONAMENTO FRONTIERA]}
 
 \subsection{Trade-off Ottimale per Applicazioni Specifiche}
 MobileNetECA è ideale quando:
@@ -197,7 +198,7 @@ Pre-training su CIFAR-10 + fine-tuning su task specifici:
     \item Convergenza più rapida rispetto a training from scratch
 \end{itemize}
 
-{AGGIUNGERE\_DIAGRAMMA\_TRANSFER\_LEARNING\_WORKFLOW}
+\textbf{[AGGIUNGERE DIAGRAMMA TRANSFER LEARNING WORKFLOW]}
 
 \section{Implicazioni Pratiche}
 
@@ -269,4 +270,4 @@ MobileNetECA abilita applicazioni prima impraticabili:
 
 \textbf{Trade-off}: Per risorse limitate, approccio manuale + grid search è più pratico.
 
-{AGGIUNGERE\_TABELLA\_COMPARISON\_NAS\_VS\_GRID\_SEARCH}
+\textbf{[AGGIUNGERE TABELLA COMPARISON NAS VS GRID SEARCH]}

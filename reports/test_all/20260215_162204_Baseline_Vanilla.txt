@@ -1,0 +1,16 @@
+==================================================
+TEST RUN REPORT: Baseline_Vanilla
+==================================================
+
+Date: 2026-02-15 16:27:14.368466
+Configuration:
+  - ECA Enabled: False
+  - Activation: ReLU
+  - Epochs: 50
+  - Seed: 50
+  - Parameters: 77216
+
+Results:
+  - Best Validation Acc: 89.92%
+  - Final Loss: 0.1595
+  - Total Time: 5.1 minutes
