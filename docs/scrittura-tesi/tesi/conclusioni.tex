@@ -1,0 +1,132 @@
+\section*{Conclusioni}
+
+Questo lavoro ha presentato lo sviluppo e l'ottimizzazione di \textbf{MobileNetECA}, un'architettura neurale ultra-compatta per la classificazione di immagini su CIFAR-10. L'obiettivo principale era esplorare il trade-off tra efficienza computazionale e accuratezza, dimostrando che modelli estremamente leggeri possono raggiungere prestazioni competitive attraverso l'integrazione di meccanismi di attenzione moderni e un'ottimizzazione sistematica degli iperparametri.
+
+\subsection*{Sintesi del Lavoro Svolto}
+Il progetto si è articolato in quattro fasi principali:
+
+\begin{enumerate}
+    \item \textbf{Progettazione architetturale}: Implementazione di MobileNetECA combinando blocchi Inverted Residual (da MobileNetV2) con meccanismi Efficient Channel Attention (ECA), utilizzando GELU come funzione di attivazione per maggiore stabilità.
+    
+    \item \textbf{Grid search sistematica}: Esplorazione di {NUMERO\_CONFIGURAZIONI} configurazioni di iperparametri attraverso un approccio two-phase (screening rapido + refinement), identificando empiricamente la combinazione ottimale di learning rate, width multiplier e weight decay.
+    
+    \item \textbf{Training finale}: Allenamento del modello ottimizzato per 200 epoche con SGD+momentum e Cosine Annealing schedule, raggiungendo un'accuratezza finale di \textbf{{ACCURATEZZA\_FINALE}\%} sul test set CIFAR-10.
+    
+    \item \textbf{Validazione sperimentale}: Confronto con modelli SOTA della letteratura e ablation study per quantificare il contributo dell'attenzione ECA (+{DELTA\_ECA}\% accuracy con overhead < 2\% parametri).
+\end{enumerate}
+
+\subsection*{Risultati Principali}
+MobileNetECA ha dimostrato un eccellente trade-off efficienza-accuratezza:
+
+\begin{itemize}
+    \item \textbf{Accuratezza}: {ACCURATEZZA\_FINALE}\% su CIFAR-10 test set
+    \item \textbf{Parametri}: 54,000 (~13× meno di MobileNetV2 ×0.5)
+    \item \textbf{FLOPs}: ~7M MACs (~4× meno di MobileNetV2 ×0.5)
+    \item \textbf{Dimensione}: < 220 KB (fit in L2 cache)
+    \item \textbf{Contributo ECA}: +{DELTA\_ECA}\% accuracy con overhead minimo
+\end{itemize}
+
+Il modello si posiziona competitivamente nella frontiera ultra-compatta (< 100k parametri), risultando ideale per scenari con vincoli estremi di memoria, latency ed energia.
+
+\subsection*{Contributi della Tesi}
+
+\textbf{1. Implementazione}:
+\begin{itemize}
+    \item Versione ottimizzata di MobileNetECA specifica per CIFAR-10
+    \item Codice modulare e riutilizzabile (model.py, train.py)
+    \item Integrazione seamless di ECA blocks in architettura Inverted Residual
+\end{itemize}
+
+\textbf{2. Metodologia}:
+\begin{itemize}
+    \item Grid search sistematica con approccio two-phase per efficienza
+    \item Protocollo di valutazione fair e riproducibile
+    \item Scoring function predittivo per early identification di configurazioni promettenti
+\end{itemize}
+
+\textbf{3. Validazione}:
+\begin{itemize}
+    \item Quantificazione empirica del contributo ECA tramite ablation study
+    \item Confronto benchmark con modelli SOTA su stesso hardware
+    \item Analisi dettagliata di errori e failure modes
+\end{itemize}
+
+\textbf{4. Open Source}:
+\begin{itemize}
+    \item Codice completo rilasciato per riproducibilità
+    \item Configurazioni ottimali documentate
+    \item Artifact di training (metriche, checkpoints) disponibili
+\end{itemize}
+
+\subsection*{Sviluppi Futuri}
+
+\subsubsection*{Architettura}
+\begin{itemize}
+    \item \textbf{Altri meccanismi di attenzione}: Testare CBAM (Convolutional Block Attention Module), Coordinate Attention, o hybrid spatial-channel attention.
+    
+    \item \textbf{Neural Architecture Search}: Applicare NAS per ricerca automatica di configurazioni ottimali (expense ratio, kernel sizes, skip patterns).
+    
+    \item \textbf{Hybrid CNN-Transformer}: Esplorare l'integrazione di self-attention layers nei stage finali per catturare dipendenze long-range.
+\end{itemize}
+
+\subsubsection*{Ottimizzazione e Compressione}
+\begin{itemize}
+    \item \textbf{Quantization}: Conversione a INT8 o FP16 per ridurre ulteriormente memoria e latency (potenziale 4× speedup).
+    
+    \item \textbf{Pruning}: Rimozione di canali o connessioni meno importanti, mantenendo accuracy con meno parametri.
+    
+    \item \textbf{Knowledge Distillation}: Training da teacher model più grande (es. ResNet-50) per boost performance senza aumentare size a inference.
+\end{itemize}
+
+\subsubsection*{Deploy ed Edge Computing}
+\begin{itemize}
+    \item \textbf{Conversione framework}: Export a TensorFlow Lite, ONNX, CoreML per deploy cross-platform.
+    
+    \item \textbf{Testing hardware reale}: Validazione su Raspberry Pi, Jetson Nano, microcontrollori ARM Cortex-M7.
+    
+    \item \textbf{Misurazione latency/energia}: Profilazione su dispositivi embedded per quantificare performance reali.
+    
+    \item \textbf{Ottimizzazione hardware-specific}: Sfruttare acceleratori (NPU, DSP) disponibili su chip moderni.
+\end{itemize}
+
+\subsubsection*{Estensioni e Generalizzazione}
+\begin{itemize}
+    \item \textbf{CIFAR-100}: Applicazione a dataset con 100 classi, maggior complessità task.
+    
+    \item \textbf{Transfer learning}: Pre-training su CIFAR-10 + fine-tuning su dataset specifici di dominio (medical imaging, industrial inspection).
+    
+    \item \textbf{Multi-task learning}: Estendere per classificazione + object detection simultanei.
+    
+    \item \textbf{Scalabilità ImageNet}: Adattamento per risoluzioni 224×224 mantenendo efficienza.
+\end{itemize}
+
+\subsection*{Impatto Pratico}
+Modelli ultra-compatti come MobileNetECA abilitano applicazioni AI precedentemente impraticabili su dispositivi con risorse limitate:
+
+\textbf{Privacy e Sicurezza}:
+\begin{itemize}
+    \item Inferenza on-device preserva privacy (dati non lasciano dispositivo)
+    \item Riduce dipendenza da cloud e connettività network
+    \item Resilienza ad attacchi e outages di rete
+\end{itemize}
+
+\textbf{Sostenibilità Ambientale}:
+\begin{itemize}
+    \item Ridotto consumo energetico per inferenza
+    \item Carbon footprint minore rispetto a modelli cloud-based
+    \item Scalabilità sostenibile per miliardi di dispositivi IoT
+\end{itemize}
+
+\textbf{Democratizzazione AI}:
+\begin{itemize}
+    \item Accessibile anche con hardware low-cost
+    \item Deploy in regioni con connettività limitata
+    \item Riduce barriere economiche all'adozione AI
+\end{itemize}
+
+\subsection*{Riflessioni Finali}
+Questo lavoro dimostra che l'efficienza e l'accuratezza non sono obiettivi mutuamente esclusivi. Attraverso design architetturale oculato, meccanismi di attenzione leggeri, e ottimizzazione sistematica, è possibile sviluppare modelli che bilanciano prestazioni competitive con requisiti computazionali minimi.
+
+Nel contesto crescente di edge AI e ubiquitous computing, la capacità di deployare intelligence su dispositivi resource-constrained diventa sempre più cruciale. MobileNetECA rappresenta un passo in questa direzione, validando che architetture ultra-compatte possono essere competitive pur mantenendo un footprint computazionale estremamente ridotto.
+
+Il futuro dell'AI non risiede solo in modelli sempre più grandi e accurati, ma anche nello sviluppo di soluzioni efficienti, sostenibili e accessibili che possano essere deploitate ovunque, abilitando una nuova generazione di applicazioni intelligenti on-device.

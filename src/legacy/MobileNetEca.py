@@ -6,8 +6,7 @@ from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 import math
 import re
-import onnx_tool
-import torch.onnx
+
 
 """
 MobileNetECA - Training su CIFAR-10
@@ -27,10 +26,14 @@ NOTA IMPORTANTE - Perché GELU invece di ReLU:
 
 # ========== Parametri Modificabili ==========
 n_classi = 10  # Numero di classi per CIFAR-10
-tasso_iniziale = 0.025  # Learning rate iniziale
+tasso_iniziale = 0.05  # Learning rate iniziale
+#tasso_iniziale = 0.025  # Learning rate iniziale
+
 epoche = 50  # Numero di epoche
 dimensione_batch = 128  # Dimensione del batch
-fattore_larghezza = 0.42  # Fattore per regolare la capacità del modello
+fattore_larghezza = 0.5  # Fattore per regolare la capacità del modello
+#fattore_larghezza = 0.5  # Fattore per regolare la capacità del modello
+
 dispositivo = 'cuda' if torch.cuda.is_available() else 'cpu'  # Uso di CUDA se disponibile
 lr_scale = 1.54  # Valore di lr_scale utilizzato nel modello
 # ============================================
@@ -343,10 +346,10 @@ trasformazioni_test = transforms.Compose([
 
 # Creazione dei DataLoader
 dataset_train = datasets.CIFAR10(root='./data', train=True, download=True, transform=trasformazioni_train)
-caricatore_train = DataLoader(dataset_train, batch_size=dimensione_batch, shuffle=True, num_workers=2, pin_memory=True)
+caricatore_train = DataLoader(dataset_train, batch_size=dimensione_batch, shuffle=True, num_workers=8, pin_memory=True)
 
 dataset_test = datasets.CIFAR10(root='./data', train=False, download=True, transform=trasformazioni_test)
-caricatore_test = DataLoader(dataset_test, batch_size=dimensione_batch, shuffle=False, num_workers=2, pin_memory=True)
+caricatore_test = DataLoader(dataset_test, batch_size=dimensione_batch, shuffle=False, num_workers=8, pin_memory=True)
 
 # Creazione del modello e trasferimento su GPU
 modello = MobileNetECA(num_classes=n_classi, width_mult=fattore_larghezza, lr_scale=lr_scale).to(dispositivo)
@@ -407,10 +410,10 @@ def validazione():
 print("------ Parametri arrotondati ------")
 params = sum(param.numel() for param in modello.parameters())
 params = arrotonda_significativo(params)
-macs = calcola_flops_onnx(modello)
+# macs = calcola_flops_onnx(modello)
 params_formattati = formatta_numero(params)
-macs_formattati = formatta_numero(macs)
-print(f"Params: {params_formattati}  MACS: {macs_formattati}")
+# macs_formattati = formatta_numero(macs)
+print(f"Params: {params_formattati}")
 
 # Ciclo di allenamento
 for epoca in range(epoche):
@@ -431,7 +434,7 @@ print("="*50)
 print(f"\nModello: MobileNetECA")
 print(f"Dataset: CIFAR-10")
 print(f"Parametri: {params_formattati} ({params})")
-print(f"MACs: {macs_formattati} ({macs})")
+# print(f"MACs: {macs_formattati} ({macs})")
 print(f"\nConfigurazione:")
 print(f"  - Epoche: {epoche}")
 print(f"  - Batch size: {dimensione_batch}")

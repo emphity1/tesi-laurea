@@ -1,0 +1,126 @@
+\section{Motivazione e Obiettivi della Tesi}
+
+\subsection{Contesto Applicativo}
+L'adozione crescente di applicazioni di intelligenza artificiale su dispositivi edge (smartphone, IoT, embedded systems) ha reso cruciale lo sviluppo di modelli neurali \textit{efficienti} oltre che \textit{accurati}. Mentre i modelli SOTA (State-of-the-Art) raggiungono accuratezze elevate su benchmark standard, spesso richiedono centinaia di milioni di parametri e operazioni computazionali, rendendoli inadatti al deploy su dispositivi con risorse limitate.
+
+Il problema centrale affrontato in questa tesi è il \textbf{trade-off tra accuratezza ed efficienza computazionale}: come mantenere prestazioni competitive riducendo drasticamente il numero di parametri e FLOPs (Floating Point Operations)?
+
+\subsection{Obiettivi Specifici}
+Gli obiettivi di questo lavoro sono:
+\begin{enumerate}
+    \item \textbf{Sviluppare un'architettura efficiente per CIFAR-10}: Implementare MobileNetECA combinando blocchi Inverted Residual con meccanismi di attenzione ECA.
+    
+    \item \textbf{Ottimizzare gli iperparametri tramite grid search sistematica}: Esplorare empiricamente lo spazio dei parametri (learning rate, width multiplier, weight decay) per identificare la configurazione ottimale.
+    
+    \item \textbf{Confrontare con modelli SOTA}: Valutare MobileNetECA rispetto a baseline consolidate nella letteratura (MobileNetV2, ResNet, ShuffleNet).
+    
+    \item \textbf{Quantificare il contributo dell'attenzione}: Condurre ablation study per misurare il miglioramento apportato dai blocchi ECA rispetto alla baseline senza attenzione.
+\end{enumerate}
+
+\section{Storia dell'Image Classification}
+
+\subsection{ImageNet Challenge (2012-2017)}
+L'evoluzione delle Convolutional Neural Networks (CNN) per la classificazione di immagini è stata guidata dall'ImageNet Large Scale Visual Recognition Challenge (ILSVRC), competizione annuale su un dataset di 1.2M immagini e 1000 classi.
+
+\begin{itemize}
+    \item \textbf{AlexNet (2012)}: Prima rete profonda a vincere ILSVRC con top-5 error del 15.3\%. Architettura a 8 layer con ~60M parametri, utilizzo di ReLU e Dropout.
+    
+    \item \textbf{VGG (2014)}: Intuizione della profondità: reti fino a 19 layer composte da blocchi 3×3 ripetuti. Semplice ma efficace, ha portato l'errore al 7.3\%.
+    
+    \item \textbf{GoogLeNet/Inception (2014)}: Introduzione di connessioni multi-scala tramite moduli Inception. Conv 1×1 per riduzione dimensionale. 22 layer con solo 5M parametri.
+    
+    \item \textbf{ResNet (2015)}: Rivoluzione delle skip connections. Risolve il problema del vanishing gradient permettendo reti fino a 152 layer. Top-5 error 3.57\%, superando le prestazioni umane.
+    
+    \item \textbf{DenseNet (2017)}: Estensione di ResNet con concatenazione invece di somma. Massimo riutilizzo delle feature, ma alto costo di memoria.
+\end{itemize}
+
+\subsection{Evoluzione verso l'Efficienza (2017-oggi)}
+Dal 2017 il focus si è spostato dall'accuratezza pura all'efficienza computazionale, per abilitare il deploy su dispositivi mobili e edge.
+
+\begin{itemize}
+    \item \textbf{MobileNet (2017)}: Introduce le \textit{depthwise separable convolutions}, riducendo i parametri di ~8-9× rispetto a conv standard con perdita minima di accuratezza.
+    
+    \item \textbf{ShuffleNet (2018)}: Aggiunge \textit{channel shuffle} per permettere mixing tra gruppi. Estremamente leggero (~1M parametri).
+    
+    \item \textbf{MobileNetV2 (2018)}: Introduce \textit{Inverted Residual blocks} con linear bottleneck. Migliore trade-off efficienza-accuratezza.
+    
+    \item \textbf{EfficientNet (2019)}: Compound scaling sistematico di depth, width e resolution. Ottima accuratezza ma ancora pesante per edge reale.
+    
+    \item \textbf{Vision Transformers (2020)}: Self-attention per visione. Prestazioni SOTA ma costo computazionale proibitivo per edge.
+    
+    \item \textbf{ECA-Net (2020)}: Efficient Channel Attention - meccanismo di attenzione con ~100 parametri che migliora accuracy di +1-2\%. Ispirazione per questa tesi.
+\end{itemize}
+
+\section{Il Dataset CIFAR-10}
+
+\subsection{Caratteristiche Tecniche}
+CIFAR-10 (Canadian Institute For Advanced Research) è un dataset standard per la classificazione di immagini, descritto in \cite{krizhevsky2009learning}.
+
+\begin{itemize}
+    \item \textbf{Dimensioni}: 60,000 immagini RGB (50,000 training, 10,000 test)
+    \item \textbf{Classi}: 10 categorie bilanciate (6,000 immagini/classe)
+    \begin{itemize}
+        \item Airplane, Automobile, Bird, Cat, Deer
+        \item Dog, Frog, Horse, Ship, Truck
+    \end{itemize}
+    \item \textbf{Risoluzione}: 32×32 pixel (bassa risoluzione)
+    \item \textbf{Sfide principali}:
+    \begin{itemize}
+        \item Bassa risoluzione limita dettagli fini
+        \item Classi visivamente simili (cane/gatto, auto/camion)
+        \item Variabilità intra-classe (pose, illuminazione, occlusioni)
+    \end{itemize}
+\end{itemize}
+
+\subsection{Importanza come Benchmark}
+CIFAR-10 è diventato uno standard de-facto per:
+\begin{itemize}
+    \item Testing rapido di nuove architetture
+    \item Validazione di tecniche di training
+    \item Confronto fair tra modelli (dataset pubblico, split standardizzato)
+    \item Ridotto costo computazionale vs ImageNet (training in ore vs giorni)
+\end{itemize}
+
+\section{Stato dell'Arte su CIFAR-10}
+
+La Tabella~\ref{tab:sota_cifar10} riassume i risultati di modelli rappresentativi della letteratura su CIFAR-10.
+
+\begin{table}[h]
+\centering
+\caption{Confronto modelli SOTA su CIFAR-10}
+\label{tab:sota_cifar10}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Modello} & \textbf{Accuracy (\%)} & \textbf{Parametri} & \textbf{FLOPs} \\
+\midrule
+ResNet-20 & 92.6 & 0.27M & 41M \\
+ResNet-32 & 93.5 & 0.47M & 69M \\
+MobileNetV2 ×0.5 & 92.9 & 0.70M & 28M \\
+MobileNetV2 ×1.0 & 93.8 & 2.24M & 88M \\
+ShuffleNetV2 ×1.0 & 93.0 & 1.26M & 45M \\
+DenseNet-121 & 95.0 & 7.98M & alto \\
+ViT (patch=2) & 96.8 & 2.73M & 916M \\
+\midrule
+\textbf{MobileNetECA (ours)} & \textbf{{ACCURACY\_FINALE}} & \textbf{0.054M} & \textbf{7M} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Gap identificato}: I modelli MobileNet senza meccanismi di attenzione lasciano margine di miglioramento nell'efficienza. L'integrazione di ECA può fornire un boost di accuratezza con overhead quasi zero.
+
+\section{Contributo della Tesi}
+
+Questo lavoro fornisce i seguenti contributi:
+\begin{enumerate}
+    \item \textbf{Implementazione}: Sviluppo completo di MobileNetECA con blocchi ECA integrati in architettura Inverted Residual.
+    
+    \item \textbf{Grid search sistematica}: Esplorazione di {NUMERO\_CONFIGURAZIONI} configurazioni per identificare empiricamente gli iperparametri ottimali.
+    
+    \item \textbf{Analisi quantitativa ECA}: Ablation study per quantificare il contributo dell'attenzione (+{DELTA\_ECA}\%).
+    
+    \item \textbf{Benchmark fair}: Confronto con baseline della letteratura su stesso hardware e protocollo di valutazione.
+    
+    \item \textbf{Open source}: Codice e configurazioni rilasciate per riproducibilità completa.
+\end{enumerate}
+
+{AGGIUNGERE\_GRAFICO\_PARETO\_EFFICIENCY\_VS\_ACCURACY}

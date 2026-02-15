@@ -1,0 +1,363 @@
+\section{Design Complessivo dell'Architettura}
+
+MobileNetECA è un'architettura convoluzionale compatta progettata specificatamente per CIFAR-10 (immagini 32×32). Combina l'efficienza di MobileNetV2 con il meccanismo di attenzione leggero ECA.
+
+\subsection{Pipeline Architetturale}
+L'architettura è composta da 4 stage principali:
+
+\begin{enumerate}
+    \item \textbf{Stem}: Conv 3×3, stride=1, BN, GELU (32×32 → 32×32)
+    \item \textbf{Stage 1-4}: Inverted Residual Blocks con ECA
+    \item \textbf{Head}: Conv 1×1 + Global Average Pooling
+    \item \textbf{Classifier}: Linear layer (10 classi)
+\end{enumerate}
+
+{AGGIUNGERE\_DIAGRAMMA\_ARCHITETTURA\_COMPLETA}
+
+\subsection{Tabella di Configurazione}
+La Tabella~\ref{tab:block_config} descrive la configurazione dei blocchi.
+
+\begin{table}[h]
+\centering
+\caption{Configurazione blocchi MobileNetECA}
+\label{tab:block_config}
+\begin{tabular}{cccccc}
+\toprule
+\textbf{Blocco} & \textbf{$t$ (expand)} & \textbf{$c$ (out)} & \textbf{$n$ (repeat)} & \textbf{$s$ (stride)} & \textbf{use\_eca} \\
+\midrule
+1 & 1 & 20 & 2 & 1 & True \\
+2 & 6 & 32 & 4 & 2 & True \\
+3 & 8 & 42 & 4 & 2 & True \\
+4 & 8 & 52 & 2 & 1 & True \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Legenda}:
+\begin{itemize}
+    \item $t$: Expansion ratio (moltiplicatore per i canali interni)
+    \item $c$: Output channels (prima di width multiplier)
+    \item $n$: Numero di ripetizioni del blocco
+    \item $s$: Stride (applicato solo al primo blocco della ripetizione)
+    \item use\_eca: Se applicare ECA dopo depthwise conv
+\end{itemize}
+
+\subsection{Width Multiplier}
+Il parametro $\alpha$ (width multiplier) scala uniformemente tutti i canali:
+\begin{equation}
+C_{\text{effective}} = \max\left(\lfloor \alpha \cdot C_{\text{base}}\rfloor, 8\right)
+\end{equation}
+
+Valori testati: $\alpha \in \{0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6\}$
+
+\textbf{Trade-off}:
+\begin{itemize}
+    \item $\alpha$ piccolo: Modello più leggero ma meno capacità
+    \item $\alpha$ grande: Più accuratezza ma più parametri/FLOPs
+\end{itemize}
+
+\section{Inverted Residual Block con ECA}
+
+\subsection{Struttura Dettagliata}
+\begin{figure}[h]
+\centering
+\begin{verbatim}
+Input (C_in channels, H×W spatial)
+    ↓
+[se expand_ratio > 1]
+    Conv 1×1: C_in → hidden_dim
+    BatchNorm
+    GELU
+    ↓
+Depthwise Conv 3×3, stride=s
+    (groups = hidden_dim)
+    BatchNorm
+    GELU
+    ↓
+ECA Block (attention ricalibration)
+    GlobalAvgPool
+    Conv1D (kernel=k_adaptive)
+    Sigmoid
+    Multiply
+    ↓
+Projection Conv 1×1: hidden_dim → C_out
+    BatchNorm (linear, no activation!)
+    ↓
+[se stride=1 AND C_in=C_out]
+    + Skip Connection (Residual)
+    ↓
+Output (C_out channels, H/s × W/s spatial)
+\end{verbatim}
+\caption{Pipeline Inverted Residual Block con ECA}
+\label{fig:inv_res_eca}
+\end{figure}
+
+\subsection{Implementazione Codice}
+Estratto semplificato da \texttt{model.py}:
+
+\begin{lstlisting}[language=Python, caption=InvertedResidual con ECA]
+class InvertedResidual(nn.Module):
+    def __init__(self, inp, oup, stride, expand_ratio, 
+                 use_eca=False, lr_scale=1.6):
+        super().__init__()
+        self.lr_scale = lr_scale
+        hidden_dim = int(inp * expand_ratio)
+        self.use_res_connect = (stride == 1 and inp == oup)
+
+        layers = []
+        # Expansion
+        if expand_ratio != 1:
+            layers += [
+                nn.Conv2d(inp, hidden_dim, 1, bias=False),
+                nn.BatchNorm2d(hidden_dim),
+                nn.GELU()
+            ]
+        
+        # Depthwise
+        layers += [
+            nn.Conv2d(hidden_dim, hidden_dim, 3, stride, 1,
+                     groups=hidden_dim, bias=False),
+            nn.BatchNorm2d(hidden_dim),
+            nn.GELU()
+        ]
+        
+        # ECA Attention
+        if use_eca:
+            layers.append(ECABlock(hidden_dim, lr_scale=lr_scale))
+        
+        # Projection (linear bottleneck)
+        layers += [
+            nn.Conv2d(hidden_dim, oup, 1, bias=False),
+            nn.BatchNorm2d(oup)
+        ]
+        
+        self.conv = nn.Sequential(*layers)
+
+    def forward(self, x):
+        out = self.conv(x)
+        # Gradient scaling
+        out = out * self.lr_scale + out.detach() * (1 - self.lr_scale)
+        if self.use_res_connect:
+            return x + out
+        return out
+\end{lstlisting}
+
+\section{ECA Block: Implementazione Dettagliata}
+
+\subsection{Formula del Kernel Adattivo}
+Il kernel size della Conv1D è calcolato dinamicamente:
+
+\begin{equation}
+t = \left|\frac{\log_2(C) + b}{\gamma}\right|
+\end{equation}
+
+\begin{equation}
+k = \begin{cases}
+t & \text{se } t \text{ è dispari} \\
+t + 1 & \text{altrimenti}
+\end{cases}
+\end{equation}
+
+Con parametri default: $b=12$, $\gamma=3$.
+
+\textbf{Motivazione}: Più canali → kernel più grande per catturare dipendenze a lungo raggio.
+
+\textbf{Esempi}:
+\begin{itemize}
+    \item $C=32$: $t = |(5 + 12)/3| = 5.67 \to k=5$
+    \item $C=64$: $t = |(6 + 12)/3| = 6 \to k=7$
+    \item $C=144$: $t = |(7.17 + 12)/3| = 6.39 \to k=7$
+\end{itemize}
+
+\subsection{Forward Pass Step-by-Step}
+\begin{enumerate}
+    \item \textbf{Input}: $\mathbf{x} \in \mathbb{R}^{B \times C \times H \times W}$
+    
+    \item \textbf{Global Average Pooling}:
+    \begin{equation}
+    \mathbf{y} = \text{GAP}(\mathbf{x}) = \frac{1}{H \cdot W} \sum_{i=1}^{H}\sum_{j=1}^{W} \mathbf{x}[:,:,i,j]
+    \end{equation}
+    Output: $\mathbf{y} \in \mathbb{R}^{B \times C \times 1 \times 1}$
+    
+    \item \textbf{Reshape}: $\mathbf{y} \in \mathbb{R}^{B \times 1 \times C}$ (per Conv1D)
+    
+    \item \textbf{Conv1D}: Kernel size $k$, padding $(k-1)/2$
+    \begin{equation}
+    \mathbf{y} = \text{Conv1D}_k(\mathbf{y})
+    \end{equation}
+    Output: $\mathbf{y} \in \mathbb{R}^{B \times 1 \times C}$
+    
+    \item \textbf{Sigmoid activation}:
+    \begin{equation}
+    \mathbf{y} = \sigma(\mathbf{y}) = \frac{1}{1 + e^{-\mathbf{y}}}
+    \end{equation}
+    Weights $\in [0, 1]$
+    
+    \item \textbf{Reshape back}: $\mathbf{y} \in \mathbb{R}^{B \times C \times 1 \times 1}$
+    
+    \item \textbf{Gradient Scaling}:
+    \begin{equation}
+    \mathbf{y} = \mathbf{y} \cdot \alpha + \mathbf{y}_{\text{stop\_grad}} \cdot (1 - \alpha)
+    \end{equation}
+    Con $\alpha = \text{lr\_scale} = 1.6$
+    
+    \item \textbf{Element-wise Multiply}:
+    \begin{equation}
+    \mathbf{x}_{\text{out}} = \mathbf{x} \odot \mathbf{y}
+    \end{equation}
+    Output: $\mathbf{x}_{\text{out}} \in \mathbb{R}^{B \times C \times H \times W}$
+\end{enumerate}
+
+\subsection{Codice Implementazione}
+\begin{lstlisting}[language=Python, caption=ECA Block]
+class ECABlock(nn.Module):
+    def __init__(self, channels, gamma=3, b=12, lr_scale=1.6):
+        super().__init__()
+        self.lr_scale = lr_scale
+        
+        # Adaptive kernel size
+        t = int(abs((math.log(channels, 2) + b) / gamma))
+        kernel_size = t if t % 2 else t + 1
+        
+        self.avg_pool = nn.AdaptiveAvgPool2d(1)
+        self.conv = nn.Conv1d(1, 1, kernel_size=kernel_size,
+                             padding=(kernel_size - 1) // 2,
+                             bias=False)
+        self.sigmoid = nn.Sigmoid()
+
+    def forward(self, x):
+        # Squeeze
+        y = self.avg_pool(x)  # [B, C, H, W] -> [B, C, 1, 1]
+        
+        # Reshape for Conv1D
+        y = y.squeeze(-1).transpose(-1, -2)  # [B, 1, C]
+        
+        # Excitation
+        y = self.conv(y)
+        y = self.sigmoid(y)
+        
+        # Reshape back
+        y = y.transpose(-1, -2).unsqueeze(-1)  # [B, C, 1, 1]
+        
+        # Gradient scaling
+        y = y * self.lr_scale + y.detach() * (1 - self.lr_scale)
+        
+        # Scale
+        return x * y.expand_as(x)
+\end{lstlisting}
+
+\section{Analisi della Complessità}
+
+\subsection{Parametri}
+Per width\_mult = 0.5:
+\begin{itemize}
+    \item \textbf{Totale parametri}: ~54,000
+    \item Stem: ~864
+    \item Inverted Residual Blocks: ~50k
+    \item ECA Blocks: ~2k (totale, ~500 per stage)
+    \item Classifier: ~1.4k
+\end{itemize}
+
+\subsection{FLOPs}
+\textbf{Multiply-Accumulate Operations (MACs)}: ~7-8M
+
+Breakdown approssimativo:
+\begin{itemize}
+    \item Depthwise convs: ~60\%
+    \item Pointwise convs: ~35\%
+    \item ECA blocks: ~1\%
+    \item Altri: ~4\%
+\end{itemize}
+
+\subsection{Confronto con Altri Modelli}
+\begin{table}[h]
+\centering
+\caption{Confronto complessità computazionale}
+\label{tab:complexity}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Modello} & \textbf{Params} & \textbf{FLOPs} & \textbf{Size (KB)} \\
+\midrule
+MobileNetECA (ours) & 54k & 7M & 216 \\
+MobileNetV2 ×0.5 & 700k & 28M & 2,800 \\
+MobileNetV2 ×1.0 & 2.24M & 88M & 8,960 \\
+ResNet-20 & 270k & 41M & 1,080 \\
+ResNet-32 & 470k & 69M & 1,880 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Osservazioni}:
+\begin{itemize}
+    \item 13× meno parametri di MobileNetV2 ×0.5
+    \item 4× meno FLOPs di MobileNetV2 ×0.5
+    \item Dimensione modello < 220 KB (fit in L2 cache!)
+\end{itemize}
+
+\section{Scelte Implementative}
+
+\subsection{Optimizer}
+\textbf{SGD con Momentum}:
+\begin{equation}
+v_t = \beta v_{t-1} + \nabla_\theta L(\theta_{t-1})
+\end{equation}
+\begin{equation}
+\theta_t = \theta_{t-1} - \eta v_t
+\end{equation}
+
+Parametri: $\beta = 0.9$ (momentum), $\eta$ variabile (learning rate).
+
+\textbf{Perché SGD vs Adam?}
+\begin{itemize}
+    \item SGD + momentum generalizza meglio
+    \item Adam converge più velocemente ma può overfittare
+    \item Per modelli compatti, generalizzazione > velocità
+\end{itemize}
+
+\subsection{Learning Rate Schedule}
+\textbf{Cosine Annealing}:
+\begin{equation}
+\eta_t = \eta_{\min} + \frac{1}{2}(\eta_{\max} - \eta_{\min})\left(1 + \cos\left(\frac{t \pi}{T}\right)\right)
+\end{equation}
+
+dove $t$ è l'epoca corrente, $T$ è il totale epoche.
+
+\textbf{Vantaggi}:
+\begin{itemize}
+    \item Decay smooth (vs step decay)
+    \item Esplorazione iniziale alta, fine-tuning finale basso
+    \item No hyperparameter (solo $T$)
+\end{itemize}
+
+{AGGIUNGERE\_GRAFICO\_COSINE\_ANNEALING\_LR}
+
+\subsection{Weight Decay}
+Regolarizzazione L2:
+\begin{equation}
+L_{\text{total}} = L_{\text{CE}} + \lambda \sum_{i} w_i^2
+\end{equation}
+
+Valori testati: $\lambda \in \{10^{-4}, 2 \times 10^{-4}, 3 \times 10^{-4}, 5 \times 10^{-4}, 10^{-3}\}$
+
+\subsection{Data Augmentation}
+\textbf{Training}:
+\begin{itemize}
+    \item RandomCrop(32, padding=4): Crop casuale con padding
+    \item RandomHorizontalFlip(p=0.5): Flip orizzontale
+    \item Normalize: mean=(0.4914, 0.4822, 0.4465), std=(0.247, 0.243, 0.261)
+\end{itemize}
+
+\textbf{Test}: SOLO Normalize (NO augmentation!)
+
+\textbf{CRITICAL}: Augmentation su test invalida i risultati!
+
+\subsection{Gradient Clipping}
+\begin{equation}
+\mathbf{g}_{\text{clipped}} = \min\left(1, \frac{\text{max\_norm}}{\|\mathbf{g}\|_2}\right) \mathbf{g}
+\end{equation}
+
+Con max\_norm = 5.0.
+
+\textbf{Previene}: Esplosione dei gradienti durante training.
+
+{AGGIUNGERE\_DIAGRAMMA\_TRAINING\_PIPELINE}

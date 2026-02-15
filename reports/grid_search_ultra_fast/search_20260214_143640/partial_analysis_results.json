@@ -1,0 +1,1009 @@
+[
+  {
+    "run_id": 85,
+    "run_name": "screen_085_lr_0p025_width_mult_0p4_weight_decay_0p001",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_085_lr_0p025_width_mult_0p4_weight_decay_0p001/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_085_lr_0p025_width_mult_0p4_weight_decay_0p001/logs",
+      "lr": 0.025,
+      "width_mult": 0.4,
+      "weight_decay": 0.001
+    },
+    "score": 92.417,
+    "best_val_acc": 88.44,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_085_lr_0p025_width_mult_0p4_weight_decay_0p001"
+  },
+  {
+    "run_id": 89,
+    "run_name": "screen_089_lr_0p025_width_mult_0p45_weight_decay_0p0005",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_089_lr_0p025_width_mult_0p45_weight_decay_0p0005/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_089_lr_0p025_width_mult_0p45_weight_decay_0p0005/logs",
+      "lr": 0.025,
+      "width_mult": 0.45,
+      "weight_decay": 0.0005
+    },
+    "score": 92.39150000000001,
+    "best_val_acc": 88.83,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_089_lr_0p025_width_mult_0p45_weight_decay_0p0005"
+  },
+  {
+    "run_id": 80,
+    "run_name": "screen_080_lr_0p025_width_mult_0p35_weight_decay_0p001",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_080_lr_0p025_width_mult_0p35_weight_decay_0p001/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_080_lr_0p025_width_mult_0p35_weight_decay_0p001/logs",
+      "lr": 0.025,
+      "width_mult": 0.35,
+      "weight_decay": 0.001
+    },
+    "score": 92.3715,
+    "best_val_acc": 87.72,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_080_lr_0p025_width_mult_0p35_weight_decay_0p001"
+  },
+  {
+    "run_id": 90,
+    "run_name": "screen_090_lr_0p025_width_mult_0p45_weight_decay_0p001",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_090_lr_0p025_width_mult_0p45_weight_decay_0p001/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_090_lr_0p025_width_mult_0p45_weight_decay_0p001/logs",
+      "lr": 0.025,
+      "width_mult": 0.45,
+      "weight_decay": 0.001
+    },
+    "score": 91.85249999999999,
+    "best_val_acc": 88.91,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_090_lr_0p025_width_mult_0p45_weight_decay_0p001"
+  },
+  {
+    "run_id": 92,
+    "run_name": "screen_092_lr_0p025_width_mult_0p5_weight_decay_0p0002",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_092_lr_0p025_width_mult_0p5_weight_decay_0p0002/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_092_lr_0p025_width_mult_0p5_weight_decay_0p0002/logs",
+      "lr": 0.025,
+      "width_mult": 0.5,
+      "weight_decay": 0.0002
+    },
+    "score": 91.82399999999998,
+    "best_val_acc": 88.8,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_092_lr_0p025_width_mult_0p5_weight_decay_0p0002"
+  },
+  {
+    "run_id": 84,
+    "run_name": "screen_084_lr_0p025_width_mult_0p4_weight_decay_0p0005",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_084_lr_0p025_width_mult_0p4_weight_decay_0p0005/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_084_lr_0p025_width_mult_0p4_weight_decay_0p0005/logs",
+      "lr": 0.025,
+      "width_mult": 0.4,
+      "weight_decay": 0.0005
+    },
+    "score": 91.599,
+    "best_val_acc": 88.26,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_084_lr_0p025_width_mult_0p4_weight_decay_0p0005"
+  },
+  {
+    "run_id": 87,
+    "run_name": "screen_087_lr_0p025_width_mult_0p45_weight_decay_0p0002",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_087_lr_0p025_width_mult_0p45_weight_decay_0p0002/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_087_lr_0p025_width_mult_0p45_weight_decay_0p0002/logs",
+      "lr": 0.025,
+      "width_mult": 0.45,
+      "weight_decay": 0.0002
+    },
+    "score": 91.40249999999999,
+    "best_val_acc": 87.99,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_087_lr_0p025_width_mult_0p45_weight_decay_0p0002"
+  },
+  {
+    "run_id": 75,
+    "run_name": "screen_075_lr_0p025_width_mult_0p3_weight_decay_0p001",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_075_lr_0p025_width_mult_0p3_weight_decay_0p001/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_075_lr_0p025_width_mult_0p3_weight_decay_0p001/logs",
+      "lr": 0.025,
+      "width_mult": 0.3,
+      "weight_decay": 0.001
+    },
+    "score": 91.04999999999998,
+    "best_val_acc": 86.23,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_075_lr_0p025_width_mult_0p3_weight_decay_0p001"
+  },
+  {
+    "run_id": 91,
+    "run_name": "screen_091_lr_0p025_width_mult_0p5_weight_decay_0p0001",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_091_lr_0p025_width_mult_0p5_weight_decay_0p0001/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_091_lr_0p025_width_mult_0p5_weight_decay_0p0001/logs",
+      "lr": 0.025,
+      "width_mult": 0.5,
+      "weight_decay": 0.0001
+    },
+    "score": 90.713,
+    "best_val_acc": 88.13,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_091_lr_0p025_width_mult_0p5_weight_decay_0p0001"
+  },
+  {
+    "run_id": 82,
+    "run_name": "screen_082_lr_0p025_width_mult_0p4_weight_decay_0p0002",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_082_lr_0p025_width_mult_0p4_weight_decay_0p0002/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_082_lr_0p025_width_mult_0p4_weight_decay_0p0002/logs",
+      "lr": 0.025,
+      "width_mult": 0.4,
+      "weight_decay": 0.0002
+    },
+    "score": 90.65700000000001,
+    "best_val_acc": 87.27,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_082_lr_0p025_width_mult_0p4_weight_decay_0p0002"
+  },
+  {
+    "run_id": 79,
+    "run_name": "screen_079_lr_0p025_width_mult_0p35_weight_decay_0p0005",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_079_lr_0p025_width_mult_0p35_weight_decay_0p0005/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_079_lr_0p025_width_mult_0p35_weight_decay_0p0005/logs",
+      "lr": 0.025,
+      "width_mult": 0.35,
+      "weight_decay": 0.0005
+    },
+    "score": 90.6565,
+    "best_val_acc": 86.95,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_079_lr_0p025_width_mult_0p35_weight_decay_0p0005"
+  },
+  {
+    "run_id": 70,
+    "run_name": "screen_070_lr_0p01_width_mult_0p6_weight_decay_0p001",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_070_lr_0p01_width_mult_0p6_weight_decay_0p001/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_070_lr_0p01_width_mult_0p6_weight_decay_0p001/logs",
+      "lr": 0.01,
+      "width_mult": 0.6,
+      "weight_decay": 0.001
+    },
+    "score": 90.57449999999999,
+    "best_val_acc": 88.08,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_070_lr_0p01_width_mult_0p6_weight_decay_0p001"
+  },
+  {
+    "run_id": 86,
+    "run_name": "screen_086_lr_0p025_width_mult_0p45_weight_decay_0p0001",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_086_lr_0p025_width_mult_0p45_weight_decay_0p0001/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_086_lr_0p025_width_mult_0p45_weight_decay_0p0001/logs",
+      "lr": 0.025,
+      "width_mult": 0.45,
+      "weight_decay": 0.0001
+    },
+    "score": 90.26249999999999,
+    "best_val_acc": 87.31,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_086_lr_0p025_width_mult_0p45_weight_decay_0p0001"
+  },
+  {
+    "run_id": 93,
+    "run_name": "screen_093_lr_0p025_width_mult_0p5_weight_decay_0p0003",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_093_lr_0p025_width_mult_0p5_weight_decay_0p0003/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_093_lr_0p025_width_mult_0p5_weight_decay_0p0003/logs",
+      "lr": 0.025,
+      "width_mult": 0.5,
+      "weight_decay": 0.0003
+    },
+    "score": 90.147,
+    "best_val_acc": 88.22,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_093_lr_0p025_width_mult_0p5_weight_decay_0p0003"
+  },
+  {
+    "run_id": 88,
+    "run_name": "screen_088_lr_0p025_width_mult_0p45_weight_decay_0p0003",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_088_lr_0p025_width_mult_0p45_weight_decay_0p0003/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_088_lr_0p025_width_mult_0p45_weight_decay_0p0003/logs",
+      "lr": 0.025,
+      "width_mult": 0.45,
+      "weight_decay": 0.0003
+    },
+    "score": 90.042,
+    "best_val_acc": 87.65,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_088_lr_0p025_width_mult_0p45_weight_decay_0p0003"
+  },
+  {
+    "run_id": 65,
+    "run_name": "screen_065_lr_0p01_width_mult_0p55_weight_decay_0p001",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_065_lr_0p01_width_mult_0p55_weight_decay_0p001/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_065_lr_0p01_width_mult_0p55_weight_decay_0p001/logs",
+      "lr": 0.01,
+      "width_mult": 0.55,
+      "weight_decay": 0.001
+    },
+    "score": 90.0395,
+    "best_val_acc": 86.9,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_065_lr_0p01_width_mult_0p55_weight_decay_0p001"
+  },
+  {
+    "run_id": 83,
+    "run_name": "screen_083_lr_0p025_width_mult_0p4_weight_decay_0p0003",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_083_lr_0p025_width_mult_0p4_weight_decay_0p0003/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_083_lr_0p025_width_mult_0p4_weight_decay_0p0003/logs",
+      "lr": 0.025,
+      "width_mult": 0.4,
+      "weight_decay": 0.0003
+    },
+    "score": 89.82449999999999,
+    "best_val_acc": 87.21,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_083_lr_0p025_width_mult_0p4_weight_decay_0p0003"
+  },
+  {
+    "run_id": 77,
+    "run_name": "screen_077_lr_0p025_width_mult_0p35_weight_decay_0p0002",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_077_lr_0p025_width_mult_0p35_weight_decay_0p0002/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_077_lr_0p025_width_mult_0p35_weight_decay_0p0002/logs",
+      "lr": 0.025,
+      "width_mult": 0.35,
+      "weight_decay": 0.0002
+    },
+    "score": 89.7585,
+    "best_val_acc": 86.07,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_077_lr_0p025_width_mult_0p35_weight_decay_0p0002"
+  },
+  {
+    "run_id": 78,
+    "run_name": "screen_078_lr_0p025_width_mult_0p35_weight_decay_0p0003",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_078_lr_0p025_width_mult_0p35_weight_decay_0p0003/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_078_lr_0p025_width_mult_0p35_weight_decay_0p0003/logs",
+      "lr": 0.025,
+      "width_mult": 0.35,
+      "weight_decay": 0.0003
+    },
+    "score": 89.46449999999999,
+    "best_val_acc": 86.35,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_078_lr_0p025_width_mult_0p35_weight_decay_0p0003"
+  },
+  {
+    "run_id": 64,
+    "run_name": "screen_064_lr_0p01_width_mult_0p55_weight_decay_0p0005",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_064_lr_0p01_width_mult_0p55_weight_decay_0p0005/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_064_lr_0p01_width_mult_0p55_weight_decay_0p0005/logs",
+      "lr": 0.01,
+      "width_mult": 0.55,
+      "weight_decay": 0.0005
+    },
+    "score": 89.362,
+    "best_val_acc": 86.8,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_064_lr_0p01_width_mult_0p55_weight_decay_0p0005"
+  },
+  {
+    "run_id": 74,
+    "run_name": "screen_074_lr_0p025_width_mult_0p3_weight_decay_0p0005",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_074_lr_0p025_width_mult_0p3_weight_decay_0p0005/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_074_lr_0p025_width_mult_0p3_weight_decay_0p0005/logs",
+      "lr": 0.025,
+      "width_mult": 0.3,
+      "weight_decay": 0.0005
+    },
+    "score": 89.24800000000002,
+    "best_val_acc": 85.98,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_074_lr_0p025_width_mult_0p3_weight_decay_0p0005"
+  },
+  {
+    "run_id": 60,
+    "run_name": "screen_060_lr_0p01_width_mult_0p5_weight_decay_0p001",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_060_lr_0p01_width_mult_0p5_weight_decay_0p001/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_060_lr_0p01_width_mult_0p5_weight_decay_0p001/logs",
+      "lr": 0.01,
+      "width_mult": 0.5,
+      "weight_decay": 0.001
+    },
+    "score": 89.2245,
+    "best_val_acc": 86.42,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_060_lr_0p01_width_mult_0p5_weight_decay_0p001"
+  },
+  {
+    "run_id": 67,
+    "run_name": "screen_067_lr_0p01_width_mult_0p6_weight_decay_0p0002",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_067_lr_0p01_width_mult_0p6_weight_decay_0p0002/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_067_lr_0p01_width_mult_0p6_weight_decay_0p0002/logs",
+      "lr": 0.01,
+      "width_mult": 0.6,
+      "weight_decay": 0.0002
+    },
+    "score": 89.07799999999999,
+    "best_val_acc": 86.86,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_067_lr_0p01_width_mult_0p6_weight_decay_0p0002"
+  },
+  {
+    "run_id": 69,
+    "run_name": "screen_069_lr_0p01_width_mult_0p6_weight_decay_0p0005",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_069_lr_0p01_width_mult_0p6_weight_decay_0p0005/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_069_lr_0p01_width_mult_0p6_weight_decay_0p0005/logs",
+      "lr": 0.01,
+      "width_mult": 0.6,
+      "weight_decay": 0.0005
+    },
+    "score": 89.03799999999998,
+    "best_val_acc": 86.82,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_069_lr_0p01_width_mult_0p6_weight_decay_0p0005"
+  },
+  {
+    "run_id": 54,
+    "run_name": "screen_054_lr_0p01_width_mult_0p45_weight_decay_0p0005",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_054_lr_0p01_width_mult_0p45_weight_decay_0p0005/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_054_lr_0p01_width_mult_0p45_weight_decay_0p0005/logs",
+      "lr": 0.01,
+      "width_mult": 0.45,
+      "weight_decay": 0.0005
+    },
+    "score": 88.8645,
+    "best_val_acc": 85.2,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_054_lr_0p01_width_mult_0p45_weight_decay_0p0005"
+  },
+  {
+    "run_id": 53,
+    "run_name": "screen_053_lr_0p01_width_mult_0p45_weight_decay_0p0003",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_053_lr_0p01_width_mult_0p45_weight_decay_0p0003/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_053_lr_0p01_width_mult_0p45_weight_decay_0p0003/logs",
+      "lr": 0.01,
+      "width_mult": 0.45,
+      "weight_decay": 0.0003
+    },
+    "score": 88.6505,
+    "best_val_acc": 85.07,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_053_lr_0p01_width_mult_0p45_weight_decay_0p0003"
+  },
+  {
+    "run_id": 76,
+    "run_name": "screen_076_lr_0p025_width_mult_0p35_weight_decay_0p0001",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_076_lr_0p025_width_mult_0p35_weight_decay_0p0001/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_076_lr_0p025_width_mult_0p35_weight_decay_0p0001/logs",
+      "lr": 0.025,
+      "width_mult": 0.35,
+      "weight_decay": 0.0001
+    },
+    "score": 88.63000000000001,
+    "best_val_acc": 85.9,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_076_lr_0p025_width_mult_0p35_weight_decay_0p0001"
+  },
+  {
+    "run_id": 81,
+    "run_name": "screen_081_lr_0p025_width_mult_0p4_weight_decay_0p0001",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_081_lr_0p025_width_mult_0p4_weight_decay_0p0001/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_081_lr_0p025_width_mult_0p4_weight_decay_0p0001/logs",
+      "lr": 0.025,
+      "width_mult": 0.4,
+      "weight_decay": 0.0001
+    },
+    "score": 88.537,
+    "best_val_acc": 86.33,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_081_lr_0p025_width_mult_0p4_weight_decay_0p0001"
+  },
+  {
+    "run_id": 62,
+    "run_name": "screen_062_lr_0p01_width_mult_0p55_weight_decay_0p0002",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_062_lr_0p01_width_mult_0p55_weight_decay_0p0002/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_062_lr_0p01_width_mult_0p55_weight_decay_0p0002/logs",
+      "lr": 0.01,
+      "width_mult": 0.55,
+      "weight_decay": 0.0002
+    },
+    "score": 88.42350000000002,
+    "best_val_acc": 86.06,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_062_lr_0p01_width_mult_0p55_weight_decay_0p0002"
+  },
+  {
+    "run_id": 55,
+    "run_name": "screen_055_lr_0p01_width_mult_0p45_weight_decay_0p001",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_055_lr_0p01_width_mult_0p45_weight_decay_0p001/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_055_lr_0p01_width_mult_0p45_weight_decay_0p001/logs",
+      "lr": 0.01,
+      "width_mult": 0.45,
+      "weight_decay": 0.001
+    },
+    "score": 88.368,
+    "best_val_acc": 85.68,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_055_lr_0p01_width_mult_0p45_weight_decay_0p001"
+  },
+  {
+    "run_id": 66,
+    "run_name": "screen_066_lr_0p01_width_mult_0p6_weight_decay_0p0001",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_066_lr_0p01_width_mult_0p6_weight_decay_0p0001/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_066_lr_0p01_width_mult_0p6_weight_decay_0p0001/logs",
+      "lr": 0.01,
+      "width_mult": 0.6,
+      "weight_decay": 0.0001
+    },
+    "score": 88.22,
+    "best_val_acc": 86.54,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_066_lr_0p01_width_mult_0p6_weight_decay_0p0001"
+  },
+  {
+    "run_id": 59,
+    "run_name": "screen_059_lr_0p01_width_mult_0p5_weight_decay_0p0005",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_059_lr_0p01_width_mult_0p5_weight_decay_0p0005/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_059_lr_0p01_width_mult_0p5_weight_decay_0p0005/logs",
+      "lr": 0.01,
+      "width_mult": 0.5,
+      "weight_decay": 0.0005
+    },
+    "score": 88.06749999999998,
+    "best_val_acc": 85.76,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_059_lr_0p01_width_mult_0p5_weight_decay_0p0005"
+  },
+  {
+    "run_id": 68,
+    "run_name": "screen_068_lr_0p01_width_mult_0p6_weight_decay_0p0003",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_068_lr_0p01_width_mult_0p6_weight_decay_0p0003/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_068_lr_0p01_width_mult_0p6_weight_decay_0p0003/logs",
+      "lr": 0.01,
+      "width_mult": 0.6,
+      "weight_decay": 0.0003
+    },
+    "score": 87.919,
+    "best_val_acc": 86.26,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_068_lr_0p01_width_mult_0p6_weight_decay_0p0003"
+  },
+  {
+    "run_id": 73,
+    "run_name": "screen_073_lr_0p025_width_mult_0p3_weight_decay_0p0003",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_073_lr_0p025_width_mult_0p3_weight_decay_0p0003/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_073_lr_0p025_width_mult_0p3_weight_decay_0p0003/logs",
+      "lr": 0.025,
+      "width_mult": 0.3,
+      "weight_decay": 0.0003
+    },
+    "score": 87.86549999999998,
+    "best_val_acc": 85.13,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_073_lr_0p025_width_mult_0p3_weight_decay_0p0003"
+  },
+  {
+    "run_id": 63,
+    "run_name": "screen_063_lr_0p01_width_mult_0p55_weight_decay_0p0003",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_063_lr_0p01_width_mult_0p55_weight_decay_0p0003/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_063_lr_0p01_width_mult_0p55_weight_decay_0p0003/logs",
+      "lr": 0.01,
+      "width_mult": 0.55,
+      "weight_decay": 0.0003
+    },
+    "score": 87.848,
+    "best_val_acc": 85.39,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_063_lr_0p01_width_mult_0p55_weight_decay_0p0003"
+  },
+  {
+    "run_id": 61,
+    "run_name": "screen_061_lr_0p01_width_mult_0p55_weight_decay_0p0001",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_061_lr_0p01_width_mult_0p55_weight_decay_0p0001/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_061_lr_0p01_width_mult_0p55_weight_decay_0p0001/logs",
+      "lr": 0.01,
+      "width_mult": 0.55,
+      "weight_decay": 0.0001
+    },
+    "score": 87.84,
+    "best_val_acc": 85.73,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_061_lr_0p01_width_mult_0p55_weight_decay_0p0001"
+  },
+  {
+    "run_id": 56,
+    "run_name": "screen_056_lr_0p01_width_mult_0p5_weight_decay_0p0001",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_056_lr_0p01_width_mult_0p5_weight_decay_0p0001/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_056_lr_0p01_width_mult_0p5_weight_decay_0p0001/logs",
+      "lr": 0.01,
+      "width_mult": 0.5,
+      "weight_decay": 0.0001
+    },
+    "score": 87.71749999999999,
+    "best_val_acc": 85.25,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_056_lr_0p01_width_mult_0p5_weight_decay_0p0001"
+  },
+  {
+    "run_id": 72,
+    "run_name": "screen_072_lr_0p025_width_mult_0p3_weight_decay_0p0002",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_072_lr_0p025_width_mult_0p3_weight_decay_0p0002/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_072_lr_0p025_width_mult_0p3_weight_decay_0p0002/logs",
+      "lr": 0.025,
+      "width_mult": 0.3,
+      "weight_decay": 0.0002
+    },
+    "score": 87.6975,
+    "best_val_acc": 84.18,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_072_lr_0p025_width_mult_0p3_weight_decay_0p0002"
+  },
+  {
+    "run_id": 57,
+    "run_name": "screen_057_lr_0p01_width_mult_0p5_weight_decay_0p0002",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_057_lr_0p01_width_mult_0p5_weight_decay_0p0002/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_057_lr_0p01_width_mult_0p5_weight_decay_0p0002/logs",
+      "lr": 0.01,
+      "width_mult": 0.5,
+      "weight_decay": 0.0002
+    },
+    "score": 87.66650000000001,
+    "best_val_acc": 85.52,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_057_lr_0p01_width_mult_0p5_weight_decay_0p0002"
+  },
+  {
+    "run_id": 71,
+    "run_name": "screen_071_lr_0p025_width_mult_0p3_weight_decay_0p0001",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_071_lr_0p025_width_mult_0p3_weight_decay_0p0001/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_071_lr_0p025_width_mult_0p3_weight_decay_0p0001/logs",
+      "lr": 0.025,
+      "width_mult": 0.3,
+      "weight_decay": 0.0001
+    },
+    "score": 87.61299999999999,
+    "best_val_acc": 84.21,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_071_lr_0p025_width_mult_0p3_weight_decay_0p0001"
+  },
+  {
+    "run_id": 50,
+    "run_name": "screen_050_lr_0p01_width_mult_0p4_weight_decay_0p001",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_050_lr_0p01_width_mult_0p4_weight_decay_0p001/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_050_lr_0p01_width_mult_0p4_weight_decay_0p001/logs",
+      "lr": 0.01,
+      "width_mult": 0.4,
+      "weight_decay": 0.001
+    },
+    "score": 87.466,
+    "best_val_acc": 84.38,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_050_lr_0p01_width_mult_0p4_weight_decay_0p001"
+  },
+  {
+    "run_id": 58,
+    "run_name": "screen_058_lr_0p01_width_mult_0p5_weight_decay_0p0003",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_058_lr_0p01_width_mult_0p5_weight_decay_0p0003/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_058_lr_0p01_width_mult_0p5_weight_decay_0p0003/logs",
+      "lr": 0.01,
+      "width_mult": 0.5,
+      "weight_decay": 0.0003
+    },
+    "score": 87.2215,
+    "best_val_acc": 85.52,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_058_lr_0p01_width_mult_0p5_weight_decay_0p0003"
+  },
+  {
+    "run_id": 47,
+    "run_name": "screen_047_lr_0p01_width_mult_0p4_weight_decay_0p0002",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_047_lr_0p01_width_mult_0p4_weight_decay_0p0002/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_047_lr_0p01_width_mult_0p4_weight_decay_0p0002/logs",
+      "lr": 0.01,
+      "width_mult": 0.4,
+      "weight_decay": 0.0002
+    },
+    "score": 86.6725,
+    "best_val_acc": 83.89,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_047_lr_0p01_width_mult_0p4_weight_decay_0p0002"
+  },
+  {
+    "run_id": 49,
+    "run_name": "screen_049_lr_0p01_width_mult_0p4_weight_decay_0p0005",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_049_lr_0p01_width_mult_0p4_weight_decay_0p0005/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_049_lr_0p01_width_mult_0p4_weight_decay_0p0005/logs",
+      "lr": 0.01,
+      "width_mult": 0.4,
+      "weight_decay": 0.0005
+    },
+    "score": 86.4905,
+    "best_val_acc": 83.79,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_049_lr_0p01_width_mult_0p4_weight_decay_0p0005"
+  },
+  {
+    "run_id": 45,
+    "run_name": "screen_045_lr_0p01_width_mult_0p35_weight_decay_0p001",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_045_lr_0p01_width_mult_0p35_weight_decay_0p001/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_045_lr_0p01_width_mult_0p35_weight_decay_0p001/logs",
+      "lr": 0.01,
+      "width_mult": 0.35,
+      "weight_decay": 0.001
+    },
+    "score": 86.04149999999998,
+    "best_val_acc": 83.57,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_045_lr_0p01_width_mult_0p35_weight_decay_0p001"
+  },
+  {
+    "run_id": 51,
+    "run_name": "screen_051_lr_0p01_width_mult_0p45_weight_decay_0p0001",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_051_lr_0p01_width_mult_0p45_weight_decay_0p0001/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_051_lr_0p01_width_mult_0p45_weight_decay_0p0001/logs",
+      "lr": 0.01,
+      "width_mult": 0.45,
+      "weight_decay": 0.0001
+    },
+    "score": 85.77749999999999,
+    "best_val_acc": 84.46,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_051_lr_0p01_width_mult_0p45_weight_decay_0p0001"
+  },
+  {
+    "run_id": 52,
+    "run_name": "screen_052_lr_0p01_width_mult_0p45_weight_decay_0p0002",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_052_lr_0p01_width_mult_0p45_weight_decay_0p0002/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_052_lr_0p01_width_mult_0p45_weight_decay_0p0002/logs",
+      "lr": 0.01,
+      "width_mult": 0.45,
+      "weight_decay": 0.0002
+    },
+    "score": 85.651,
+    "best_val_acc": 83.66,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_052_lr_0p01_width_mult_0p45_weight_decay_0p0002"
+  },
+  {
+    "run_id": 48,
+    "run_name": "screen_048_lr_0p01_width_mult_0p4_weight_decay_0p0003",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_048_lr_0p01_width_mult_0p4_weight_decay_0p0003/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_048_lr_0p01_width_mult_0p4_weight_decay_0p0003/logs",
+      "lr": 0.01,
+      "width_mult": 0.4,
+      "weight_decay": 0.0003
+    },
+    "score": 85.29050000000001,
+    "best_val_acc": 83.44,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_048_lr_0p01_width_mult_0p4_weight_decay_0p0003"
+  },
+  {
+    "run_id": 46,
+    "run_name": "screen_046_lr_0p01_width_mult_0p4_weight_decay_0p0001",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_046_lr_0p01_width_mult_0p4_weight_decay_0p0001/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_046_lr_0p01_width_mult_0p4_weight_decay_0p0001/logs",
+      "lr": 0.01,
+      "width_mult": 0.4,
+      "weight_decay": 0.0001
+    },
+    "score": 85.07399999999998,
+    "best_val_acc": 83.1,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_046_lr_0p01_width_mult_0p4_weight_decay_0p0001"
+  },
+  {
+    "run_id": 35,
+    "run_name": "screen_035_lr_0p005_width_mult_0p6_weight_decay_0p001",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_035_lr_0p005_width_mult_0p6_weight_decay_0p001/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_035_lr_0p005_width_mult_0p6_weight_decay_0p001/logs",
+      "lr": 0.005,
+      "width_mult": 0.6,
+      "weight_decay": 0.001
+    },
+    "score": 85.00450000000001,
+    "best_val_acc": 82.95,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_035_lr_0p005_width_mult_0p6_weight_decay_0p001"
+  },
+  {
+    "run_id": 31,
+    "run_name": "screen_031_lr_0p005_width_mult_0p6_weight_decay_0p0001",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_031_lr_0p005_width_mult_0p6_weight_decay_0p0001/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_031_lr_0p005_width_mult_0p6_weight_decay_0p0001/logs",
+      "lr": 0.005,
+      "width_mult": 0.6,
+      "weight_decay": 0.0001
+    },
+    "score": 84.66349999999998,
+    "best_val_acc": 82.54,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_031_lr_0p005_width_mult_0p6_weight_decay_0p0001"
+  },
+  {
+    "run_id": 29,
+    "run_name": "screen_029_lr_0p005_width_mult_0p55_weight_decay_0p0005",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_029_lr_0p005_width_mult_0p55_weight_decay_0p0005/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_029_lr_0p005_width_mult_0p55_weight_decay_0p0005/logs",
+      "lr": 0.005,
+      "width_mult": 0.55,
+      "weight_decay": 0.0005
+    },
+    "score": 83.816,
+    "best_val_acc": 82.01,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_029_lr_0p005_width_mult_0p55_weight_decay_0p0005"
+  },
+  {
+    "run_id": 33,
+    "run_name": "screen_033_lr_0p005_width_mult_0p6_weight_decay_0p0003",
+    "config": {
+      "batch_size": 128,
+      "num_workers": 16,
+      "lr_scale": 1.54,
+      "momentum": 0.9,
+      "save_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_033_lr_0p005_width_mult_0p6_weight_decay_0p0003/models",
+      "log_dir": "../../reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_033_lr_0p005_width_mult_0p6_weight_decay_0p0003/logs",
+      "lr": 0.005,
+      "width_mult": 0.6,
+      "weight_decay": 0.0003
+    },
+    "score": 83.36850000000001,
+    "best_val_acc": 82.32,
+    "status": "completed",
+    "path": "/workspace/tesi-laurea/reports/grid_search_ultra_fast/search_20260214_143640/phase1_screening/screen_033_lr_0p005_width_mult_0p6_weight_decay_0p0003"
+  }
+]

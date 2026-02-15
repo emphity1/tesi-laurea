@@ -1,0 +1,21 @@
+==================================================
+REPORT DI ALLENAMENTOVERIFICATO
+==================================================
+
+Modello: MobileNetECA
+Dataset: CIFAR-10
+Parametri: 54.0k (54000)
+
+Configurazione:
+  - Epoche: 50
+  - Batch size: 128
+  - Learning rate iniziale: 0.025
+  - Width multiplier: 0.42
+  - LR scale: 1.54
+  - Dispositivo: cuda
+
+Accuratezza finale:
+  - Training: 94.00%
+  - Validation: 89.23%
+
+==================================================

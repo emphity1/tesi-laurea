@@ -1,0 +1,234 @@
+\section{Convolutional Neural Networks}
+
+\subsection{Operazione di Convoluzione}
+L'operazione fondamentale delle CNN è la \textbf{convoluzione discreta 2D}, definita matematicamente come:
+
+\begin{equation}
+(I * K)[i,j] = \sum_{m}\sum_{n} I[i+m, j+n] \cdot K[m,n]
+\end{equation}
+
+dove $I$ è l'immagine di input, $K$ è il kernel (filtro) di convoluzione, e l'output è una feature map.
+
+\textbf{Concetto di receptive field}: Ogni neurone in uno strato profondo ``vede'' una regione dell'immagine originale. Layer successivi aumentano il receptive field, permettendo di catturare pattern sempre più complessi (bordi → texture → oggetti).
+
+\subsection{Componenti Principali}
+
+\subsubsection{Convolutional Layers}
+Layer convoluzionali applicano filtri apprendibili per estrarre feature locali. Parametri:
+\begin{itemize}
+    \item \textbf{Kernel size}: Dimensione del filtro (es. 3×3, 5×5)
+    \item \textbf{Stride}: Passo con cui si muove il filtro (stride=2 dimezza le dimensioni spaziali)
+    \item \textbf{Padding}: Aggiunta di bordi per controllare output shape
+    \item \textbf{Numero di filtri}: Determina i canali in output
+\end{itemize}
+
+\textbf{Complexity}: Per una conv 2D standard:
+\begin{equation}
+\text{FLOPs} = H_{out} \times W_{out} \times C_{out} \times (K \times K \times C_{in})
+\end{equation}
+
+\subsubsection{Batch Normalization}
+Normalizza gli input di ogni layer durante il training:
+\begin{equation}
+\hat{x} = \frac{x - \mu_B}{\sqrt{\sigma_B^2 + \epsilon}}
+\end{equation}
+
+\textbf{Benefici}:
+\begin{itemize}
+    \item Stabilizza il training (riduce internal covariate shift)
+    \item Permette learning rate più alti
+    \item Regolarizzazione implicita (riduce necessità di Dropout)
+\end{itemize}
+
+\subsubsection{Funzioni di Attivazione}
+\textbf{ReLU (Rectified Linear Unit)}:
+\begin{equation}
+f(x) = \max(0, x)
+\end{equation}
+Pro: Semplice, veloce, evita vanishing gradient. Contro: Dying ReLU (neuroni che si ``spengono'').
+
+\textbf{GELU (Gaussian Error Linear Unit)}:
+\begin{equation}
+f(x) = x \cdot \Phi(x) = x \cdot \frac{1}{2}\left[1 + \text{erf}\left(\frac{x}{\sqrt{2}}\right)\right]
+\end{equation}
+
+dove $\Phi(x)$ è la CDF (Cumulative Distribution Function) della gaussiana standard.
+
+\textbf{Vantaggi di GELU}:
+\begin{itemize}
+    \item Smooth gradient ovunque (vs discontinuità ReLU in 0)
+    \item Usata in Transformers SOTA (BERT, GPT, Vision Transformers)
+    \item Migliori prestazioni in modelli compatti
+\end{itemize}
+
+\textbf{Scelta per MobileNetECA}: GELU in tutti i blocchi per stabilità del training.
+
+\subsubsection{Pooling Layers}
+Riducono le dimensioni spaziali delle feature map.
+
+\textbf{Max Pooling}: Seleziona il valore massimo in ogni window.
+
+\textbf{Average Pooling}: Calcola la media in ogni window.
+
+\textbf{Adaptive Average Pooling}: Output size fissato indipendentemente da input size. Fondamentale per architetture flessibili.
+
+\section{Architetture Residual}
+
+\subsection{Problema del Vanishing Gradient}
+In reti molto profonde, i gradienti tendono a ``svanire'' durante il backpropagation:
+\begin{equation}
+\frac{\partial L}{\partial w_1} = \frac{\partial L}{\partial a_N} \prod_{i=1}^{N-1} \frac{\partial a_{i+1}}{\partial a_i} \cdot \frac{\partial a_1}{\partial w_1}
+\end{equation}
+
+Se $|\frac{\partial a_{i+1}}{\partial a_i}| < 1$, il prodotto decade esponenzialmente con la profondità.
+
+\subsection{Residual Connections}
+ResNet \cite{he2016deep} risolve il problema con \textbf{skip connections}:
+\begin{equation}
+\mathbf{y} = \mathcal{F}(\mathbf{x}, \{W_i\}) + \mathbf{x}
+\end{equation}
+
+Invece di apprendere $H(\mathbf{x})$, la rete apprende la funzione residua $\mathcal{F}(\mathbf{x}) = H(\mathbf{x}) - \mathbf{x}$.
+
+\textbf{Benefici}:
+\begin{itemize}
+    \item \textbf{Gradient flow diretto}: I gradienti fluiscono attraverso la skip connection
+    \item \textbf{Identità mapping}: Se $\mathcal{F}(\mathbf{x}) = 0$, lo strato implementa identità (non degrada)
+    \item \textbf{Reti profonde}: Abilita training di reti fino a 1000+ layer
+\end{itemize}
+
+\section{Depthwise Separable Convolutions}
+
+\subsection{Motivazione}
+Le convoluzioni standard sono computazionalmente costose. Per un layer con input $H \times W \times C_{in}$ e output $H \times W \times C_{out}$ con kernel $K \times K$:
+
+\begin{equation}
+\text{FLOPs}_{\text{standard}} = H \times W \times C_{in} \times C_{out} \times K \times K
+\end{equation}
+
+\subsection{Depthwise Separable Decomposition}
+MobileNet \cite{howard2017mobilenets} decompone la conv in due step:
+
+\textbf{1. Depthwise Convolution}: Una conv per canale (groups = $C_{in}$)
+\begin{equation}
+\text{FLOPs}_{\text{DW}} = H \times W \times C_{in} \times K \times K
+\end{equation}
+
+\textbf{2. Pointwise Convolution}: Conv 1×1 per mixing tra canali
+\begin{equation}
+\text{FLOPs}_{\text{PW}} = H \times W \times C_{in} \times C_{out}
+\end{equation}
+
+\textbf{Riduzione computazionale}:
+\begin{equation}
+\frac{\text{FLOPs}_{\text{DW}} + \text{FLOPs}_{\text{PW}}}{\text{FLOPs}_{\text{standard}}} = \frac{1}{C_{out}} + \frac{1}{K^2}
+\end{equation}
+
+Per $C_{out}=64$ e $K=3$: riduzione di $\sim$8-9×!
+
+\textbf{Trade-off}: Leggera perdita di capacità espressiva vs enorme guadagno in efficienza.
+
+\section{Inverted Residual Blocks (MobileNetV2)}
+
+\subsection{Confronto con Bottleneck Classico}
+\textbf{ResNet Bottleneck}: Largo → Stretto → Largo (es. 256 → 64 → 256)
+\begin{itemize}
+    \item Reduce, 3×3 conv, expand
+    \item Lavora su rappresentazioni compresse
+\end{itemize}
+
+\textbf{MobileNetV2 Inverted Residual} \cite{sandler2018mobilenetv2}: Stretto → Largo → Stretto (es. 24 → 144 → 24)
+\begin{itemize}
+    \item Expand, depthwise, project
+    \item Mantiene rappresentazioni compatte, espande solo per filtering
+\end{itemize}
+
+\subsection{Struttura Dettagliata}
+\begin{enumerate}
+    \item \textbf{Expansion}: Conv 1×1, BN, ReLU6 (espansione con fattore $t$)
+    \item \textbf{Depthwise}: Conv 3×3 depthwise, BN, ReLU6
+    \item \textbf{Projection}: Conv 1×1 linear, BN (no activation!)
+    \item \textbf{Residual}: Somma con input se stride=1 e dimensioni match
+\end{enumerate}
+
+\textbf{Linear Bottleneck}: No activation dopo projection per preservare informazione.
+
+{AGGIUNGERE\_DIAGRAMMA\_INVERTED\_RESIDUAL}
+
+\subsection{Motivazione Teorica}
+MobileNetV2 ipotizza che le informazioni importanti stiano in un \textit{manifold di bassa dimensione}. Mantenere rappresentazioni compatte (low-dim) previene perdita di informazione causata da ReLU (che ``taglia'' valori negativi).
+
+\section{Meccanismi di Attention}
+
+\subsection{Concetto Generale}
+I meccanismi di \textbf{attention} permettono alla rete di \textit{focalizzarsi} su feature importanti, assegnando pesi differenziati ai vari elementi.
+
+\textbf{Tipi di attention}:
+\begin{itemize}
+    \item \textbf{Spatial attention}: Dove guardare (quale regione spaziale)
+    \item \textbf{Channel attention}: Cosa guardare (quali canali/feature)
+    \item \textbf{Self-attention}: Relazioni tra elementi (Transformers)
+\end{itemize}
+
+\subsection{Squeeze-and-Excitation (SE) Block}
+Proposto in \cite{hu2018squeeze}, SE applica channel attention:
+
+\textbf{Pipeline}:
+\begin{enumerate}
+    \item \textbf{Squeeze}: Global Average Pooling $\rightarrow [B, C, H, W] \to [B, C, 1, 1]$
+    \item \textbf{Excitation}:
+    \begin{itemize}
+        \item FC layer: $C \to C/r$ (reduction ratio $r=16$)
+        \item ReLU
+        \item FC layer: $C/r \to C$
+        \item Sigmoid
+    \end{itemize}
+    \item \textbf{Scale}: Moltiplica input per attention weights
+\end{enumerate}
+
+\textbf{Costo}: ~10\% parametri aggiuntivi (due FC layers).
+
+\subsection{Efficient Channel Attention (ECA) Block}
+ECA \cite{wang2020eca} semplifica SE rimuovendo le FC layers:
+
+\textbf{Pipeline}:
+\begin{enumerate}
+    \item \textbf{Squeeze}: Global Average Pooling
+    \item \textbf{Excitation}: Conv1D con kernel size adattivo
+    \begin{equation}
+    k = \left|\frac{\log_2(C) + b}{\gamma}\right|_{\text{odd}}
+    \end{equation}
+    dove $b=12$, $\gamma=3$, e $|x|_{\text{odd}}$ denota arrotondamento a dispari più vicino.
+    \item \textbf{Scale}: Sigmoid + moltiplicazione
+\end{enumerate}
+
+\textbf{Vantaggi vs SE}:
+\begin{itemize}
+    \item Solo ~100 parametri (vs migliaia in SE)
+    \item No riduzione dimensionale (evita perdita informazione)
+    \item Kernel adattivo: size aumenta per più canali
+    \item Performance: +1-2\% accuracy, overhead quasi zero
+\end{itemize}
+
+{AGGIUNGERE\_DIAGRAMMA\_ECA\_VS\_SE}
+
+\section{Gradient Scaling e Stabilità del Training}
+
+\subsection{Problema: Attention Dominance}
+I meccanismi di attention possono \textit{dominare} il training, causando instabilità.
+
+\subsection{Soluzione: Learning Rate Scaling}
+Applicato in ECA e Inverted Residual blocks:
+\begin{equation}
+\mathbf{y}_{\text{scaled}} = \mathbf{y} \cdot \text{lr\_scale} + \mathbf{y}_{\text{detach}} \cdot (1 - \text{lr\_scale})
+\end{equation}
+
+Dove:
+\begin{itemize}
+    \item $\mathbf{y}_{\text{detach}}$: Valore senza gradienti (stop gradient)
+    \item $\text{lr\_scale} \in [0,1]$: Fattore di scaling (tipicamente 1.54-1.6)
+\end{itemize}
+
+\textbf{Effetto}: Riduce la magnitudine dei gradienti che fluiscono attraverso attention, stabilizzando il training.
+
+{AGGIUNGERE\_GRAFICO\_TRAINING\_STABILITY\_LOSS\_CURVE}

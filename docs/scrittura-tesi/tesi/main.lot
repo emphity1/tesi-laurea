@@ -1,0 +1,17 @@
+\babel@toc {italian}{}\relax 
+\babel@toc {italian}{}\relax 
+\addvspace {10pt}
+\addvspace {10pt}
+\contentsline {table}{\numberline {1.1}{\ignorespaces Confronto modelli SOTA su CIFAR-10\relax }}{5}{table.caption.5}%
+\addvspace {10pt}
+\addvspace {10pt}
+\contentsline {table}{\numberline {3.1}{\ignorespaces Configurazione blocchi MobileNetECA\relax }}{16}{table.caption.6}%
+\contentsline {table}{\numberline {3.2}{\ignorespaces Confronto complessità computazionale\relax }}{24}{table.caption.8}%
+\addvspace {10pt}
+\contentsline {table}{\numberline {4.1}{\ignorespaces Top-5 configurazioni da grid search (placeholder)\relax }}{31}{table.caption.9}%
+\addvspace {10pt}
+\addvspace {10pt}
+\contentsline {table}{\numberline {6.1}{\ignorespaces Accuratezza finale MobileNetECA Reparameterized (200 Epoche)\relax }}{38}{table.caption.10}%
+\contentsline {table}{\numberline {6.2}{\ignorespaces Confronto con Stato dell'Arte (SOTA) su CIFAR-10\relax }}{41}{table.caption.15}%
+\addvspace {10pt}
+\addvspace {10pt}

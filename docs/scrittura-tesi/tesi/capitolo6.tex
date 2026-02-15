@@ -1,0 +1,272 @@
+\section{Interpretazione dei Risultati}
+
+\subsection{Grid Search: Lezioni Apprese}
+L'esplorazione sistematica dello spazio degli iperparametri ha confermato diverse ipotesi e rivelato insight interessanti:
+
+\textbf{Width Multiplier}:
+\begin{itemize}
+    \item Valori più alti ($\alpha \geq 0.5$) correlano con accuratezza migliore
+    \item Trade-off: +{DELTA\_ACC\_WIDTH}\% accuracy costa {DELTA\_PARAMS\_WIDTH}k parametri
+    \item Per vincoli di memoria estremi: $\alpha=0.35$ fornisce buon compromesso
+\end{itemize}
+
+\textbf{Learning Rate}:
+\begin{itemize}
+    \item Range ottimale: [0.025, 0.05] per convergenza stabile
+    \item LR troppo basso (< 0.01): Convergenza lenta, plateau prematuro
+    \item LR troppo alto (> 0.075): Oscillazioni training, instabilità
+\end{itemize}
+
+\textbf{Weight Decay}:
+\begin{itemize}
+    \item Regolarizzazione moderata (3e-4, 5e-4) funziona meglio
+    \item WD troppo alto (> 1e-3): Underfit, capacità modello limitata
+    \item WD troppo basso (< 1e-4): Overfitting su training
+\end{itemize}
+
+\subsection{GELU vs ReLU}
+{SE\_FATTO\_ESPERIMENTO\_GELU\_VS\_RELU}
+
+La scelta di GELU come funzione di attivazione è motivata da:
+\begin{itemize}
+    \item Gradienti smooth ovunque (vs discontinuità ReLU)
+    \item Migliore stabilità in modelli compatti
+    \item Usata in architetture SOTA (Transformers, EfficientNet)
+\end{itemize}
+
+{AGGIUNGERE\_CONFRONTO\_GELU\_VS\_RELU\_SE\_DISPONIBILE}
+
+\subsection{Cosine Annealing: Efficacia}
+Il learning rate schedule Cosine Annealing ha dimostrato efficacia per:
+\begin{itemize}
+    \item Convergenza smooth senza oscillazioni brusche
+    \item Esplorazione iniziale con LR alto
+    \item Fine-tuning finale con LR basso
+    \item No necessità di tuning manuale (vs step decay)
+\end{itemize}
+
+{AGGIUNGERE\_GRAFICO\_LR\_SCHEDULE\_EFFECT}
+
+\subsection{Contributo Quantitativo di ECA}
+L'ablation study ha quantificato il valore aggiunto dell'attenzione:
+\begin{itemize}
+    \item \textbf{+{DELTA\_ECA}\%} accuracy con overhead < 2\% parametri
+    \item Return on investment eccezionale: {ROI\_ECA}× miglioramento per parametro
+    \item Validazione dell'ipotesi: attention leggera efficace in architetture compatte
+\end{itemize}
+
+\section{Validità dell'Approccio}
+
+\subsection{Punti di Forza}
+
+\subsubsection{Grid Search Sistematica Riproducibile}
+\begin{itemize}
+    \item Esplorazione esaustiva spazio parametri
+    \item Risultati deterministici (seed fissato)
+    \item Codice e configurazioni rilasciate open source
+    \item Protocollo replicabile da altri ricercatori
+\end{itemize}
+
+\subsubsection{Confronto Fair con Letteratura}
+\begin{itemize}
+    \item Stesso dataset (CIFAR-10 ufficiale)
+    \item Stesso protocollo di valutazione (no TTA, no ensemble)
+    \item Stesso hardware per misure latency
+    \item Metriche standard (accuracy, params, FLOPs)
+\end{itemize}
+
+\subsubsection{Efficienza Estrema}
+\begin{itemize}
+    \item 54k parametri → deploy su microcontrollori
+    \item < 220 KB model size → fit in cache L2
+    \item 7M FLOPs → latency sub-millisecondo
+    \item Memoria runtime < {GPU\_MEM} MB
+\end{itemize}
+
+\subsection{Limitazioni}
+
+\subsubsection{Dataset Specifico}
+\textbf{Limitazione}: Testato solo su CIFAR-10 (32×32, 10 classi).
+
+\textbf{Impatto}:
+\begin{itemize}
+    \item Generalizzazione a dataset diversi non validata
+    \item Scalabilità a risoluzioni maggiori (224×224) incerta
+    \item Performance su classi fine-grained (CIFAR-100) sconosciuta
+\end{itemize}
+
+\textbf{Mitigazione}: Architettura modulare facilita adattamento a nuovi task.
+
+\subsubsection{Grid Search Limitato}
+\textbf{Limitazione}: Esplorato subset discreto spazio iperparametri.
+
+\textbf{Impatto}:
+\begin{itemize}
+    \item Configurazione ottimale globale potrebbe non essere trovata
+    \item Interazioni complesse tra parametri non catturate
+    \item Altri parametri (batch size, lr\_scale) non esplorati
+\end{itemize}
+
+\textbf{Mitigazione}: Grid sufficientemente fine per identificare region ottimale.
+
+\subsubsection{Validazione solo Simulata}
+\textbf{Limitazione}: Non testato su hardware edge reale.
+
+\textbf{Impatto}:
+\begin{itemize}
+    \item Latency reale su dispositivi embedded sconosciuta
+    \item Overhead framework deployment (TFLite, ONNX) non quantificato
+    \item Consumo energetico effettivo non misurato
+\end{itemize}
+
+\textbf{Mitigazione}: FLOPs/parametri sono proxy affidabili per efficienza.
+
+\section{Posizionamento rispetto allo SOTA}
+
+\subsection{Frontiera Efficienza-Accuratezza}
+MobileNetECA si posiziona nell'estremità \textit{ultra-compatta} della frontiera:
+
+\begin{itemize}
+    \item \textbf{Regione Occupied}: < 100k parametri, 80-92\% accuracy
+    \item \textbf{Competitors diretti}:
+    \begin{itemize}
+        \item TinyNet, MicroNet: Architetture comparabili
+        \item NAS-derived models: Più complessi ma potenzialmente più accurati
+    \end{itemize}
+    \item \textbf{Vantaggio}: Semplice, interpretabile, facilmente adattabile
+\end{itemize}
+
+{AGGIUNGERE\_GRAFICO\_POSIZIONAMENTO\_FRONTIERA}
+
+\subsection{Trade-off Ottimale per Applicazioni Specifiche}
+MobileNetECA è ideale quando:
+\begin{itemize}
+    \item Vincolo memoria < 1 MB è critico
+    \item Latency sub-millisecondo necessaria
+    \item Energia limitata (batteria, solar-powered)
+    \item Accuratezza 85-92\% accettabile per task
+\end{itemize}
+
+\textbf{Non ottimale quando}:
+\begin{itemize}
+    \item Accuratezza SOTA (> 95\%) richiesta
+    \item Risorse hardware abbondanti
+    \item Dataset ad alta risoluzione (> 224×224)
+\end{itemize}
+
+\section{Generalizzabilità}
+
+\subsection{Applicazione a Dataset Simili}
+L'architettura può essere adattata a:
+
+\textbf{CIFAR-100}:
+\begin{itemize}
+    \item 100 classi vs 10 → espandere classifier layer
+    \item Maggiore complessità task → potrebbe servire $\alpha$ più alto
+    \item Stessi preprocessing e augmentation applicabili
+\end{itemize}
+
+\textbf{SVHN (Street View House Numbers)}:
+\begin{itemize}
+    \item Risoluzione 32×32 → architettura diretta utilizzabile
+    \item Task più semplice (cifre numeri) → accuratezza attesa più alta
+\end{itemize}
+
+\textbf{Fashion-MNIST, MNIST}:
+\begin{itemize}
+    \item Immagini grayscale → input channel 1 vs 3
+    \item Task molto semplice → modello potrebbe essere oversized
+\end{itemize}
+
+\subsection{Scalabilità a Risoluzioni Maggiori}
+Per ImageNet (224×224):
+\begin{itemize}
+    \item Aumentare numero blocchi (più stages)
+    \item Scala width multiplier ($\alpha \approx 1.0$)
+    \item Aumentare expansion ratio (6 → 8 → 10)
+    \item Stimato: ~500k params, 90M FLOPs
+\end{itemize}
+
+\textbf{Sfida}: Bilanciare efficienza con necessità di maggior capacità rappresentazionale.
+
+\subsection{Transfer Learning Potential}
+Pre-training su CIFAR-10 + fine-tuning su task specifici:
+\begin{itemize}
+    \item Feature extracted dai primi layer generalizzano
+    \item Classifier finale re-trainato per nuove classi
+    \item Convergenza più rapida rispetto a training from scratch
+\end{itemize}
+
+{AGGIUNGERE\_DIAGRAMMA\_TRANSFER\_LEARNING\_WORKFLOW}
+
+\section{Implicazioni Pratiche}
+
+\subsection{Scenari di Deploy Reali}
+MobileNetECA abilita applicazioni prima impraticabili:
+
+\textbf{Smartphone e Mobile Devices}:
+\begin{itemize}
+    \item Real-time classification su immagini camera
+    \item Assistenti visivi on-device (privacy-preserving)
+    \item App di riconoscimento oggetti offline
+\end{itemize}
+
+\textbf{IoT e Edge Computing}:
+\begin{itemize}
+    \item Smart cameras per sorveglianza
+    \item Drones autonomi con riconoscimento oggetti
+    \item Sistemi di sorting automatico in produzione
+\end{itemize}
+
+\textbf{Embedded Systems}:
+\begin{itemize}
+    \item Microcontrollori (ARM Cortex-M7, STM32)
+    \item FPGA per accelerazione hardware
+    \item Sistemi automotive (ADAS)
+\end{itemize}
+
+\subsection{Benefici Ambientali ed Economici}
+\textbf{Riduzione Costi Computazionali}:
+\begin{itemize}
+    \item Meno energia consumata per inferenza
+    \item Training su GPU consumer (vs datacenter)
+    \item Deploy su hardware low-cost
+\end{itemize}
+
+\textbf{Impatto Ambientale}:
+\begin{itemize}
+    \item Carbon footprint ridotto (meno compute)
+    \item Lifetime estesa dispositivi (minor carico processore)
+    \item Scalabilità sostenibile per milioni di device
+\end{itemize}
+
+\subsection{Privacy e Sicurezza}
+\textbf{On-Device Inference}:
+\begin{itemize}
+    \item Dati sensibili non lasciano il dispositivo
+    \item No dipendenza da cloud/server esterni
+    \item Latency ridotta (no network round-trip)
+\end{itemize}
+
+\textbf{Resilienza}:
+\begin{itemize}
+    \item Funziona offline (no connettività richiesta)
+    \item Meno vulnerabile ad attacchi network
+\end{itemize}
+
+\section{Confronto con Neural Architecture Search}
+\textbf{NAS (Neural Architecture Search)}:
+\begin{itemize}
+    \item Pro: Trova architetture ottimali automaticamente
+    \item Contro: Computazionalmente costoso (migliaia GPU-hours)
+\end{itemize}
+
+\textbf{MobileNetECA (Hand-crafted + Grid Search)}:
+\begin{itemize}
+    \item Pro: Interpretabile, controllabile, economico (~3 ore GPU)
+    \item Contro: Potrebbe non raggiungere optimum globale
+\end{itemize}
+
+\textbf{Trade-off}: Per risorse limitate, approccio manuale + grid search è più pratico.
+
+{AGGIUNGERE\_TABELLA\_COMPARISON\_NAS\_VS\_GRID\_SEARCH}

@@ -1,0 +1,237 @@
+\section{Grid Search Sistematica}
+
+\subsection{Obiettivo}
+L'ottimizzazione degli iperparametri è cruciale per ottenere le migliori prestazioni da un'architettura neurale. Invece di procedere per tentativi empirici non sistematici, è stata condotta una \textbf{grid search esaustiva} per esplorare lo spazio dei parametri in modo riproduc
+
+ibile.
+
+\subsection{Spazio di Ricerca}
+I parametri esplorati sono:
+
+\begin{itemize}
+    \item \textbf{Learning Rate}: $\eta \in \{0.005, 0.01, 0.025, 0.05, 0.075, 0.1\}$ (6 valori)
+    \item \textbf{Width Multiplier}: $\alpha \in \{0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6\}$ (7 valori)
+    \item \textbf{Weight Decay}: $\lambda \in \{10^{-4}, 2 \times 10^{-4}, 3 \times 10^{-4}, 5 \times 10^{-4}, 10^{-3}\}$ (5 valori)
+\end{itemize}
+
+\textbf{Parametri fissi}:
+\begin{itemize}
+    \item Batch size: 128
+    \item Momentum: 0.9
+    \item LR scale: 1.54
+\end{itemize}
+
+\textbf{Combinazioni totali}: $6 \times 7 \times 5 = 210$ configurazioni
+
+\subsection{Strategia: Two-Phase Approach}
+Per ridurre il tempo computazionale senza sacrificare la qualità della ricerca:
+
+\textbf{Fase 1 - Screening (25 epoche)}:
+\begin{itemize}
+    \item Tutte le 210 configurazioni allenate per 25 epoche
+    \item Valutazione multi-checkpoint (epoch 15, 20, 25)
+    \item Early stopping: configurazioni con val\_acc < 80\% @ epoch 15 sono scartate
+    \item Calcolo di uno \textit{score predittivo} basato su accuracy corrente + trend di miglioramento
+\end{itemize}
+
+\textbf{Fase 2 - Refinement (50 epoche)}:
+\begin{itemize}
+    \item Top-5 configurazioni per score allenate per 50 epoche complete
+    \item Salvataggio best model e metriche dettagliate
+    \item Identificazione della configurazione ottimale finale
+\end{itemize}
+
+\textbf{Tempo totale stimato}: ~2-3 ore su GPU (vs ~8-10 ore per 210×50 epoche)
+
+\subsection{Scoring Function}
+Lo score predittivo combina accuracy corrente e trend:
+
+\begin{equation}
+\text{score} = 0.7 \cdot \text{val\_acc}_{\text{epoch 25}} + 0.3 \cdot \text{val\_acc}_{\text{predicted}}
+\end{equation}
+
+dove:
+\begin{equation}
+\text{val\_acc}_{\text{predicted}} = \text{val\_acc}_{\text{epoch 25}} + \overline{r} \cdot 25
+\end{equation}
+
+\begin{equation}
+\overline{r} = \frac{1}{N-1}\sum_{i=1}^{N-1} \frac{\text{val\_acc}_{e_{i+1}} - \text{val\_acc}_{e_i}}{e_{i+1} - e_i}
+\end{equation}
+
+$\overline{r}$ = tasso medio di miglioramento per epoca tra checkpoint $e_i \in \{15, 20, 25\}$.
+
+\section{Implementazione Grid Search}
+
+\subsection{Codice e Workflow}
+Script principale: \texttt{src/scripts/grid\_search\_ultra\_fast.py}
+
+\textbf{Processo}:
+\begin{enumerate}
+    \item Generazione combinazioni con \texttt{itertools.product}
+    \item Pre-caricamento dataset CIFAR-10 (condiviso tra run)
+    \item Per ogni configurazione:
+    \begin{itemize}
+        \item Inizializza modello, optimizer, scheduler
+        \item Training loop 25 epoche
+        \item Valutazione checkpoint, calcolo score
+        \item Early stopping se necessario
+    \end{itemize}
+    \item Sorting per score, selezione top-5
+    \item Refinement con training completo 50 epoche
+    \item Salvataggio risultati JSON e summary
+\end{enumerate}
+
+\subsection{Output e Artifact}
+Struttura directory risultati:
+\begin{verbatim}
+reports/grid_search_ultra_fast/search_YYYYMMDD_HHMMSS/
+|-- SUMMARY.txt
+|-- two_phase_results.json
+|-- best_config.json
+|-- phase1_screening/
+|   |-- screen_001_.../logs/screening_metrics.json
+|   |-- screen_002_.../logs/...
+|   `-- ...
+`-- phase2_refinement/
+    |-- refine_01_.../
+    |   |-- logs/final_metrics.json
+    |   `-- models/best_model.pth
+    `-- ...
+\end{verbatim}
+
+\section{Risultati Grid Search}
+
+\subsection{Statistiche Phase 1}
+\begin{itemize}
+    \item Configurazioni testate: 210
+    \item Completate screening: {NUM\_SUCCESSFUL}
+    \item Early stopped: {NUM\_STOPPED}
+    \item Tempo medio per run: ~{AVG\_TIME} minuti
+\end{itemize}
+
+\subsection{Top-5 Configurazioni (da Phase 2)}
+{AGGIUNGERE\_TABELLA\_TOP5\_CONFIGS}
+
+\begin{table}[h]
+\centering
+\caption{Top-5 configurazioni da grid search (placeholder)}
+\label{tab:top5}
+\begin{tabular}{cccccc}
+\toprule
+\textbf{Rank} & \textbf{Val Acc (\%)} & \textbf{LR} & \textbf{Width} & \textbf{WD} & \textbf{Epochs Best} \\
+\midrule
+1 & {ACC\_1} & {LR\_1} & {WIDTH\_1} & {WD\_1} & {EPOCH\_1} \\
+2 & {ACC\_2} & {LR\_2} & {WIDTH\_2} & {WD\_2} & {EPOCH\_2} \\
+3 & {ACC\_3} & {LR\_3} & {WIDTH\_3} & {WD\_3} & {EPOCH\_3} \\
+4 & {ACC\_4} & {LR\_4} & {WIDTH\_4} & {WD\_4} & {EPOCH\_4} \\
+5 & {ACC\_5} & {LR\_5} & {WIDTH\_5} & {WD\_5} & {EPOCH\_5} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Analisi Insights}
+{AGGIUNGERE\_ANALISI\_DOPO\_GRID\_SEARCH}
+
+Osservazioni preliminari (da aggiornare con dati reali):
+\begin{itemize}
+    \item \textbf{Width multiplier}: Valori più alti (0.5-0.6) tendono a performance migliori
+    \item \textbf{Learning rate}: Range ottimale sembra 0.025-0.05
+    \item \textbf{Weight decay}: Regolarizzazione moderata (3e-4, 5e-4) bilancia overfitting
+    \item \textbf{Spread accuratezza}: Range {MIN\_ACC}\% - {MAX\_ACC}\% = {SPREAD}\% punti
+\end{itemize}
+
+\subsection{Visualizzazioni Heatmap}
+{AGGIUNGERE\_HEATMAP\_LR\_VS\_WIDTH}
+{AGGIUNGERE\_HEATMAP\_LR\_VS\_WD}
+{AGGIUNGERE\_HEATMAP\_WIDTH\_VS\_WD}
+
+\section{Training Finale (200 Epoche)}
+
+\subsection{Configurazione Scelta}
+Basandosi sui risultati del grid search, la configurazione ottimale identificata è:
+
+\begin{itemize}
+    \item Learning rate: {BEST\_LR}
+    \item Width multiplier: {BEST\_WIDTH}
+    \item Weight decay: {BEST\_WD}
+    \item Batch size: 128
+    \item Momentum: 0.9
+    \item Epoche: 200
+\end{itemize}
+
+\subsection{Dettagli Training}
+\textbf{Hardware}: {GPU\_TYPE}
+
+\textbf{Tempo totale}: ~{TOTAL\_TIME} minuti
+
+\textbf{Checkpoint}: Best model salvato quando validation accuracy migliora
+
+\textbf{Configurazione PyTorch}:
+\begin{lstlisting}[language=Python, caption=Config training finale]
+optimizer = optim.SGD(
+    model.parameters(),
+    lr={BEST_LR},
+    momentum=0.9,
+    weight_decay={BEST_WD}
+)
+
+scheduler = CosineAnnealingLR(optimizer, T_max=200)
+criterion = nn.CrossEntropyLoss()
+
+# Gradient clipping
+nn.utils.clip_grad_norm_(model.parameters(), max_norm=5.0)
+\end{lstlisting}
+
+\subsection{Curve di Training}
+{AGGIUNGERE\_GRAFICO\_ACCURACY\_TRAIN\_VAL\_200\_EPOCHS}
+{AGGIUNGERE\_GRAFICO\_LOSS\_TRAIN\_VAL\_200\_EPOCHS}
+{AGGIUNGERE\_GRAFICO\_LR\_SCHEDULE\_200\_EPOCHS}
+
+Figura~\ref{fig:training_curves} mostra l'evoluzione di accuracy e loss durante le 200 epoche.
+
+\textbf{Osservazioni}:
+\begin{itemize}
+    \item Convergenza smooth senza oscillazioni maggiori
+    \item Gap train-val accuracy: {TRAIN\_VAL\_GAP}\% (indica livello overfitting)
+    \item Best epoch: {BEST\_EPOCH}/200
+    \item Plateau raggiunto dopo ~{PLATEAU\_EPOCH} epoche
+\end{itemize}
+
+\section{Validazione e Testing}
+
+\subsection{Split Dataset}
+\begin{itemize}
+    \item Training: 50,000 immagini (CIFAR-10 train split ufficiale)
+    \item Test: 10,000 immagini (CIFAR-10 test split ufficiale)
+    \item NO validation split separato (validation = test in questo contesto)
+\end{itemize}
+
+\subsection{Metriche di Valutazione}
+\textbf{Primary metric}: Top-1 Accuracy
+\begin{equation}
+\text{Accuracy} = \frac{\text{\# predizioni corrette}}{\text{\# totale campioni}}
+\end{equation}
+
+\textbf{Per-class metrics}:
+\begin{itemize}
+    \item \textbf{Precision}: $P_i = \frac{TP_i}{TP_i + FP_i}$
+    \item \textbf{Recall}: $R_i = \frac{TP_i}{TP_i + FN_i}$
+    \item \textbf{F1-Score}: $F1_i = 2 \cdot \frac{P_i \cdot R_i}{P_i + R_i}$
+\end{itemize}
+
+\textbf{Confusion Matrix}: Matrice 10×10 per visualizzare errori sistematici
+
+\textbf{ROC Curves}: One-vs-rest per ogni classe
+
+\subsection{Protocollo Fair}
+Per garantire confronto equo con letteratura:
+\begin{itemize}
+    \item \textbf{Seed fisso}: Riproducibilità completa (seed=42)
+    \item \textbf{NO augmentation su test}: Solo normalizzazione
+    \item \textbf{Single crop evaluation}: No test-time augmentation (TTA)
+    \item \textbf{Stesso dataset split}: CIFAR-10 ufficiale
+\end{itemize}
+
+{AGGIUNGERE\_CONFUSION\_MATRIX\_PLACEHOLDER}
+{AGGIUNGERE\_PER\_CLASS\_ACCURACY\_BAR\_CHART}

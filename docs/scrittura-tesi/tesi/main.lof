@@ -1,0 +1,16 @@
+\babel@toc {italian}{}\relax 
+\babel@toc {italian}{}\relax 
+\addvspace {10pt}
+\addvspace {10pt}
+\addvspace {10pt}
+\addvspace {10pt}
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Pipeline Inverted Residual Block con ECA\relax }}{17}{figure.caption.7}%
+\addvspace {10pt}
+\addvspace {10pt}
+\addvspace {10pt}
+\contentsline {figure}{\numberline {6.1}{\ignorespaces Confronto delle dinamiche di addestramento. La linea rossa (Reparameterized) mostra una convergenza più lenta ma costante, superando il plateau della baseline (blu) grazie al Cosine Annealing esteso e alla maggiore capacità rappresentativa dei rami paralleli.\relax }}{39}{figure.caption.11}%
+\contentsline {figure}{\numberline {6.2}{\ignorespaces Scatter plot (scala logaritmica) che posiziona il nostro modello rispetto allo Stato dell'Arte. La stella blu (Reparameterized) si colloca nella regione di "massima efficienza", con un'accuratezza comparabile a ResNet-20 e MobileNetV2 ma con un numero di parametri drasticamente inferiore (76k vs 270k/700k).\relax }}{40}{figure.caption.12}%
+\contentsline {figure}{\numberline {6.3}{\ignorespaces Matrice di Confusione sul Test Set. Si nota una diagonale dominante, indice di alta precisione. Le confusioni principali avvengono tra classi semanticamente affini: Gatto $\leftrightarrow $ Cane e Automobile $\leftrightarrow $ Camion.\relax }}{41}{figure.caption.13}%
+\contentsline {figure}{\numberline {6.4}{\ignorespaces Curve ROC One-vs-Rest per le 10 classi CIFAR-10. L'Area Sotto la Curva (AUC) media è estremamente alta (>0.99), indicando che il modello separa eccellentemente le classi positive dalle negative a vari livelli di soglia.\relax }}{42}{figure.caption.14}%
+\addvspace {10pt}
+\addvspace {10pt}

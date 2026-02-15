@@ -1,0 +1,77 @@
+% !TeX spellcheck = it_IT
+\documentclass{TesiDiaUniroma3}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[bottom]{footmisc}
+\usepackage{xurl}
+
+\titolo{\textbf{Ottimizzazione di Architetture Neurali Compatte con Meccanismi di Attenzione: MobileNetECA per la Classificazione su CIFAR-10}}
+\autore{Dmytro Kozak}
+\matricola{538593}
+\relatore{Prof. Giuseppe Sansonetti}
+%\correlatore{} % modifica anche TesiDiaUniroma3.cls se vuoi avere un correlatore
+\annoAccademico{2024/2025}
+
+% Pacchetti di utilità
+\usepackage[plainpages=false, hidelinks]{hyperref}
+\usepackage[all]{hypcap}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+\usepackage[width=.75\textwidth]{caption}
+\usepackage{adjustbox}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{listings}
+\usepackage[table]{xcolor}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{subcaption}
+\useunder{\uline}{\ul}{}
+
+% Configurazione listings per codice Python
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{gray},
+    stringstyle=\color{red},
+    showstringspaces=false,
+    breaklines=true,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    frame=single
+}
+
+\begin{document}
+
+% Pagine di frontespizio (numerate in romano)
+\frontmatter
+\generaFrontespizio
+\introduzione{introduzione}
+\generaIndice
+\generaIndiceFigure
+\generaIndiceTabelle
+
+% Pagine di tesi (numerate in arabo)
+\mainmatter
+\capitolo{Introduzione e Contesto}{capitolo1}
+\capitolo{Fondamenti Teorici}{capitolo2}
+\capitolo{Architettura MobileNetECA}{capitolo3}
+\capitolo{Metodologia Sperimentale}{capitolo4}
+\capitolo{Risultati e Analisi}{capitolo5}
+\capitolo{Discussione}{capitolo6}
+
+% Parte finale della tesi
+\backmatter
+\conclusioni{conclusioni}
+\ringraziamenti{ringraziamenti}
+
+% Bibliografia con BibTeX
+\bibliography{bibliografia}
+
+\end{document}

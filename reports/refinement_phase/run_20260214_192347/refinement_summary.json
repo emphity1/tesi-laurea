@@ -1,0 +1,57 @@
+[
+  {
+    "rank": 1,
+    "config": {
+      "lr": 0.025,
+      "width_mult": 0.4,
+      "weight_decay": 0.001
+    },
+    "best_acc": 90.12,
+    "best_epoch": 46,
+    "total_time_min": 6.824919939041138
+  },
+  {
+    "rank": 2,
+    "config": {
+      "lr": 0.025,
+      "width_mult": 0.45,
+      "weight_decay": 0.0005
+    },
+    "best_acc": 90.29,
+    "best_epoch": 50,
+    "total_time_min": 6.905593915780385
+  },
+  {
+    "rank": 3,
+    "config": {
+      "lr": 0.025,
+      "width_mult": 0.35,
+      "weight_decay": 0.001
+    },
+    "best_acc": 89.82,
+    "best_epoch": 50,
+    "total_time_min": 6.95977809826533
+  },
+  {
+    "rank": 4,
+    "config": {
+      "lr": 0.025,
+      "width_mult": 0.45,
+      "weight_decay": 0.001
+    },
+    "best_acc": 90.73,
+    "best_epoch": 49,
+    "total_time_min": 6.9211902300516766
+  },
+  {
+    "rank": 5,
+    "config": {
+      "lr": 0.025,
+      "width_mult": 0.5,
+      "weight_decay": 0.0002
+    },
+    "best_acc": 90.13,
+    "best_epoch": 46,
+    "total_time_min": 6.940976611773173
+  }
+]

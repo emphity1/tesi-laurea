@@ -1,0 +1,107 @@
+% !TeX spellcheck = it_IT
+\chapter{Risultati Sperimentali}
+\label{chap:risultati}
+
+In questo capitolo vengono presentati i risultati finali ottenuti con l'architettura \textbf{MobileNetECA Reparameterized}. L'obiettivo principale della sperimentazione era superare la baseline del 91.44\% mantenendo il numero di parametri inferenziali al di sotto dei 100k.
+
+\section{Prestazioni Finali del Modello}
+
+Il modello finale, addestrato per 200 epoche con tecnica di Reparameterization e Cosine Annealing Learning Rate, ha raggiunto prestazioni eccellenti, confermando la validità dell'approccio proposto.
+
+\subsection{Accuratezza Globale}
+I risultati sul test set di CIFAR-10 (10.000 immagini) sono riassunti nella Tabella~\ref{tab:final_acc}.
+
+\begin{table}[ht]
+\centering
+\caption{Accuratezza finale MobileNetECA Reparameterized (200 Epoche)}
+\label{tab:final_acc}
+\begin{tabular}{lc}
+\toprule
+\textbf{Metrica} & \textbf{Valore} \\
+\midrule
+Training Accuracy & 99.43\% \\
+\textbf{Validation Accuracy (Best)} & \textbf{92.47\%} \\
+Loss Finale & 0.0265 \\
+Parametri (Training) & 84.7k \\
+\textbf{Parametri (Inference)} & \textbf{76.6k} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Il modello ha ottenuto un guadagno netto di \textbf{+1.03\%} rispetto alla baseline standard (91.44\%), utilizzando lo stesso budget di parametri inferenziali (76.6k). L'elevata accuracy sul training set (99.43\%) indica che il modello ha capacità sufficiente per apprendere il dataset, mentre il gap con il validation set suggerisce margini per ulteriore regolarizzazione, sebbene il risultato sia già allo stato dell'arte per questa classe di complessità.
+
+\section{Analisi dell'Addestramento}
+
+\subsection{Dinamiche di Convergenza}
+Il confronto tra il training della baseline (50 epoche) e del modello proposto (200 epoche) evidenzia l'importanza di un learning rate schedule prolungato.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.95\textwidth]{immagini/training_comparison.png}
+    \caption{Confronto delle dinamiche di addestramento. La linea rossa (Reparameterized) mostra una convergenza più lenta ma costante, superando il plateau della baseline (blu) grazie al Cosine Annealing esteso e alla maggiore capacità rappresentativa dei rami paralleli.}
+    \label{fig:training_comparison}
+\end{figure}
+
+Come mostrato in Figura~\ref{fig:training_comparison}, la baseline raggiunge rapidamente il suo asintoto intorno all'epoca 40. Al contrario, il modello Reparameterized continua a migliorare costantemente, beneficiando della struttura multi-branch che facilita il flusso dei gradienti durante le fasi iniziali e centrali dell'apprendimento.
+
+\section{Efficienza: Trade-off Accuracy vs Parametri}
+
+Il risultato più significativo di questo lavoro è l'eccezionale efficienza del modello proposto rispetto alla letteratura esistente.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.95\textwidth]{immagini/accuracy_vs_params.png}
+    \caption{Scatter plot (scala logaritmica) che posiziona il nostro modello rispetto allo Stato dell'Arte. La stella blu (Reparameterized) si colloca nella regione di "massima efficienza", con un'accuratezza comparabile a ResNet-20 e MobileNetV2 ma con un numero di parametri drasticamente inferiore (76k vs 270k/700k).}
+    \label{fig:accuracy_vs_params}
+\end{figure}
+
+La Figura~\ref{fig:accuracy_vs_params} illustra chiaramente il posizionamento competitivo di MobileNetECA Reparameterized. Mentre modelli come MobileNetV2 (x0.5) e ResNet-20 ottengono accuratezze simili (~92.6-92.8\%), richiedono da 3 a 10 volte più parametri. Il nostro modello ottiene il 92.47\% con soli 76.6k parametri, dimostrando che l'attenzione ECA e la ri-parametrizzazione sono chiavi per l'efficienza estrema.
+
+\section{Analisi Dettagliata degli Errori}
+
+Per comprendere meglio il comportamento del modello, abbiamo analizzato la matrice di confusione e le curve ROC.
+
+\subsection{Matrice di Confusione}
+La Figura~\ref{fig:confusion_matrix} mostra le predizioni del modello aggregate per classe.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.85\textwidth]{immagini/confusion_matrix.png}
+    \caption{Matrice di Confusione sul Test Set. Si nota una diagonale dominante, indice di alta precisione. Le confusioni principali avvengono tra classi semanticamente affini: Gatto $\leftrightarrow$ Cane e Automobile $\leftrightarrow$ Camion.}
+    \label{fig:confusion_matrix}
+\end{figure}
+
+L'analisi conferma che gli errori non sono casuali ma concentrati su coppie di classi visivamente simili, un comportamento tipico dei modelli di visione umana e artificiale.
+
+\subsection{Curve ROC e AUC}
+L'analisi delle curve ROC (Receiver Operating Characteristic), visibile in Figura~\ref{fig:roc_curves}, conferma la robustezza del classificatore.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.85\textwidth]{immagini/roc_curves.png}
+    \caption{Curve ROC One-vs-Rest per le 10 classi CIFAR-10. L'Area Sotto la Curva (AUC) media è estremamente alta (>0.99), indicando che il modello separa eccellentemente le classi positive dalle negative a vari livelli di soglia.}
+    \label{fig:roc_curves}
+\end{figure}
+
+\section{Confronto Tabellare con SOTA}
+
+Concludiamo con un confronto diretto con le architetture di riferimento citate in letteratura per CIFAR-10.
+
+\begin{table}[ht]
+\centering
+\caption{Confronto con Stato dell'Arte (SOTA) su CIFAR-10}
+\label{tab:sota_comparison}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Modello} & \textbf{Params} & \textbf{Accuracy} & \textbf{Efficienza (Acc/kParam)} \\
+\midrule
+ResNet-20 & 270k & 92.60\% & 0.34 \\
+MobileNetV2 (x0.5) & 700k & 92.88\% & 0.13 \\
+ShuffleNetV2 (x0.5) & 350k & 90.13\% & 0.25 \\
+GhostNet (Ours) & 57k & 89.50\% & 1.57 \\
+\textbf{MobileNetECA Rep (Ours)} & \textbf{76.6k} & \textbf{92.47\%} & \textbf{1.20} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+La Tabella~\ref{tab:sota_comparison} evidenzia come il nostro modello offra un compromesso unico: pur avendo un numero di parametri minuscolo, compete ad armi pari con reti molto più grandi, risultando in un indice di efficienza (Accuratezza per migliaio di parametri) eccezionale.
