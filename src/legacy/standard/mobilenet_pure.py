@@ -117,7 +117,7 @@ def main():
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     
     # Hyperparameters
-    epochs = 50
+    epochs = 200
     batch_size = 128
     lr = 0.05
     

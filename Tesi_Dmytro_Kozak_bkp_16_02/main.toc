@@ -1,0 +1,84 @@
+\babel@toc {italian}{}\relax 
+\babel@toc {italian}{}\relax 
+\contentsline {chapter}{Introduzione}{iii}{chapter*.1}%
+\contentsline {chapter}{Indice}{iv}{section*.2}%
+\contentsline {chapter}{Elenco delle figure}{viii}{section*.3}%
+\contentsline {chapter}{\chapternumberline {1}Introduzione}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Contesto e Motivazione}{1}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Obiettivi della Tesi}{2}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Contributi del Lavoro}{2}{section.1.3}%
+\contentsline {section}{\numberline {1.4}Struttura della Tesi}{3}{section.1.4}%
+\contentsline {chapter}{\chapternumberline {2}Il Dataset CIFAR-10}{5}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Descrizione del Dataset CIFAR-10}{5}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Struttura e Organizzazione dei Dati}{6}{subsection.2.1.1}%
+\contentsline {section}{\numberline {2.2}Preprocessing dei Dati}{7}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Normalizzazione}{7}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Data Augmentation Standard}{8}{subsection.2.2.2}%
+\contentsline {section}{\numberline {2.3}Sfide e Limitazioni}{8}{section.2.3}%
+\contentsline {chapter}{\chapternumberline {3}Fondamenti delle Reti Neurali}{10}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Apprendimento Automatico}{10}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Paradigmi di Apprendimento}{10}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}Il Perceptron e il Neurone Artificiale}{11}{subsection.3.1.2}%
+\contentsline {section}{\numberline {3.2}Funzioni di Attivazione}{12}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Sigmoide e Tanh}{12}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}ReLU (Rectified Linear Unit)}{12}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}GELU (Gaussian Error Linear Unit)}{13}{subsection.3.2.3}%
+\contentsline {section}{\numberline {3.3}Addestramento della Rete}{13}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Funzione di Costo (Loss Function)}{13}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Algoritmo di Backpropagation}{13}{subsection.3.3.2}%
+\contentsline {section}{\numberline {3.4}Ottimizzazione e Regolarizzazione}{14}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Ottimizzatori}{14}{subsection.3.4.1}%
+\contentsline {subsubsection}{\numberline {3.4.1.1}Stochastic Gradient Descent (SGD)}{14}{subsubsection.3.4.1.1}%
+\contentsline {subsubsection}{\numberline {3.4.1.2}SGD con Momentum}{14}{subsubsection.3.4.1.2}%
+\contentsline {subsubsection}{\numberline {3.4.1.3}Adam (Adaptive Moment Estimation)}{15}{subsubsection.3.4.1.3}%
+\contentsline {subsection}{\numberline {3.4.2}Tecniche di Regolarizzazione}{15}{subsection.3.4.2}%
+\contentsline {subsubsection}{\numberline {3.4.2.1}Batch Normalization}{15}{subsubsection.3.4.2.1}%
+\contentsline {subsubsection}{\numberline {3.4.2.2}Dropout}{15}{subsubsection.3.4.2.2}%
+\contentsline {subsubsection}{\numberline {3.4.2.3}Weight Decay (L2 Regularization)}{15}{subsubsection.3.4.2.3}%
+\contentsline {chapter}{\chapternumberline {4}Stato dell'Arte e Tecniche di Efficienza}{16}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Evoluzione delle Architetture CNN}{16}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Evoluzione delle Architetture CNN}{16}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Dalle Origini al Deep Learning Moderno}{16}{subsection.4.2.1}%
+\contentsline {section}{\numberline {4.3}Architetture Efficienti per Mobile}{17}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Depthwise Separable Convolutions}{17}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}MobileNetV2: Inverted Residuals}{17}{subsection.4.3.2}%
+\contentsline {section}{\numberline {4.4}Meccanismi di Attenzione}{18}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Squeeze-and-Excitation (SE)}{18}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}Efficient Channel Attention (ECA)}{19}{subsection.4.4.2}%
+\contentsline {chapter}{\chapternumberline {5}Metodologia e Architettura Proposta}{20}{chapter.5}%
+\contentsline {chapter}{\chapternumberline {6}Metodologia e Architettura Proposta}{21}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Panoramica del Sistema}{21}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Structural Reparameterization}{22}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}Concetto Chiave: Training vs Inference}{22}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.2}Fusione Matematica dei Kernel}{23}{subsection.6.2.2}%
+\contentsline {section}{\numberline {6.3}Architettura Dettagliata}{24}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}Inverted Residual Block con ECA}{24}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.3.2}Scelte Architetturali Specifiche}{24}{subsection.6.3.2}%
+\contentsline {subsubsection}{\numberline {6.3.2.1}Stride Iniziale}{24}{subsubsection.6.3.2.1}%
+\contentsline {subsubsection}{\numberline {6.3.2.2}Attivazione: GELU vs ReLU}{25}{subsubsection.6.3.2.2}%
+\contentsline {section}{\numberline {6.4}Implementazione del Deploy}{25}{section.6.4}%
+\contentsline {subsection}{\numberline {6.4.1}ECA Block: Implementazione Dettagliata}{27}{subsection.6.4.1}%
+\contentsline {subsubsection}{\numberline {6.4.1.1}Formula del Kernel Adattivo}{27}{subsubsection.6.4.1.1}%
+\contentsline {subsubsection}{\numberline {6.4.1.2}Pipeline Operativa}{27}{subsubsection.6.4.1.2}%
+\contentsline {section}{\numberline {6.5}Configurazione Sperimentale}{28}{section.6.5}%
+\contentsline {subsection}{\numberline {6.5.1}Protocollo di Training}{28}{subsection.6.5.1}%
+\contentsline {subsection}{\numberline {6.5.2}Learning Rate Schedule}{28}{subsection.6.5.2}%
+\contentsline {section}{\numberline {6.6}Analisi della Complessità Teorica}{28}{section.6.6}%
+\contentsline {chapter}{\chapternumberline {7}Analisi dei Risultati}{30}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Ablation Study: Impatto delle Componenti}{30}{section.7.1}%
+\contentsline {subsection}{\numberline {7.1.1}Dinamiche di Addestramento}{31}{subsection.7.1.1}%
+\contentsline {section}{\numberline {7.2}Analisi del Modello Finale (MobileNetECA-Rep)}{32}{section.7.2}%
+\contentsline {subsection}{\numberline {7.2.1}Matrice di Confusione}{32}{subsection.7.2.1}%
+\contentsline {subsection}{\numberline {7.2.2}Curve ROC e AUC}{33}{subsection.7.2.2}%
+\contentsline {section}{\numberline {7.3}Analisi Qualitativa}{34}{section.7.3}%
+\contentsline {subsection}{\numberline {7.3.1}Esempi di Classificazione Corretta}{34}{subsection.7.3.1}%
+\contentsline {subsection}{\numberline {7.3.2}Analisi degli Errori (Misclassification)}{35}{subsection.7.3.2}%
+\contentsline {section}{\numberline {7.4}Confronto con lo Stato dell'Arte: Efficienza}{36}{section.7.4}%
+\contentsline {subsection}{\numberline {7.4.1}Discussione}{37}{subsection.7.4.1}%
+\contentsline {subsection}{\numberline {7.4.2}Analisi Empirica della Latenza e Implementabilità}{37}{subsection.7.4.2}%
+\contentsline {section}{\numberline {7.5}Analisi dell'Impatto degli Iperparametri}{38}{section.7.5}%
+\contentsline {subsection}{\numberline {7.5.1}Interazione Learning Rate vs Weight Decay}{38}{subsection.7.5.1}%
+\contentsline {subsection}{\numberline {7.5.2}Impatto della Capacità del Modello (Width)}{39}{subsection.7.5.2}%
+\contentsline {appendix}{\chapternumberline {A}Dettagli Metriche di Valutazione}{42}{appendix.Alph1}%
+\contentsline {chapter}{Conclusioni e Sviluppi Futuri}{43}{appendix*.4}%
+\contentsline {chapter}{Bibliografia}{50}{appendix*.15}%

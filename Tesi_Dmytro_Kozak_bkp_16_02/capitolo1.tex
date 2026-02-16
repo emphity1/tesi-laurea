@@ -1,0 +1,40 @@
+
+
+
+L'intelligenza artificiale, e in particolare il Deep Learning, ha rivoluzionato il modo in cui le macchine percepiscono e interagiscono con il mondo. Dalla visione artificiale al riconoscimento del linguaggio naturale, le reti neurali hanno raggiunto prestazioni sovrumane in numerosi compiti complessi. Tuttavia, questo progresso ha avuto un costo:: la richiesta di risorse computazionali sempre maggiori.
+
+\section{Contesto e Motivazione}
+L'adozione crescente di applicazioni di intelligenza artificiale su dispositivi \textit{edge} (smartphone, IoT, sistemi embedded, droni) ha reso cruciale lo sviluppo di modelli neurali non solo \textit{accurati}, ma anche \textit{efficienti}.
+Mentre i modelli dello Stato dell'Arte (SOTA) come Vision Transformers o grandi CNN (es. ResNet-101, DenseNet) raggiungono accuratezze elevatissime su benchmark standard, essi richiedono spesso centinaia di milioni di parametri e miliardi di operazioni (FLOPs) per una singola inferenza. Questo li rende inadatti al deployment su dispositivi con vincoli stringenti di batteria, memoria e potenza di calcolo.
+
+Il problema centrale affrontato in questa tesi è il \textbf{trade-off tra accuratezza ed efficienza computazionale}: è possibile mantenere prestazioni competitive riducendo drasticamente il numero di parametri e la complessità computazionale?
+
+\section{Obiettivi della Tesi}
+L'obiettivo principale di questo lavoro è progettare, implementare e validare un'architettura di rete neurale convoluzionale (CNN) estremamente leggera per la classificazione di immagini su dataset a bassa risoluzione (CIFAR-10), capace di competere con modelli molto più grandi.
+
+Nello specifico, gli obiettivi sono:
+\begin{enumerate}
+    \item \textbf{Efficienza Estrema}: Sviluppare un modello con meno di \textbf{100.000 parametri} (un ordine di grandezza inferiore rispetto a ResNet-20 o MobileNetV2 standard).
+    \item \textbf{Alta Accuratezza}: Raggiungere un'accuratezza superiore al \textbf{93\%} sul dataset di test CIFAR-10.
+    \item \textbf{Innovazione Architetturale}: Integrare tecniche moderne di ottimizzazione come \textit{Efficient Channel Attention (ECA)} e \textit{Structural Reparameterization (RepVGG)} su una backbone MobileNetV2.
+    \item \textbf{Analisi Comparativa}: Dimostrare la superiorità del modello proposto in termini di "Pareto Efficiency" rispetto alle alternative esistenti in letteratura.
+\end{enumerate}
+
+\section{Contributi del Lavoro}
+I principali contributi originali di questa tesi possono essere riassunti come segue:
+\begin{enumerate}
+    \item \textbf{MobileNetECA-Rep}: La proposta di una nuova architettura ibrida che combina blocchi Inverted Residual, attenzione di canale leggera e ri-parametrizzazione strutturale.
+    \item \textbf{Studio di Ablation}: Un'analisi dettagliata che quantifica il contributo individuale di ogni componente (Attention, Reparameterization, Data Augmentation avanzata) alle prestazioni finali.
+    \item \textbf{Ottimizzazione per Low-Res}: L'adattamento specifico dell'architettura per gestire efficacemente immagini a bassa risoluzione ($32 \times 32$), un dominio spesso trascurato dai modelli progettati per ImageNet ($224 \times 224$).
+    \item \textbf{Codice e Riproducibilità}: Il rilascio del codice sorgente completo e degli script di addestramento per garantire la riproducibilità dei risultati.
+\end{enumerate}
+
+\section{Struttura della Tesi}
+Il resto dell'elaborato è organizzato come segue:
+\begin{itemize}
+    \item Il \textbf{Capitolo 2} introduce il dataset CIFAR-10 e le tecniche di preprocessing utilizzate.
+    \item Il \textbf{Capitolo 3} fornisce il background teorico necessario, coprendo le CNN, i meccanismi di attenzione e lo stato dell'arte attuale.
+    \item Il \textbf{Capitolo 4} descrive in dettaglio la metodologia, l'architettura proposta e le scelte implementative.
+    \item Il \textbf{Capitolo 5} presenta i risultati sperimentali, l'analisi degli errori e il confronto con lo stato dell'arte.
+    \item Infine, le \textbf{Conclusioni} riassumono i risultati ottenuti e delineano possibili sviluppi futuri.
+\end{itemize}

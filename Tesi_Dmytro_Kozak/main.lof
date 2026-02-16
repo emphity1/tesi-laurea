@@ -1,0 +1,28 @@
+\babel@toc {italian}{}\relax 
+\babel@toc {italian}{}\relax 
+\addvspace {10pt}
+\addvspace {10pt}
+\addvspace {10pt}
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Esempi di Immagini dal Dataset CIFAR-10. La bassa risoluzione ($32 \times 32$) rende il compito di classificazione sfidante anche per l'occhio umano, specialmente per classi visivamente simili.\relax }}{7}{figure.2.1}%
+\addvspace {10pt}
+\addvspace {10pt}
+\addvspace {10pt}
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Architettura MobileNetECARep. I blocchi azzurri rappresentano i tensori intermedi. Il dettaglio mostra il modulo RepInvertedResidual con integrazione di Efficient Channel Attention (ECA) e la struttura di convoluzione riparametrizzabile (RepConv).\relax }}{21}{figure.5.1}%
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Visualizzazione della fusione dei kernel. Il kernel $1 \times 1$ viene portato a $3 \times 3$ tramite zero-padding, mentre l'identità diventa un kernel $3 \times 3$ con 1 al centro e 0 altrove. La somma finale produce un unico kernel $3 \times 3$ equivalente.\relax }}{23}{figure.5.2}%
+\contentsline {figure}{\numberline {5.3}{\ignorespaces Schema del blocco Inverted Residual modificato con integrazione del modulo ECA dopo la Depthwise Convolution.\relax }}{24}{figure.5.3}%
+\contentsline {figure}{\numberline {5.4}{\ignorespaces Confronto tra ReLU (rossa) e GELU (blu). La natura liscia e non monotona della GELU vicino allo zero favorisce un flusso dei gradienti più robusto.\relax }}{25}{figure.5.4}%
+\contentsline {figure}{\numberline {5.5}{\ignorespaces Confronto Standard Convolution vs Depthwise Separable (usata in MobileNet). La re-parametrizzazione permette di usare strutture complesse in training che collassano in efficienti depthwise/standard conv all'inferenza. L'immagine evidenzia la differenza fondamentale tra l'operazione spaziale densa e quella fattorizzata.\relax }}{26}{figure.5.5}%
+\contentsline {figure}{\numberline {5.6}{\ignorespaces Schema dettagliato del modulo ECA (Efficient Channel Attention). Viene eseguita una Global Average Pooling seguita da una convoluzione 1D con kernel adattivo e funzione sigmoidea.\relax }}{27}{figure.5.6}%
+\contentsline {figure}{\numberline {5.7}{\ignorespaces Andamento del Learning Rate durante le 200 epoche di training (Cosine Annealing). Il tasso di apprendimento decresce dolcemente seguendo una curva cosinusoidale.\relax }}{29}{figure.5.7}%
+\addvspace {10pt}
+\contentsline {figure}{\numberline {6.1}{\ignorespaces Dinamiche di apprendimento per le diverse configurazioni. Si noti come la configurazione finale (rossa) converga a un'accuratezza superiore nonostante una loss iniziale più alta dovuta alla difficoltà introdotta dall'augmentation.\relax }}{33}{figure.6.1}%
+\contentsline {figure}{\numberline {6.2}{\ignorespaces Dinamiche reali dell'addestramento finale (200 epoche). I dati evidenziano la stabilità della convergenza grazie allo schedule Cosine Annealing.\relax }}{33}{figure.6.2}%
+\contentsline {figure}{\numberline {6.3}{\ignorespaces Matrice di Confusione del modello MobileNetECA-Rep sul Test Set.\relax }}{34}{figure.6.3}%
+\contentsline {figure}{\numberline {6.4}{\ignorespaces Dettaglio delle curve ROC per le 10 classi (Zoom TPR 0.8-1.0). L'area sotto la curva (AUC) è prossima a 1.0 per tutte le classi, indicando un'eccellente separabilità.\relax }}{35}{figure.6.4}%
+\contentsline {figure}{\numberline {6.5}{\ignorespaces Esempi di errata classificazione (Test Set). Ogni riquadro mostra l'immagine originale con l'etichetta vera (True), quella predetta (Pred) e la confidenza del modello. Si noti come alcune immagini siano ambigue o difficili anche per un osservatore umano.\relax }}{37}{figure.6.5}%
+\contentsline {figure}{\numberline {6.6}{\ignorespaces Efficiency Frontier: Accuratezza vs Numero di Parametri (scala logaritmica). Il nostro modello (stella rossa) si trova nettamente a sinistra (meno parametri) rispetto a modelli con accuratezza simile come ResNet-32 o VGG-16.\relax }}{39}{figure.6.6}%
+\contentsline {figure}{\numberline {6.7}{\ignorespaces Heatmap dell'accuratezza (Validation Accuracy) al variare di Learning Rate e Weight Decay. Si osserva che alti valori di LR richiedono un decay maggiore per stabilizzare l'addestramento.\relax }}{40}{figure.6.7}%
+\contentsline {figure}{\numberline {6.8}{\ignorespaces Accuratezza in funzione di Learning Rate e Width Multiplier. Reti più larghe (Width > 0.5) beneficiano di LR più alti, mentre reti molto sottili richiedono un approccio più conservativo.\relax }}{41}{figure.6.8}%
+\contentsline {figure}{\numberline {6.9}{\ignorespaces Interazione tra Width Multiplier e Weight Decay. Reti più piccole sono meno soggette a overfitting massiccio ma beneficiano comunque di una moderata regolarizzazione.\relax }}{42}{figure.6.9}%
+\addvspace {10pt}
+\addvspace {10pt}

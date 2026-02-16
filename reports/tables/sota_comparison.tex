@@ -1,0 +1,22 @@
+
+\begin{table}[h]
+    \centering
+    \label{tab:comparison_sota}
+    \caption{Confronto con lo Stato dell'Arte su CIFAR-10. Il nostro modello (MobileNetECA-Rep) ottiene risultati competitivi con una frazione dei parametri e dei FLOPs.}
+    \begin{tabular}{l l c c c c}
+        \toprule
+        \textbf{Modello} & \textbf{Tipo} & \textbf{Accuratezza} & \textbf{Parametri} & \textbf{FLOPs} & \textbf{Rif.} \\
+        \midrule
+        ResNet-20 & CNN & 92.60\% & 0.27M & 40.81M & \cite{he2016deep} \\
+        ResNet-32 & CNN & 93.53\% & 0.47M & 69.12M & \cite{he2016deep} \\
+        ResNet-44 & CNN & 94.01\% & 0.66M & 97.44M & \cite{he2016deep} \\
+        ResNet-56 & CNN & 94.37\% & 0.86M & 125.75M & \cite{he2016deep} \\
+        VGG-16 (bn) & CNN & 94.16\% & 15.25M & 313.73M & \cite{simonyan2014very} \\
+        MobileNetV2 (0.5x) & Efficient & 92.88\% & 0.70M & 27.97M & \cite{sandler2018mobilenetv2} \\
+        MobileNetV2 (1.0x) & Efficient & 93.79\% & 2.24M & 87.98M & \cite{sandler2018mobilenetv2} \\
+        ShuffleNetV2 (0.5x) & Efficient & 90.13\% & 0.35M & 10.90M & \cite{ma2018shufflenet} \\
+        RepVGG-A0 & Rep & 94.39\% & 7.84M & 489.08M & \cite{ding2021repvgg} \\
+        \textbf{MobileNetECA-Rep (Ours)} & \textbf{Hybrid} & \textbf{93.49\%} & \textbf{0.08M} & \textbf{10.73M} & This Work \\
+        \bottomrule
+    \end{tabular}
+\end{table}

@@ -1,0 +1,202 @@
+
+In questo capitolo vengono presentati e discussi i risultati sperimentali ottenuti. L'analisi è suddivisa in tre parti:
+\begin{itemize}
+    \item \textbf{Ablation Study}: Valutazione dell'impatto di ogni singola componente (ECA, Reparameterization, Augmentation) sulle prestazioni.
+    \item \textbf{Analisi Dettagliata del Modello Finale}: Studio degli errori tramite matrice di confusione e curve ROC.
+    \item \textbf{Confronto con lo Stato dell'Arte}: Posizionamento del nostro modello rispetto ad altre architetture note in letteratura in termini di efficienza (Pareto Frontier).
+\end{itemize}
+
+\section{Ablation Study: Impatto delle Componenti}
+Per isolare il contributo di ciascuna tecnica proposta, abbiamo addestrato e valutato quattro varianti del modello, partendo dalla baseline MobileNetV2 fino alla configurazione finale.
+
+\begin{table}[h]
+    \centering
+    \caption{Risultati dell'Ablation Study. Ogni riga rappresenta l'aggiunta di una componente rispetto alla precedente.}
+    \label{tab:ablation}
+    \begin{tabular}{l l c c c}
+        \toprule
+        \textbf{ID} & \textbf{Configurazione} & \textbf{Accuratezza Val (\%)} & \textbf{Parametri} & \textbf{Note} \\
+        \midrule
+        A & MobileNetV2 (Baseline) & 91.45\% & $\sim$68k & Width Mult 0.5 \\
+        B & + ECA Attention & 92.40\% & $\sim$68k & +1.0\% Acc (params invar.) \\
+        C & + Reparameterization & 92.76\% & $\sim$76k & +0.4\% Acc \\
+        D & + Advanced Aug (Final) & \textbf{93.50\%} & \textbf{76.6k} & \textbf{+0.7\% Acc (Best)} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Come si evince dalla Tabella \ref{tab:ablation}, l'introduzione del blocco \textbf{ECA} (Configurazione B) offre il miglioramento più significativo a costo quasi nullo, dimostrando l'importanza di enfatizzare le feature informative nei canali.
+La \textbf{ri-parametrizzazione} (Configurazione C) fornisce un ulteriore boost, permettendo al modello di apprendere rappresentazioni più complesse grazie ai rami multipli in training.
+Infine, l'\textbf{Advanced Augmentation} (Configurazione D) è determinante per superare la barriera del 93\%, agendo come forte regolarizzatore e prevenendo l'overfitting che altrimenti limiterebbe le prestazioni di un modello così compatto.
+
+\subsection{Dinamiche di Addestramento}
+Analizzando le curve di training (Figura \ref{fig:accuracy_loss}), notiamo comportamenti distinti.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}{0.48\textwidth}
+        \includegraphics[width=\textwidth]{figure/accuracy_comparison.png}
+        \caption{Confronto Accuratezza di Validazione}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\textwidth}
+        \includegraphics[width=\textwidth]{figure/loss_comparison.png}
+        \caption{Confronto Loss di Training (Smoothed)}
+    \end{subfigure}
+    \caption{Dinamiche di apprendimento per le diverse configurazioni. Si noti come la configurazione finale (rossa) converga a un'accuratezza superiore nonostante una loss iniziale più alta dovuta alla difficoltà introdotta dall'augmentation.}
+    \label{fig:accuracy_loss}
+\end{figure}
+
+Il modello con Advanced Augmentation mostra una crescita dell'accuratezza più lenta nelle prime epoche rispetto alla baseline. Questo è atteso: le immagini "tagliate" o distorte sono più difficili da classificare. Tuttavia, nel lungo periodo (epoche $>150$), questa difficoltà costringe la rete ad apprendere feature più robuste e generalizzabili, portando al picco finale del 93.50\%.
+
+Inoltre, riportiamo in Figura \ref{fig:real_dynamics} le dinamiche di addestramento estratte direttamente dai log sperimentali della configurazione finale. Si osserva chiaramente come l'accuratezza di validazione (arancione) rimanga costantemente sopra quella di training (blu). Questo fenomeno è spiegato dalla forte componente di rumore introdotta dalla Data Augmentation sul set di addestramento, che agisce come un "prezzo" da pagare in termini di loss istantanea per ottenere una superiore capacità di generalizzazione sui dati reali del test set.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}{0.48\textwidth}
+        \includegraphics[width=\textwidth]{figure/train_vs_val_acc.png}
+        \caption{Accuratezza (Training vs Validation)}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\textwidth}
+        \includegraphics[width=\textwidth]{figure/train_loss.png}
+        \caption{Progressione Loss di Training}
+    \end{subfigure}
+    \caption{Dinamiche reali dell'addestramento finale (200 epoche). I dati evidenziano la stabilità della convergenza grazie allo schedule Cosine Annealing.}
+    \label{fig:real_dynamics}
+\end{figure}
+
+\section{Analisi del Modello Finale (MobileNetECA-Rep)}
+Il modello finale è stato sottoposto a un'analisi più approfondita sul Test Set.
+
+\subsection{Matrice di Confusione}
+La matrice di confusione (Figura \ref{fig:confusion_matrix}) ci permette di visualizzare le classi in cui il modello commette più errori.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figure/confusion_matrix.png}
+    \caption{Matrice di Confusione del modello MobileNetECA-Rep sul Test Set.}
+    \label{fig:confusion_matrix}
+\end{figure}
+
+Osserviamo che la diagonale principale è dominante, indicando un'ottima capacità di classificazione generale. Le confusioni più frequenti avvengono tra classi semanticamente simili:
+\begin{itemize}
+    \item \textbf{Gatto vs Cane}: Errore classico dovuto alla similarità morfologica (quattro zampe, pelo, orecchie).
+    \item \textbf{Camion vs Automobile}: Entrambi veicoli su ruote, spesso confusi se lo sfondo è simile (strada).
+\end{itemize}
+Tuttavia, il tasso di errore è contenuto, confermando l'efficacia del meccanismo di attenzione nel discriminare dettagli sottili.
+
+\subsection{Curve ROC e AUC}
+Le curve ROC (Receiver Operating Characteristic) mostrano il trade-off tra True Positive Rate e False Positive Rate.
+Per una migliore leggibilità, riportiamo un ingrandimento (zoom) dell'angolo in alto a sinistra (Figura \ref{fig:roc_zoomed}).
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figure/roc_curve_zoomed.png}
+    \caption{Dettaglio delle curve ROC per le 10 classi (Zoom TPR 0.8-1.0). L'area sotto la curva (AUC) è prossima a 1.0 per tutte le classi, indicando un'eccellente separabilità.}
+    \label{fig:roc_zoomed}
+\end{figure}
+
+L'AUC medio è estremamente elevato ($>0.99$ per classi facili come "Nave" o "Aereo"), dimostrando che il modello assegna probabilità molto alte alla classe corretta e basse alle altre.
+
+\section{Analisi Qualitativa}
+Oltre alle metriche numeriche, è fondamentale analizzare visivamente il comportamento del modello per comprenderne i limiti.
+
+\subsection{Esempi di Classificazione Corretta}
+Il modello dimostra una notevole robustezza nel classificare oggetti anche in condizioni non ideali.
+\begin{itemize}
+    \item \textbf{Aerei su sfondi complessi}: Il modello distingue correttamente aerei anche quando il cielo è nuvoloso o al tramonto, concentrandosi sulla forma delle ali e della fusoliera piuttosto che sul colore blu dominante.
+    \item \textbf{Animali in pose insolite}: Gatti raggomitolati o cani in corsa vengono classificati correttamente, suggerendo che il modulo ECA aiuta a catturare feature geometriche invarianti alla posa.
+\end{itemize}
+
+\subsection{Analisi degli Errori - Misclassification}
+Esaminando i casi di errore (i valori fuori diagonale nella matrice di confusione), emergono alcuni pattern ricorrenti visualizzati in Figura \ref{fig:misclassified}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figure/misclassified_examples.png}
+    \caption{Esempi di errata classificazione (Test Set). Ogni riquadro mostra l'immagine originale con l'etichetta vera (True), quella predetta (Pred) e la confidenza del modello. Si noti come alcune immagini siano ambigue o difficili anche per un osservatore umano.}
+    \label{fig:misclassified}
+\end{figure}
+
+L'analisi qualitativa di questi campioni rivela che:
+\begin{enumerate}
+    \item \textbf{Background Confusion}: Alcuni \textit{Uccelli} (Bird) vengono classificati come \textit{Aerei} (Plane) se lo sfondo è azzurro uniforme. Questo indica che in alcuni casi il modello fa ancora troppo affidamento sul contesto (colore dello sfondo) piuttosto che sull'oggetto.
+    \item \textbf{Fine-grained Features}: La distinzione tra \textit{Automobile} e \textit{Camion} (Truck) fallisce per i pickup, che possiedono caratteristiche ibride (cabina da auto, cassone da camion). La risoluzione $32 \times 32$ penalizza fortemente questo tipo di discriminazione fine-grained.
+\end{enumerate}
+
+Questa analisi suggerisce che ulteriori miglioramenti potrebbero derivare da un aumento della risoluzione (es. $64 \times 64$ o $128 \times 128$) o dall'integrazione di meccanismi di attenzione spaziale oltre a quelli di canale (es. CBAM).
+
+\section{Confronto con lo Stato dell'Arte: Efficienza}
+Infine, posizioniamo il nostro lavoro nel panorama della letteratura scientifica. L'obiettivo non era solo l'accuratezza assoluta, ma l'efficienza (Pareto Efficiency).
+
+\input{reports/tables/sota_comparison.tex}
+
+Come mostrato nella Tabella \ref{tab:comparison_sota} e visivamente nella Figura \ref{fig:efficiency}, il nostro modello occupa una posizione di rilievo.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figure/efficiency_params.png}
+    \caption{Efficiency Frontier: Accuratezza vs Numero di Parametri (scala logaritmica). Il nostro modello (stella rossa) si trova nettamente a sinistra (meno parametri) rispetto a modelli con accuratezza simile come ResNet-32 o VGG-16.}
+    \label{fig:efficiency}
+\end{figure}
+
+\subsection{Discussione}
+\textbf{Confronto con ResNet}: Otteniamo performance simili a una ResNet-32/44 ma con una frazione dei parametri ($76k$ vs $\sim500k$).
+\subsection{Analisi Empirica della Latenza e Implementabilità}
+Un aspetto cruciale per il deployment su dispositivi edge è la latenza di inferenza. Per validare l'efficacia della ri-parametrizzazione, abbiamo misurato le prestazioni del modello finale in modalità "deploy" (con kernel fusi, vedi Sez. 5.1).
+Le misurazioni sono state effettuate su CPU \textbf{AMD Ryzen Threadripper 3965WX} (32 Core @ 3.8GHz) utilizzando un batch size unitario ($N=1$) per simulare uno scenario real-time.
+
+\begin{table}[h]
+    \centering
+    \caption{Latenza di Inferenza media su CPU (1000 iterazioni)}
+    \label{tab:latency}
+    \begin{tabular}{l c c}
+        \toprule
+        \textbf{Metrica} & \textbf{Valore Misurato} & \textbf{Note} \\
+        \midrule
+        Latenza Media & \textbf{19.38 ms} & $\sigma = 28.5$ ms \\
+        Throughput & \textbf{51.59 FPS} & Real-Time ($>30$ FPS) \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Con un throughput superiore a \textbf{51 FPS} su una CPU generica, il modello garantisce prestazioni real-time senza necessità di acceleratori hardware dedicati. Su microcontrollori performanti (es. STM32H7) o processori mobile (Snapdragon), ci si attende una latenza ulteriormente ridotta ($< 5$ ms), rendendo l'architettura ideale per droni, videosorveglianza e robotica a basso costo.
+L'assenza di operazioni complesse non supportate (come Hard-Swish) facilita inoltre il porting diretto verso framework embedded come TensorFlow Lite Micro.
+
+
+\section{Analisi dell'Impatto degli Iperparametri}
+Oltre all'architettura, la scelta degli iperparametri di addestramento gioca un ruolo cruciale nel raggiungimento della massima accuratezza, specialmente per reti compatte. Abbiamo condotto una Grid Search analizzando l'interazione tra Learning Rate (LR), Weight Decay (WD) e Width Multiplier ($\alpha$).
+
+\subsection{Interazione Learning Rate vs Weight Decay}
+La Figura \ref{fig:heatmap_lr_wd} mostra come l'accuratezza vari al variare di LR e WD.
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figure/heatmap_lr_wd.png}
+    \caption{Heatmap dell'accuratezza (Validation Accuracy) al variare di Learning Rate e Weight Decay. Si osserva che alti valori di LR richiedono un decay maggiore per stabilizzare l'addestramento.}
+    \label{fig:heatmap_lr_wd}
+\end{figure}
+Si nota una regione ottimale (zona chiara) lungo la diagonale, suggerendo che un learning rate aggressivo deve essere bilanciato da una regolarizzazione più forte per prevenire l'esplosione dei pesi.
+
+\subsection{Impatto della Capacità del Modello (Width)}
+Analizzando l'interazione tra la larghezza della rete (Width Multiplier) e gli iperparametri, emergono trend interessanti.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figure/heatmap_lr_width.png}
+    \caption{Accuratezza in funzione di Learning Rate e Width Multiplier. Reti più larghe (Width > 0.5) beneficiano di LR più alti, mentre reti molto sottili richiedono un approccio più conservativo.}
+    \label{fig:heatmap_lr_width}
+\end{figure}
+
+Come mostrato in Figura \ref{fig:heatmap_lr_width}, aumentare la larghezza migliora monotonicamente le prestazioni, ma con ritorni decrescenti oltre $\alpha=0.75$. La nostra scelta di $\alpha=0.5$ rappresenta il punto di ginocchio (knee point) ottimale tra prestazioni e costi.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figure/heatmap_width_wd.png}
+    \caption{Interazione tra Width Multiplier e Weight Decay. Reti più piccole sono meno soggette a overfitting massiccio ma beneficiano comunque di una moderata regolarizzazione.}
+    \label{fig:heatmap_width_wd}
+\end{figure}
+
+La Figura \ref{fig:heatmap_width_wd} conferma che il Weight Decay deve essere scalato inversamente alla capacità della rete: modelli più grandi richiedono più regolarizzazione.
+
+In conclusione, \textbf{MobileNetECA-Rep} dimostra che è possibile ottenere prestazioni da "Server-Class" (93\%+) con un budget di risorse da "Microcontroller-Class", grazie alla sinergia tra depthwise convolution, attenzione ECA e ri-parametrizzazione.
