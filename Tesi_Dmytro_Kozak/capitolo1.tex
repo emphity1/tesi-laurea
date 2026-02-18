@@ -21,12 +21,23 @@ Nello specifico, gli obiettivi sono:
 \end{enumerate}
 
 \section{Contributi del Lavoro}
-I principali contributi originali di questa tesi possono essere riassunti come segue:
+I principali contributi originali di questa tesi possono essere riassunti nei seguenti punti chiave:
+
 \begin{enumerate}
-    \item \textbf{MobileNetECA-Rep}: La proposta di una nuova architettura ibrida che combina blocchi Inverted Residual, attenzione di canale leggera e ri-parametrizzazione strutturale.
-    \item \textbf{Studio di Ablation}: Un'analisi dettagliata che quantifica il contributo individuale di ogni componente (Attention, Reparameterization, Data Augmentation avanzata) alle prestazioni finali.
-    \item \textbf{Ottimizzazione per Low-Res}: L'adattamento specifico dell'architettura per gestire efficacemente immagini a bassa risoluzione ($32 \times 32$), un dominio spesso trascurato dai modelli progettati per ImageNet ($224 \times 224$).
-    \item \textbf{Codice e Riproducibilità}: Il rilascio del codice sorgente completo e degli script di addestramento per garantire la riproducibilità dei risultati.
+    \item \textbf{Progettazione Micro-Architetturale (MobileNetV2-Micro)}:
+    Il punto di partenza è stato l'adattamento critico della backbone MobileNetV2 standard per operare in regime di vincoli estremi ($<$100k parametri). Questo ha comportato una ricerca manuale della configurazione ottimale di blocchi, canali e, soprattutto, dello \textit{stride} iniziale, cruciale per preservare le feature spaziali su immagini a bassa risoluzione (CIFAR-10).
+
+    \item \textbf{Ottimizzazione Iperparametri (Grid Search)}:
+    Per massimizzare il potenziale di questa micro-architettura base, è stata condotta una \textit{Grid Search} sistematica, identificando i valori ideali di learning rate, weight decay e width multiplier che garantissero la migliore convergenza possibile.
+
+    \item \textbf{Evoluzione tramite Meccanismi di Attenzione (MobileNetECA)}:
+    L'integrazione del modulo \textit{Efficient Channel Attention (ECA)} ha rappresentato il primo significativo salto prestazionale, dimostrando come la ricalibrazione dinamica delle feature map possa compensare la ridotta capacità (pochi canali) del modello leggero.
+
+    \item \textbf{Potenziamento Strutturale (MobileNetECA-Rep)}:
+    Successivamente, l'adozione della \textit{Structural Reparameterization} ha permesso di arricchire la capacità rappresentativa durante il training (tramite rami multi-branch) mantenendo inalterata la complessità di inferenza, grazie alla tecnica di fusione dei layer (RepVGG-style).
+
+    \item \textbf{Robustezza Finale (AdvAug)}:
+    L'ultimo step evolutivo ha riguardato l'addestramento con tecniche di \textit{Advanced Data Augmentation} (AutoAugment + Random Erasing), portando il modello finale (\textbf{MobileNetECA-Rep-AdvAug}) a superare la soglia del \textbf{93.5\%} di accuratezza, un risultato eccezionale per la sua classe di dimensione.
 \end{enumerate}
 
 \section{Struttura della Tesi}

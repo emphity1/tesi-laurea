@@ -76,9 +76,9 @@ Questa trasformazione, visualizzata in Figura \ref{fig:kernel_fusion_viz}, è es
 Il cuore dell'architettura è il blocco Inverted Residual modificato con l'integrazione del meccanismo di attenzione ECA.
 Come mostrato in Figura \ref{fig:inv_res_eca_detail}, il blocco segue la struttura standard di MobileNetV2 (espansione $\rightarrow$ depthwise $\rightarrow$ proiezione) ma include un modulo ECA subito dopo la depthwise convolution.
 
-\begin{figure}[h]
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.6\textwidth]{figure/inv_res_with_eca_block.jpg}
+    \includegraphics[width=0.9\textwidth]{figure/inv_res_with_eca_block.jpg}
     \caption{Schema del blocco Inverted Residual modificato con integrazione del modulo ECA dopo la Depthwise Convolution.}
     \label{fig:inv_res_eca_detail}
 \end{figure}
@@ -96,8 +96,8 @@ Abbiamo sostituito la classica ReLU con \textbf{GELU (Gaussian Error Linear Unit
 Sebbene la GELU sia computazionalmente più onerosa (coinvolgendo funzioni trascendenti come $\tanh$ o approssimazioni sigmoidee) rispetto alla semplice soglia della ReLU, il tradeoff è vantaggioso per modelli compatti.
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.6\textwidth]{figure/gelu_vs_relu.jpg}
-    \caption{Confronto tra ReLU (rossa) e GELU (blu). La natura liscia e non monotona della GELU vicino allo zero favorisce un flusso dei gradienti più robusto.}
+    \includegraphics[width=0.9\textwidth]{figure/gelu_vs_relu.jpg}
+    \caption{Confronto tra ReLU (blu) e GELU (gialla). La natura liscia e non monotona della GELU vicino allo zero favorisce un flusso dei gradienti più robusto.}
     \label{fig:gelu_vs_relu}
 \end{figure}
 In una rete con meno di 100k parametri, la "capacità" di ogni neurone è preziosa. La proprietà di non azzerare completamente i gradienti negativi (come fa ReLU) ma di attenuarli dolcemente, permette di evitare il problema dei "Dead Neurons", massimizzando l'utilizzo efficace dei pochi parametri disponibili.
@@ -214,7 +214,7 @@ Sebbene ottimizzatori adattivi come Adam convergano più velocemente nelle fasi 
 Per garantire una convergenza ottimale, è stato utilizzato un \textit{Cosine Annealing Schedule}.
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.8\textwidth]{figure/lr_schedule_200.png}
+    \includegraphics[width=0.8\textwidth]{figure/v3_lr_schedule.png}
     \caption{Andamento del Learning Rate durante le 200 epoche di training (Cosine Annealing). Il tasso di apprendimento decresce dolcemente seguendo una curva cosinusoidale.}
     \label{fig:lr_schedule}
 \end{figure}

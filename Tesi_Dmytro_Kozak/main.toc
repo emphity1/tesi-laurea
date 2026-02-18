@@ -54,33 +54,33 @@
 \contentsline {subsection}{\numberline {5.3.1}Inverted Residual Block con ECA}{23}{subsection.5.3.1}%
 \contentsline {subsection}{\numberline {5.3.2}Scelte Architetturali Specifiche}{24}{subsection.5.3.2}%
 \contentsline {subsubsection}{\numberline {5.3.2.1}Stride Iniziale}{24}{subsubsection.5.3.2.1}%
-\contentsline {subsubsection}{\numberline {5.3.2.2}Attivazione: GELU vs ReLU}{24}{subsubsection.5.3.2.2}%
+\contentsline {subsubsection}{\numberline {5.3.2.2}Attivazione: GELU vs ReLU}{25}{subsubsection.5.3.2.2}%
 \contentsline {section}{\numberline {5.4}Implementazione del Deploy}{25}{section.5.4}%
 \contentsline {subsection}{\numberline {5.4.1}Configurazione Layer Dettagliata}{27}{subsection.5.4.1}%
 \contentsline {subsection}{\numberline {5.4.2}ECA Block: Implementazione Dettagliata}{28}{subsection.5.4.2}%
-\contentsline {subsubsection}{\numberline {5.4.2.1}Formula del Kernel Adattivo}{28}{subsubsection.5.4.2.1}%
+\contentsline {subsubsection}{\numberline {5.4.2.1}Formula del Kernel Adattivo}{29}{subsubsection.5.4.2.1}%
 \contentsline {subsubsection}{\numberline {5.4.2.2}Pipeline Operativa}{29}{subsubsection.5.4.2.2}%
 \contentsline {section}{\numberline {5.5}Configurazione Sperimentale}{29}{section.5.5}%
 \contentsline {subsection}{\numberline {5.5.1}Strategie di Data Augmentation Avanzate}{29}{subsection.5.5.1}%
 \contentsline {subsection}{\numberline {5.5.2}Protocollo di Training}{30}{subsection.5.5.2}%
 \contentsline {subsection}{\numberline {5.5.3}Learning Rate Schedule}{30}{subsection.5.5.3}%
 \contentsline {section}{\numberline {5.6}Analisi della Complessità Teorica}{31}{section.5.6}%
-\contentsline {chapter}{\chapternumberline {6}Analisi dei Risultati}{32}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Ablation Study: Impatto delle Componenti}{32}{section.6.1}%
-\contentsline {subsection}{\numberline {6.1.1}Dinamiche di Addestramento}{33}{subsection.6.1.1}%
+\contentsline {chapter}{\chapternumberline {6}Analisi dei Risultati}{33}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Ablation Study: Impatto delle Componenti}{33}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}Dinamiche di Addestramento}{34}{subsection.6.1.1}%
 \contentsline {section}{\numberline {6.2}Analisi del Modello Finale (MobileNetECA-Rep)}{35}{section.6.2}%
 \contentsline {subsection}{\numberline {6.2.1}Matrice di Confusione}{35}{subsection.6.2.1}%
-\contentsline {subsection}{\numberline {6.2.2}Curve ROC e AUC}{36}{subsection.6.2.2}%
-\contentsline {section}{\numberline {6.3}Analisi Qualitativa Avanzata}{37}{section.6.3}%
-\contentsline {subsection}{\numberline {6.3.1}Occlusion Sensitivity Analysis}{37}{subsection.6.3.1}%
-\contentsline {subsection}{\numberline {6.3.2}Analisi degli "Imperdonabili": High Confidence Errors}{37}{subsection.6.3.2}%
-\contentsline {section}{\numberline {6.4}Confronto Esteso con lo Stato dell'Arte}{38}{section.6.4}%
-\contentsline {section}{\numberline {6.5}Confronto con lo Stato dell'Arte: Efficienza}{40}{section.6.5}%
-\contentsline {subsection}{\numberline {6.5.1}Discussione}{40}{subsection.6.5.1}%
-\contentsline {subsection}{\numberline {6.5.2}Analisi Empirica della Latenza e Implementabilità}{41}{subsection.6.5.2}%
-\contentsline {section}{\numberline {6.6}Analisi dell'Impatto degli Iperparametri}{42}{section.6.6}%
-\contentsline {subsection}{\numberline {6.6.1}Interazione Learning Rate vs Weight Decay}{42}{subsection.6.6.1}%
-\contentsline {subsection}{\numberline {6.6.2}Impatto della Capacità del Modello sulla Regolarizzazione}{42}{subsection.6.6.2}%
-\contentsline {appendix}{\chapternumberline {A}Dettagli Metriche di Valutazione}{45}{appendix.Alph1}%
-\contentsline {chapter}{Conclusioni e Sviluppi Futuri}{46}{appendix*.3}%
-\contentsline {chapter}{Bibliografia}{53}{appendix*.14}%
+\contentsline {subsection}{\numberline {6.2.2}Curve ROC e AUC}{35}{subsection.6.2.2}%
+\contentsline {section}{\numberline {6.3}Analisi Qualitativa Avanzata}{36}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}Occlusion Sensitivity Analysis}{36}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.3.2}Analisi degli "Imperdonabili": High Confidence Errors}{36}{subsection.6.3.2}%
+\contentsline {section}{\numberline {6.4}Confronto Esteso con lo Stato dell'Arte}{37}{section.6.4}%
+\contentsline {section}{\numberline {6.5}Confronto con lo Stato dell'Arte: Efficienza}{38}{section.6.5}%
+\contentsline {subsection}{\numberline {6.5.1}Discussione}{38}{subsection.6.5.1}%
+\contentsline {subsection}{\numberline {6.5.2}Analisi Empirica della Latenza e Implementabilità}{38}{subsection.6.5.2}%
+\contentsline {section}{\numberline {6.6}Analisi dell'Impatto degli Iperparametri}{39}{section.6.6}%
+\contentsline {subsection}{\numberline {6.6.1}Interazione Learning Rate vs Weight Decay}{39}{subsection.6.6.1}%
+\contentsline {subsection}{\numberline {6.6.2}Impatto della Capacità del Modello sulla Regolarizzazione}{40}{subsection.6.6.2}%
+\contentsline {appendix}{\chapternumberline {A}Dettagli Metriche di Valutazione}{48}{appendix.Alph1}%
+\contentsline {chapter}{Conclusioni e Sviluppi Futuri}{49}{appendix*.3}%
+\contentsline {chapter}{Bibliografia}{56}{appendix*.14}%

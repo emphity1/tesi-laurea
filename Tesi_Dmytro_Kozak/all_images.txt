@@ -4,7 +4,6 @@ accuracy_comparison.png
 cifar10_images.png
 comparing_conv_standard_and_depthwise_sep.jpg
 confusion_matrix.png
-efficiency_flops.png
 efficiency_params.png
 gelu_vs_relu.jpg
 heatmap_lr_wd.png
@@ -15,11 +14,10 @@ kernel1x1_to_3x3.jpg
 loss_comparison.png
 lr_schedule_200.png
 misclassified_examples.png
-roc_curve.png
+mockup_augmentation.png
+occlusion_sensitivity.png
 roc_curve_zoomed.png
+top_errors.png
 train_loss.png
-train_loss_real.png
 train_vs_val_acc.png
-train_vs_val_acc_real.png
-train_vs_val_loss.png
 uniroma3-logo.jpg

@@ -13,16 +13,18 @@ Per isolare il contributo di ciascuna tecnica proposta, abbiamo addestrato e val
     \centering
     \caption{Risultati dell'Ablation Study. Ogni riga rappresenta l'aggiunta di una componente rispetto alla precedente.}
     \label{tab:ablation}
+    \resizebox{\textwidth}{!}{
     \begin{tabular}{l l c c c}
         \toprule
         \textbf{ID} & \textbf{Configurazione} & \textbf{Accuratezza Val (\%)} & \textbf{Parametri} & \textbf{Note} \\
         \midrule
-        A & MobileNetV2 (Baseline) & 91.45\% & $\sim$68k & Width Mult 0.5 \\
-        B & + ECA Attention & 92.40\% & $\sim$68k & +1.0\% Acc (params invar.) \\
-        C & + Reparameterization & 92.76\% & $\sim$76k & +0.4\% Acc \\
-        D & + Advanced Aug (Final) & \textbf{93.50\%} & \textbf{76.6k} & \textbf{+0.7\% Acc (Best)} \\
+        A & MobileNetV2-Micro (Baseline) & 91.45\% & $\sim$68k & Optimized Stride/Layers \\
+        B & MobileNetECA (A + ECA) & 92.20\% & $\sim$68k & +0.75\% Acc (params invar.) \\
+        C & MobileNetECA-Rep (B + Rep) & 92.76\% & $\sim$76k & +0.56\% Acc \\
+        D & MobileNetECA-Rep-AdvAug (Final) & \textbf{93.50\%} & \textbf{76.6k} & \textbf{+0.74\% Acc (Best)} \\
         \bottomrule
     \end{tabular}
+    }
 \end{table}
 
 Come si evince dalla Tabella \ref{tab:ablation}, l'introduzione del blocco \textbf{ECA} (Configurazione B) offre il miglioramento più significativo a costo quasi nullo, dimostrando l'importanza di enfatizzare le feature informative nei canali.
@@ -34,12 +36,12 @@ Analizzando le curve di training (Figura \ref{fig:accuracy_loss}), notiamo compo
 
 \begin{figure}[h]
     \centering
-    \begin{subfigure}{0.48\textwidth}
+    \begin{subfigure}{0.8\textwidth}
         \includegraphics[width=\textwidth]{figure/accuracy_comparison.png}
         \caption{Confronto Accuratezza di Validazione}
     \end{subfigure}
     \hfill
-    \begin{subfigure}{0.48\textwidth}
+    \begin{subfigure}{0.8\textwidth}
         \includegraphics[width=\textwidth]{figure/loss_comparison.png}
         \caption{Confronto Loss di Training (Smoothed)}
     \end{subfigure}
@@ -54,12 +56,12 @@ Inoltre, riportiamo in Figura \ref{fig:real_dynamics} le dinamiche di addestrame
 \begin{figure}[h]
     \centering
     \begin{subfigure}{0.48\textwidth}
-        \includegraphics[width=\textwidth]{figure/train_vs_val_acc.png}
+        \includegraphics[width=\textwidth]{figure/v3_train_vs_val_acc.png}
         \caption{Accuratezza (Training vs Validation)}
     \end{subfigure}
     \hfill
     \begin{subfigure}{0.48\textwidth}
-        \includegraphics[width=\textwidth]{figure/train_loss.png}
+        \includegraphics[width=\textwidth]{figure/v3_train_loss.png}
         \caption{Progressione Loss di Training}
     \end{subfigure}
     \caption{Dinamiche reali dell'addestramento finale (200 epoche). I dati evidenziano la stabilità della convergenza grazie allo schedule Cosine Annealing.}
@@ -74,7 +76,7 @@ La matrice di confusione (Figura \ref{fig:confusion_matrix}) ci permette di visu
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.7\textwidth]{figure/confusion_matrix.png}
+    \includegraphics[width=1\textwidth]{figure/confusion_matrix.png}
     \caption{Matrice di Confusione del modello MobileNetECA-Rep sul Test Set.}
     \label{fig:confusion_matrix}
 \end{figure}

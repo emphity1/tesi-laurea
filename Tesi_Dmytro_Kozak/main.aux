@@ -101,50 +101,42 @@
 \newlabel{fig:inv_res_eca_detail}{{5.3}{24}{Schema del blocco Inverted Residual modificato con integrazione del modulo ECA dopo la Depthwise Convolution}{figure.5.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.3.2}Scelte Architetturali Specifiche}{24}{subsection.5.3.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {5.3.2.1}Stride Iniziale}{24}{subsubsection.5.3.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.3.2.2}Attivazione: GELU vs ReLU}{24}{subsubsection.5.3.2.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {5.4}{\ignorespaces Confronto tra ReLU (rossa) e GELU (blu). La natura liscia e non monotona della GELU vicino allo zero favorisce un flusso dei gradienti più robusto.}}{25}{figure.5.4}\protected@file@percent }
-\newlabel{fig:gelu_vs_relu}{{5.4}{25}{Confronto tra ReLU (rossa) e GELU (blu). La natura liscia e non monotona della GELU vicino allo zero favorisce un flusso dei gradienti più robusto}{figure.5.4}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.3.2.2}Attivazione: GELU vs ReLU}{25}{subsubsection.5.3.2.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5.4}{\ignorespaces Confronto tra ReLU (blu) e GELU (gialla). La natura liscia e non monotona della GELU vicino allo zero favorisce un flusso dei gradienti più robusto.}}{25}{figure.5.4}\protected@file@percent }
+\newlabel{fig:gelu_vs_relu}{{5.4}{25}{Confronto tra ReLU (blu) e GELU (gialla). La natura liscia e non monotona della GELU vicino allo zero favorisce un flusso dei gradienti più robusto}{figure.5.4}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {5.4}Implementazione del Deploy}{25}{section.5.4}\protected@file@percent }
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {5.1}{\ignorespaces Pseudo-codice per la fusione dei kernel (Switch to Deploy)}}{25}{lstlisting.5.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {5.5}{\ignorespaces Confronto Standard Convolution vs Depthwise Separable (usata in MobileNet). La re-parametrizzazione permette di usare strutture complesse in training che collassano in efficienti depthwise/standard conv all'inferenza. L'immagine evidenzia la differenza fondamentale tra l'operazione spaziale densa e quella fattorizzata.}}{26}{figure.5.5}\protected@file@percent }
-\newlabel{fig:conv_comparison}{{5.5}{26}{Confronto Standard Convolution vs Depthwise Separable (usata in MobileNet). La re-parametrizzazione permette di usare strutture complesse in training che collassano in efficienti depthwise/standard conv all'inferenza. L'immagine evidenzia la differenza fondamentale tra l'operazione spaziale densa e quella fattorizzata}{figure.5.5}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {5.1}{\ignorespaces Pseudo-codice per la fusione dei kernel (Switch to Deploy)}}{26}{lstlisting.5.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5.5}{\ignorespaces Confronto Standard Convolution vs Depthwise Separable (usata in MobileNet). La re-parametrizzazione permette di usare strutture complesse in training che collassano in efficienti depthwise/standard conv all'inferenza. L'immagine evidenzia la differenza fondamentale tra l'operazione spaziale densa e quella fattorizzata.}}{27}{figure.5.5}\protected@file@percent }
+\newlabel{fig:conv_comparison}{{5.5}{27}{Confronto Standard Convolution vs Depthwise Separable (usata in MobileNet). La re-parametrizzazione permette di usare strutture complesse in training che collassano in efficienti depthwise/standard conv all'inferenza. L'immagine evidenzia la differenza fondamentale tra l'operazione spaziale densa e quella fattorizzata}{figure.5.5}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.4.1}Configurazione Layer Dettagliata}{27}{subsection.5.4.1}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {5.1}{\ignorespaces Configurazione Architetturale di MobileNetECA-Rep ($0.5\times $)}}{27}{table.5.1}\protected@file@percent }
 \newlabel{tab:layer_config}{{5.1}{27}{Configurazione Architetturale di MobileNetECA-Rep ($0.5\times $)}{table.5.1}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.4.2}ECA Block: Implementazione Dettagliata}{28}{subsection.5.4.2}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {5.6}{\ignorespaces Schema dettagliato del modulo ECA (Efficient Channel Attention). Viene eseguita una Global Average Pooling seguita da una convoluzione 1D con kernel adattivo e funzione sigmoidea.}}{28}{figure.5.6}\protected@file@percent }
 \newlabel{fig:eca_detail}{{5.6}{28}{Schema dettagliato del modulo ECA (Efficient Channel Attention). Viene eseguita una Global Average Pooling seguita da una convoluzione 1D con kernel adattivo e funzione sigmoidea}{figure.5.6}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.4.2.1}Formula del Kernel Adattivo}{28}{subsubsection.5.4.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.4.2.1}Formula del Kernel Adattivo}{29}{subsubsection.5.4.2.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {5.4.2.2}Pipeline Operativa}{29}{subsubsection.5.4.2.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {5.5}Configurazione Sperimentale}{29}{section.5.5}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.5.1}Strategie di Data Augmentation Avanzate}{29}{subsection.5.5.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.5.2}Protocollo di Training}{30}{subsection.5.5.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.5.3}Learning Rate Schedule}{30}{subsection.5.5.3}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {5.7}{\ignorespaces Andamento del Learning Rate durante le 200 epoche di training (Cosine Annealing). Il tasso di apprendimento decresce dolcemente seguendo una curva cosinusoidale.}}{30}{figure.5.7}\protected@file@percent }
-\newlabel{fig:lr_schedule}{{5.7}{30}{Andamento del Learning Rate durante le 200 epoche di training (Cosine Annealing). Il tasso di apprendimento decresce dolcemente seguendo una curva cosinusoidale}{figure.5.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.7}{\ignorespaces Andamento del Learning Rate durante le 200 epoche di training (Cosine Annealing). Il tasso di apprendimento decresce dolcemente seguendo una curva cosinusoidale.}}{31}{figure.5.7}\protected@file@percent }
+\newlabel{fig:lr_schedule}{{5.7}{31}{Andamento del Learning Rate durante le 200 epoche di training (Cosine Annealing). Il tasso di apprendimento decresce dolcemente seguendo una curva cosinusoidale}{figure.5.7}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {5.6}Analisi della Complessità Teorica}{31}{section.5.6}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {5.2}{\ignorespaces Confronto Complessità MobileNetECA-Rep vs Baseline}}{31}{table.5.2}\protected@file@percent }
 \newlabel{tab:complexity_new}{{5.2}{31}{Confronto Complessità MobileNetECA-Rep vs Baseline}{table.5.2}{}}
 \@writefile{lof}{\addvspace {10pt}}
 \@writefile{lot}{\addvspace {10pt}}
-\@writefile{toc}{\contentsline {chapter}{\chapternumberline {6}Analisi dei Risultati}{32}{chapter.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\chapternumberline {6}Analisi dei Risultati}{33}{chapter.6}\protected@file@percent }
 \@writefile{loa}{\addvspace {10\p@ }}
-\newlabel{cap:capitolo6}{{6}{32}{Analisi dei Risultati}{chapter.6}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6.1}Ablation Study: Impatto delle Componenti}{32}{section.6.1}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {6.1}{\ignorespaces Risultati dell'Ablation Study. Ogni riga rappresenta l'aggiunta di una componente rispetto alla precedente.}}{33}{table.6.1}\protected@file@percent }
-\newlabel{tab:ablation}{{6.1}{33}{Risultati dell'Ablation Study. Ogni riga rappresenta l'aggiunta di una componente rispetto alla precedente}{table.6.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.1.1}Dinamiche di Addestramento}{33}{subsection.6.1.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {6.1}{\ignorespaces Dinamiche di apprendimento per le diverse configurazioni. Si noti come la configurazione finale (rossa) converga a un'accuratezza superiore nonostante una loss iniziale più alta dovuta alla difficoltà introdotta dall'augmentation.}}{34}{figure.6.1}\protected@file@percent }
-\newlabel{fig:accuracy_loss}{{6.1}{34}{Dinamiche di apprendimento per le diverse configurazioni. Si noti come la configurazione finale (rossa) converga a un'accuratezza superiore nonostante una loss iniziale più alta dovuta alla difficoltà introdotta dall'augmentation}{figure.6.1}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6.2}{\ignorespaces Dinamiche reali dell'addestramento finale (200 epoche). I dati evidenziano la stabilità della convergenza grazie allo schedule Cosine Annealing.}}{34}{figure.6.2}\protected@file@percent }
-\newlabel{fig:real_dynamics}{{6.2}{34}{Dinamiche reali dell'addestramento finale (200 epoche). I dati evidenziano la stabilità della convergenza grazie allo schedule Cosine Annealing}{figure.6.2}{}}
+\newlabel{cap:capitolo6}{{6}{33}{Analisi dei Risultati}{chapter.6}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.1}Ablation Study: Impatto delle Componenti}{33}{section.6.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6.1}{\ignorespaces Risultati dell'Ablation Study. Ogni riga rappresenta l'aggiunta di una componente rispetto alla precedente.}}{34}{table.6.1}\protected@file@percent }
+\newlabel{tab:ablation}{{6.1}{34}{Risultati dell'Ablation Study. Ogni riga rappresenta l'aggiunta di una componente rispetto alla precedente}{table.6.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1.1}Dinamiche di Addestramento}{34}{subsection.6.1.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {6.2}Analisi del Modello Finale (MobileNetECA-Rep)}{35}{section.6.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.2.1}Matrice di Confusione}{35}{subsection.6.2.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {6.3}{\ignorespaces Matrice di Confusione del modello MobileNetECA-Rep sul Test Set.}}{35}{figure.6.3}\protected@file@percent }
-\newlabel{fig:confusion_matrix}{{6.3}{35}{Matrice di Confusione del modello MobileNetECA-Rep sul Test Set}{figure.6.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.2}Curve ROC e AUC}{36}{subsection.6.2.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {6.4}{\ignorespaces Dettaglio delle curve ROC per le 10 classi (Zoom TPR 0.8-1.0). L'area sotto la curva (AUC) è prossima a 1.0 per tutte le classi, indicando un'eccellente separabilità.}}{36}{figure.6.4}\protected@file@percent }
-\newlabel{fig:roc_zoomed}{{6.4}{36}{Dettaglio delle curve ROC per le 10 classi (Zoom TPR 0.8-1.0). L'area sotto la curva (AUC) è prossima a 1.0 per tutte le classi, indicando un'eccellente separabilità}{figure.6.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.2}Curve ROC e AUC}{35}{subsection.6.2.2}\protected@file@percent }
 \citation{he2016deep}
 \citation{he2016deep}
 \citation{he2016deep}
@@ -154,33 +146,41 @@
 \citation{sandler2018mobilenetv2}
 \citation{ma2018shufflenet}
 \citation{ding2021repvgg}
-\@writefile{toc}{\contentsline {section}{\numberline {6.3}Analisi Qualitativa Avanzata}{37}{section.6.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.1}Occlusion Sensitivity Analysis}{37}{subsection.6.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.2}Analisi degli "Imperdonabili": High Confidence Errors}{37}{subsection.6.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.3}Analisi Qualitativa Avanzata}{36}{section.6.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.1}Occlusion Sensitivity Analysis}{36}{subsection.6.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3.2}Analisi degli "Imperdonabili": High Confidence Errors}{36}{subsection.6.3.2}\protected@file@percent }
 \citation{thriftynet2021}
-\@writefile{lof}{\contentsline {figure}{\numberline {6.5}{\ignorespaces Mappe di Sensibilità all'Occlusione. (Riga 1) Immagine originale. (Riga 2) Heatmap: le aree rosse indicano le zone dove l'occlusione causa il maggior calo di confidenza. (Riga 3) Sovrapposizione. Si nota come il modello si concentri correttamente sulle caratteristiche discriminanti dell'oggetto (es. il muso del cane, la carrozzeria dell'auto) ignorando lo sfondo.}}{38}{figure.6.5}\protected@file@percent }
-\newlabel{fig:occlusion_sensitivity}{{6.5}{38}{Mappe di Sensibilità all'Occlusione. (Riga 1) Immagine originale. (Riga 2) Heatmap: le aree rosse indicano le zone dove l'occlusione causa il maggior calo di confidenza. (Riga 3) Sovrapposizione. Si nota come il modello si concentri correttamente sulle caratteristiche discriminanti dell'oggetto (es. il muso del cane, la carrozzeria dell'auto) ignorando lo sfondo}{figure.6.5}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6.4}Confronto Esteso con lo Stato dell'Arte}{38}{section.6.4}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {6.6}{\ignorespaces Errori ad Alta Confidenza ($>90\%$). Ogni immagine riporta la classe vera (True), quella predetta (Pred) e la confidenza. Molti di questi errori sono dovuti ad ambiguità visive estreme (es. prospettive insolite o oggetti parzialmente occlusi) che metterebbero in difficoltà anche un osservatore umano.}}{39}{figure.6.6}\protected@file@percent }
-\newlabel{fig:top_errors}{{6.6}{39}{Errori ad Alta Confidenza ($>90\%$). Ogni immagine riporta la classe vera (True), quella predetta (Pred) e la confidenza. Molti di questi errori sono dovuti ad ambiguità visive estreme (es. prospettive insolite o oggetti parzialmente occlusi) che metterebbero in difficoltà anche un osservatore umano}{figure.6.6}{}}
-\newlabel{tab:comparison_sota}{{\caption@xref {tab:comparison_sota}{ on input line 4}}{40}{Confronto Esteso con lo Stato dell'Arte}{section.6.4}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {6.2}{\ignorespaces Confronto con lo Stato dell'Arte su CIFAR-10. Il nostro modello (MobileNetECA-Rep) ottiene risultati competitivi con una frazione dei parametri e dei FLOPs.}}{40}{table.6.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6.5}Confronto con lo Stato dell'Arte: Efficienza}{40}{section.6.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.5.1}Discussione}{40}{subsection.6.5.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {6.7}{\ignorespaces Efficiency Frontier: Accuratezza vs Numero di Parametri (scala logaritmica). Il nostro modello (stella rossa) si trova nettamente a sinistra (meno parametri) rispetto a modelli con accuratezza simile come ResNet-32 o VGG-16.}}{41}{figure.6.7}\protected@file@percent }
-\newlabel{fig:efficiency}{{6.7}{41}{Efficiency Frontier: Accuratezza vs Numero di Parametri (scala logaritmica). Il nostro modello (stella rossa) si trova nettamente a sinistra (meno parametri) rispetto a modelli con accuratezza simile come ResNet-32 o VGG-16}{figure.6.7}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.5.2}Analisi Empirica della Latenza e Implementabilità}{41}{subsection.6.5.2}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {6.3}{\ignorespaces Latenza di Inferenza media su CPU (1000 iterazioni)}}{42}{table.6.3}\protected@file@percent }
-\newlabel{tab:latency}{{6.3}{42}{Latenza di Inferenza media su CPU (1000 iterazioni)}{table.6.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6.6}Analisi dell'Impatto degli Iperparametri}{42}{section.6.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.6.1}Interazione Learning Rate vs Weight Decay}{42}{subsection.6.6.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.6.2}Impatto della Capacità del Modello sulla Regolarizzazione}{42}{subsection.6.6.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {6.8}{\ignorespaces Heatmap dell'accuratezza (Validation Accuracy) al variare di Learning Rate e Weight Decay. Si osserva che alti valori di LR richiedono un decay maggiore per stabilizzare l'addestramento.}}{43}{figure.6.8}\protected@file@percent }
-\newlabel{fig:heatmap_lr_wd}{{6.8}{43}{Heatmap dell'accuratezza (Validation Accuracy) al variare di Learning Rate e Weight Decay. Si osserva che alti valori di LR richiedono un decay maggiore per stabilizzare l'addestramento}{figure.6.8}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.4}Confronto Esteso con lo Stato dell'Arte}{37}{section.6.4}\protected@file@percent }
+\newlabel{tab:comparison_sota}{{\caption@xref {tab:comparison_sota}{ on input line 4}}{37}{Confronto Esteso con lo Stato dell'Arte}{section.6.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6.2}{\ignorespaces Confronto con lo Stato dell'Arte su CIFAR-10. Il nostro modello (MobileNetECA-Rep) ottiene risultati competitivi con una frazione dei parametri e dei FLOPs.}}{37}{table.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.5}Confronto con lo Stato dell'Arte: Efficienza}{38}{section.6.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.5.1}Discussione}{38}{subsection.6.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.5.2}Analisi Empirica della Latenza e Implementabilità}{38}{subsection.6.5.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6.3}{\ignorespaces Latenza di Inferenza media su CPU (1000 iterazioni)}}{39}{table.6.3}\protected@file@percent }
+\newlabel{tab:latency}{{6.3}{39}{Latenza di Inferenza media su CPU (1000 iterazioni)}{table.6.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.6}Analisi dell'Impatto degli Iperparametri}{39}{section.6.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.6.1}Interazione Learning Rate vs Weight Decay}{39}{subsection.6.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.6.2}Impatto della Capacità del Modello sulla Regolarizzazione}{40}{subsection.6.6.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6.1}{\ignorespaces Dinamiche di apprendimento per le diverse configurazioni. Si noti come la configurazione finale (rossa) converga a un'accuratezza superiore nonostante una loss iniziale più alta dovuta alla difficoltà introdotta dall'augmentation.}}{41}{figure.6.1}\protected@file@percent }
+\newlabel{fig:accuracy_loss}{{6.1}{41}{Dinamiche di apprendimento per le diverse configurazioni. Si noti come la configurazione finale (rossa) converga a un'accuratezza superiore nonostante una loss iniziale più alta dovuta alla difficoltà introdotta dall'augmentation}{figure.6.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.2}{\ignorespaces Dinamiche reali dell'addestramento finale (200 epoche). I dati evidenziano la stabilità della convergenza grazie allo schedule Cosine Annealing.}}{42}{figure.6.2}\protected@file@percent }
+\newlabel{fig:real_dynamics}{{6.2}{42}{Dinamiche reali dell'addestramento finale (200 epoche). I dati evidenziano la stabilità della convergenza grazie allo schedule Cosine Annealing}{figure.6.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.3}{\ignorespaces Matrice di Confusione del modello MobileNetECA-Rep sul Test Set.}}{42}{figure.6.3}\protected@file@percent }
+\newlabel{fig:confusion_matrix}{{6.3}{42}{Matrice di Confusione del modello MobileNetECA-Rep sul Test Set}{figure.6.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.4}{\ignorespaces Dettaglio delle curve ROC per le 10 classi (Zoom TPR 0.8-1.0). L'area sotto la curva (AUC) è prossima a 1.0 per tutte le classi, indicando un'eccellente separabilità.}}{43}{figure.6.4}\protected@file@percent }
+\newlabel{fig:roc_zoomed}{{6.4}{43}{Dettaglio delle curve ROC per le 10 classi (Zoom TPR 0.8-1.0). L'area sotto la curva (AUC) è prossima a 1.0 per tutte le classi, indicando un'eccellente separabilità}{figure.6.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.5}{\ignorespaces Mappe di Sensibilità all'Occlusione. (Riga 1) Immagine originale. (Riga 2) Heatmap: le aree rosse indicano le zone dove l'occlusione causa il maggior calo di confidenza. (Riga 3) Sovrapposizione. Si nota come il modello si concentri correttamente sulle caratteristiche discriminanti dell'oggetto (es. il muso del cane, la carrozzeria dell'auto) ignorando lo sfondo.}}{44}{figure.6.5}\protected@file@percent }
+\newlabel{fig:occlusion_sensitivity}{{6.5}{44}{Mappe di Sensibilità all'Occlusione. (Riga 1) Immagine originale. (Riga 2) Heatmap: le aree rosse indicano le zone dove l'occlusione causa il maggior calo di confidenza. (Riga 3) Sovrapposizione. Si nota come il modello si concentri correttamente sulle caratteristiche discriminanti dell'oggetto (es. il muso del cane, la carrozzeria dell'auto) ignorando lo sfondo}{figure.6.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.6}{\ignorespaces Errori ad Alta Confidenza ($>90\%$). Ogni immagine riporta la classe vera (True), quella predetta (Pred) e la confidenza. Molti di questi errori sono dovuti ad ambiguità visive estreme (es. prospettive insolite o oggetti parzialmente occlusi) che metterebbero in difficoltà anche un osservatore umano.}}{45}{figure.6.6}\protected@file@percent }
+\newlabel{fig:top_errors}{{6.6}{45}{Errori ad Alta Confidenza ($>90\%$). Ogni immagine riporta la classe vera (True), quella predetta (Pred) e la confidenza. Molti di questi errori sono dovuti ad ambiguità visive estreme (es. prospettive insolite o oggetti parzialmente occlusi) che metterebbero in difficoltà anche un osservatore umano}{figure.6.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.7}{\ignorespaces Efficiency Frontier: Accuratezza vs Numero di Parametri (scala logaritmica). Il nostro modello (stella rossa) si trova nettamente a sinistra (meno parametri) rispetto a modelli con accuratezza simile come ResNet-32 o VGG-16.}}{46}{figure.6.7}\protected@file@percent }
+\newlabel{fig:efficiency}{{6.7}{46}{Efficiency Frontier: Accuratezza vs Numero di Parametri (scala logaritmica). Il nostro modello (stella rossa) si trova nettamente a sinistra (meno parametri) rispetto a modelli con accuratezza simile come ResNet-32 o VGG-16}{figure.6.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.8}{\ignorespaces Heatmap dell'accuratezza (Validation Accuracy) al variare di Learning Rate e Weight Decay. Si osserva che alti valori di LR richiedono un decay maggiore per stabilizzare l'addestramento.}}{47}{figure.6.8}\protected@file@percent }
+\newlabel{fig:heatmap_lr_wd}{{6.8}{47}{Heatmap dell'accuratezza (Validation Accuracy) al variare di Learning Rate e Weight Decay. Si osserva che alti valori di LR richiedono un decay maggiore per stabilizzare l'addestramento}{figure.6.8}{}}
 \@input{appendice.aux}
 \@writefile{lof}{\addvspace {10pt}}
 \@writefile{lot}{\addvspace {10pt}}
-\@writefile{toc}{\contentsline {chapter}{Conclusioni e Sviluppi Futuri}{46}{appendix*.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{Conclusioni e Sviluppi Futuri}{49}{appendix*.3}\protected@file@percent }
 \@writefile{loa}{\addvspace {10\p@ }}
 \citation{*}
 \bibdata{bibliografia}
@@ -191,7 +191,7 @@
 \bibcite{sandler2018mobilenetv2}{5}
 \bibcite{hu2018squeeze}{6}
 \bibcite{wang2020eca}{7}
-\@writefile{toc}{\contentsline {chapter}{Bibliografia}{53}{appendix*.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{Bibliografia}{56}{appendix*.14}\protected@file@percent }
 \bibcite{ding2021repvgg}{8}
 \bibcite{simonyan2014very}{9}
 \bibcite{ma2018shufflenet}{10}
@@ -200,6 +200,6 @@
 \bibcite{lecun2015deep}{13}
 \bibcite{cubuk2019autoaugment}{14}
 \bibcite{zhong2020random}{15}
-\memsetcounter{lastsheet}{63}
-\memsetcounter{lastpage}{54}
-\gdef \@abspage@last{63}
+\memsetcounter{lastsheet}{66}
+\memsetcounter{lastpage}{57}
+\gdef \@abspage@last{66}
