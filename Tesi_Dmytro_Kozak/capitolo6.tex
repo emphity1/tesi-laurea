@@ -99,25 +99,41 @@ Per una migliore leggibilità, riportiamo un ingrandimento (zoom) dell'angolo in
 
 L'AUC medio è estremamente elevato ($>0.99$ per classi facili come "Nave" o "Aereo"), dimostrando che il modello assegna probabilità molto alte alla classe corretta e basse alle altre.
 
-\section{Analisi Qualitativa}
-Oltre alle metriche numeriche, è fondamentale analizzare visivamente il comportamento del modello per comprenderne i limiti.
+\section{Analisi Qualitativa Avanzata}
+Oltre alle metriche globali, è fondamentale comprendere *dove* e *perché* il modello prende le sue decisioni. Abbiamo condotto due analisi specifiche: la sensibilità all'occlusione (per capire quali parti dell'immagine sono determinanti) e l'analisi degli errori ad alta confidenza.
 
-\subsection{Esempi di Classificazione Corretta}
-Il modello dimostra una notevole robustezza nel classificare oggetti anche in condizioni non ideali.
-\begin{itemize}
-    \item \textbf{Aerei su sfondi complessi}: Il modello distingue correttamente aerei anche quando il cielo è nuvoloso o al tramonto, concentrandosi sulla forma delle ali e della fusoliera piuttosto che sul colore blu dominante.
-    \item \textbf{Animali in pose insolite}: Gatti raggomitolati o cani in corsa vengono classificati correttamente, suggerendo che il modulo ECA aiuta a catturare feature geometriche invarianti alla posa.
-\end{itemize}
+\subsection{Occlusion Sensitivity Analysis}
+Per verificare che il modello non stia sfruttando shortcut spurie (come il colore dello sfondo), abbiamo analizzato la """Occlusion Sensitivity""". In Figura \ref{fig:occlusion_sensitivity}, mostriamo come varia la confidenza della classe corretta quando oscuriamo diverse parti dell'immagine con un patch scorrevole.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1.0\textwidth]{figure/occlusion_sensitivity.png}
+    \caption{Mappe di Sensibilità all'Occlusione. (Riga 1) Immagine originale. (Riga 2) Heatmap: le aree rosse indicano le zone dove l'occlusione causa il maggior calo di confidenza. (Riga 3) Sovrapposizione. Si nota come il modello si concentri correttamente sulle caratteristiche discriminanti dell'oggetto (es. il muso del cane, la carrozzeria dell'auto) ignorando lo sfondo.}
+    \label{fig:occlusion_sensitivity}
+\end{figure}
+Le heatmap confermano che il modulo ECA guida l'attenzione della rete sulle feature morfologiche rilevanti dell'oggetto, ignorando efficacemente il background. Questo comportamento è indice di una buona generalizzazione.
 
-\subsection{Analisi degli Errori - Misclassification}
-Esaminando i casi di errore (i valori fuori diagonale nella matrice di confusione), emergono alcuni pattern ricorrenti visualizzati in Figura \ref{fig:misclassified}.
+\subsection{Analisi degli "Imperdonabili": High Confidence Errors}
+Un aspetto critico per l'affidabilità è capire quando il modello sbaglia con alta certezza ("overconfident").
+In Figura \ref{fig:top_errors}, riportiamo alcuni esempi dal Test Set dove il modello ha sbagliato previsione con una confidenza superiore al 90\%.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.9\textwidth]{figure/misclassified_examples.png}
-    \caption{Esempi di errata classificazione (Test Set). Ogni riquadro mostra l'immagine originale con l'etichetta vera (True), quella predetta (Pred) e la confidenza del modello. Si noti come alcune immagini siano ambigue o difficili anche per un osservatore umano.}
-    \label{fig:misclassified}
+    \includegraphics[width=1.0\textwidth]{figure/top_errors.png}
+    \caption{Errori ad Alta Confidenza ($>90\%$). Ogni immagine riporta la classe vera (True), quella predetta (Pred) e la confidenza. Molti di questi errori sono dovuti ad ambiguità visive estreme (es. prospettive insolite o oggetti parzialmente occlusi) che metterebbero in difficoltà anche un osservatore umano.}
+    \label{fig:top_errors}
 \end{figure}
+L'analisi rivela che molti di questi "errori" sono in realtà casi limite o etichettature discutibili nel dataset stesso (noisy labels), scagionando parzialmente l'architettura.
+
+\section{Confronto Esteso con lo Stato dell'Arte}
+Infine, posizioniamo il nostro lavoro nel panorama della letteratura scientifica ultra-lightweight.
+
+\input{reports/tables/sota_comparison.tex}
+
+Come mostrato nella Tabella \ref{tab:comparison_sota}, MobileNetECA-Rep eccelle nella categoria "sotto i 100k parametri".
+
+\textbf{Il Caso ThriftyNet}: Un confronto particolarmente interessante è con \textit{ThriftyNet} \cite{thriftynet2021}.
+Mentre ThriftyNet raggiunge il 91.0\% con soli $\sim40$k parametri sfruttando iterazioni ricorsive dello stesso filtro, il nostro approccio raggiunge il \textbf{93.5\%} (+2.5\%) con $\sim76$k parametri.
+Sebbene usiamo quasi il doppio dei parametri, rimaniamo ben al di sotto della soglia critica dei 100k, offrendo però un guadagno di accuratezza sostanziale e una struttura (feed-forward lineare) molto più semplice da parallelizzare su hardware moderno rispetto alle architetture ricorsive.
 
 L'analisi qualitativa di questi campioni rivela che:
 \begin{enumerate}
@@ -128,9 +144,7 @@ L'analisi qualitativa di questi campioni rivela che:
 Questa analisi suggerisce che ulteriori miglioramenti potrebbero derivare da un aumento della risoluzione (es. $64 \times 64$ o $128 \times 128$) o dall'integrazione di meccanismi di attenzione spaziale oltre a quelli di canale (es. CBAM).
 
 \section{Confronto con lo Stato dell'Arte: Efficienza}
-Infine, posizioniamo il nostro lavoro nel panorama della letteratura scientifica. L'obiettivo non era solo l'accuratezza assoluta, ma l'efficienza (Pareto Efficiency).
-
-\input{reports/tables/sota_comparison.tex}
+Infine, posizioniamo il nostro lavoro nel panorama della letteratura scientifica in termini di Pareto Efficiency.
 
 Come mostrato nella Tabella \ref{tab:comparison_sota} e visivamente nella Figura \ref{fig:efficiency}, il nostro modello occupa una posizione di rilievo.
 
@@ -178,25 +192,9 @@ La Figura \ref{fig:heatmap_lr_wd} mostra come l'accuratezza vari al variare di L
 \end{figure}
 Si nota una regione ottimale (zona chiara) lungo la diagonale, suggerendo che un learning rate aggressivo deve essere bilanciato da una regolarizzazione più forte per prevenire l'esplosione dei pesi.
 
-\subsection{Impatto della Capacità del Modello (Width)}
-Analizzando l'interazione tra la larghezza della rete (Width Multiplier) e gli iperparametri, emergono trend interessanti.
-
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.9\textwidth]{figure/heatmap_lr_width.png}
-    \caption{Accuratezza in funzione di Learning Rate e Width Multiplier. Reti più larghe (Width > 0.5) beneficiano di LR più alti, mentre reti molto sottili richiedono un approccio più conservativo.}
-    \label{fig:heatmap_lr_width}
-\end{figure}
-
-Come mostrato in Figura \ref{fig:heatmap_lr_width}, aumentare la larghezza migliora monotonicamente le prestazioni, ma con ritorni decrescenti oltre $\alpha=0.75$. La nostra scelta di $\alpha=0.5$ rappresenta il punto di ginocchio (knee point) ottimale tra prestazioni e costi.
-
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.9\textwidth]{figure/heatmap_width_wd.png}
-    \caption{Interazione tra Width Multiplier e Weight Decay. Reti più piccole sono meno soggette a overfitting massiccio ma beneficiano comunque di una moderata regolarizzazione.}
-    \label{fig:heatmap_width_wd}
-\end{figure}
-
-La Figura \ref{fig:heatmap_width_wd} conferma che il Weight Decay deve essere scalato inversamente alla capacità della rete: modelli più grandi richiedono più regolarizzazione.
+\subsection{Impatto della Capacità del Modello sulla Regolarizzazione}
+Analizzando l'interazione tra la larghezza della rete (Width Multiplier) e gli iperparametri, emergono trend coerenti.
+Aumentare la larghezza migliora monotonicamente le prestazioni, ma con ritorni decrescenti oltre $\alpha=0.75$. La nostra scelta di $\alpha=0.5$ rappresenta il punto di ginocchio (knee point) ottimale tra prestazioni e computazione.
+Inoltre, analisi estensive hanno confermato una relazione inversa tra capacità del modello e regolarizzazione ottimale: modelli più grandi richiedono un Weight Decay maggiore per prevenire l'overfitting, mentre reti molto sottili, avendo intrinsecamente meno capacità di memorizzazione, beneficiano di un approccio più conservativo.
 
 In conclusione, \textbf{MobileNetECA-Rep} dimostra che è possibile ottenere prestazioni da "Server-Class" (93\%+) con un budget di risorse da "Microcontroller-Class", grazie alla sinergia tra depthwise convolution, attenzione ECA e ri-parametrizzazione.

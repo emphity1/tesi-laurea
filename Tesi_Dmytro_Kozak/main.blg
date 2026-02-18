@@ -1,47 +1,47 @@
-This is BibTeX, Version 0.99d (TeX Live 2022/dev/Debian)
+This is BibTeX, Version 0.99d (TeX Live 2025)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: main.aux
 The style file: ieeetr.bst
 A level-1 auxiliary file: appendice.aux
 Database file #1: bibliografia.bib
-You've used 14 entries,
+You've used 15 entries,
             1876 wiz_defined-function locations,
-            549 strings with 5890 characters,
-and the built_in function-call counts, 4320 in all, are:
-= -- 397
-> -- 202
+            554 strings with 6100 characters,
+and the built_in function-call counts, 4506 in all, are:
+= -- 412
+> -- 216
 < -- 0
-+ -- 72
-- -- 58
-* -- 302
-:= -- 602
-add.period$ -- 15
-call.type$ -- 14
-change.case$ -- 14
++ -- 77
+- -- 62
+* -- 316
+:= -- 635
+add.period$ -- 17
+call.type$ -- 15
+change.case$ -- 15
 chr.to.int$ -- 0
-cite$ -- 14
-duplicate$ -- 231
-empty$ -- 415
-format.name$ -- 58
-if$ -- 1040
+cite$ -- 15
+duplicate$ -- 240
+empty$ -- 432
+format.name$ -- 62
+if$ -- 1082
 int.to.chr$ -- 0
-int.to.str$ -- 14
-missing$ -- 14
-newline$ -- 46
-num.names$ -- 14
-pop$ -- 77
+int.to.str$ -- 15
+missing$ -- 15
+newline$ -- 50
+num.names$ -- 15
+pop$ -- 80
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 146
+skip$ -- 147
 stack$ -- 0
 substring$ -- 304
-swap$ -- 89
+swap$ -- 90
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 0
-while$ -- 38
-width$ -- 16
-write$ -- 127
+while$ -- 39
+width$ -- 17
+write$ -- 137

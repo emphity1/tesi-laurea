@@ -1,8 +1,44 @@
-# File grandi - NON committare
+
+# Environment
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.DS_Store
+
+# Data & Models
+data/
+datasets/
+models/*.pt
+models/*.pth
+*.pt
+*.pth
+*.ckpt
+*.onnx
+
+# Logs & Experiments
+runs/
 mutex-wandb/
 wandb/
-models/*.pt
+mlruns/
+lightning_logs/
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Tesi related (keep source but ignore generated bloat)
 *.pdf
-data/
-.DS_Store
-__pycache__/
+*.aux
+*.log
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.toc
+*.out
+*.lof
+
+# Custom user excludes
+src/sn31-v2/

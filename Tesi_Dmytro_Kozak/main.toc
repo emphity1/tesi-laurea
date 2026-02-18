@@ -1,8 +1,7 @@
 \babel@toc {italian}{}\relax 
 \babel@toc {italian}{}\relax 
-\contentsline {chapter}{Introduzione}{iii}{chapter*.1}%
-\contentsline {chapter}{Indice}{iv}{section*.2}%
-\contentsline {chapter}{Elenco delle figure}{viii}{section*.3}%
+\contentsline {chapter}{Indice}{iii}{section*.1}%
+\contentsline {chapter}{Elenco delle figure}{vii}{section*.2}%
 \contentsline {chapter}{\chapternumberline {1}Introduzione}{1}{chapter.1}%
 \contentsline {section}{\numberline {1.1}Contesto e Motivazione}{1}{section.1.1}%
 \contentsline {section}{\numberline {1.2}Obiettivi della Tesi}{2}{section.1.2}%
@@ -57,29 +56,31 @@
 \contentsline {subsubsection}{\numberline {5.3.2.1}Stride Iniziale}{24}{subsubsection.5.3.2.1}%
 \contentsline {subsubsection}{\numberline {5.3.2.2}Attivazione: GELU vs ReLU}{24}{subsubsection.5.3.2.2}%
 \contentsline {section}{\numberline {5.4}Implementazione del Deploy}{25}{section.5.4}%
-\contentsline {subsection}{\numberline {5.4.1}ECA Block: Implementazione Dettagliata}{27}{subsection.5.4.1}%
-\contentsline {subsubsection}{\numberline {5.4.1.1}Formula del Kernel Adattivo}{27}{subsubsection.5.4.1.1}%
-\contentsline {subsubsection}{\numberline {5.4.1.2}Pipeline Operativa}{28}{subsubsection.5.4.1.2}%
-\contentsline {section}{\numberline {5.5}Configurazione Sperimentale}{28}{section.5.5}%
-\contentsline {subsection}{\numberline {5.5.1}Strategie di Data Augmentation Avanzate}{28}{subsection.5.5.1}%
-\contentsline {subsection}{\numberline {5.5.2}Protocollo di Training}{29}{subsection.5.5.2}%
-\contentsline {subsection}{\numberline {5.5.3}Learning Rate Schedule}{29}{subsection.5.5.3}%
-\contentsline {section}{\numberline {5.6}Analisi della Complessità Teorica}{30}{section.5.6}%
-\contentsline {chapter}{\chapternumberline {6}Analisi dei Risultati}{31}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Ablation Study: Impatto delle Componenti}{31}{section.6.1}%
-\contentsline {subsection}{\numberline {6.1.1}Dinamiche di Addestramento}{32}{subsection.6.1.1}%
-\contentsline {section}{\numberline {6.2}Analisi del Modello Finale (MobileNetECA-Rep)}{34}{section.6.2}%
-\contentsline {subsection}{\numberline {6.2.1}Matrice di Confusione}{34}{subsection.6.2.1}%
-\contentsline {subsection}{\numberline {6.2.2}Curve ROC e AUC}{35}{subsection.6.2.2}%
-\contentsline {section}{\numberline {6.3}Analisi Qualitativa}{36}{section.6.3}%
-\contentsline {subsection}{\numberline {6.3.1}Esempi di Classificazione Corretta}{36}{subsection.6.3.1}%
-\contentsline {subsection}{\numberline {6.3.2}Analisi degli Errori - Misclassification}{36}{subsection.6.3.2}%
-\contentsline {section}{\numberline {6.4}Confronto con lo Stato dell'Arte: Efficienza}{37}{section.6.4}%
-\contentsline {subsection}{\numberline {6.4.1}Discussione}{38}{subsection.6.4.1}%
-\contentsline {subsection}{\numberline {6.4.2}Analisi Empirica della Latenza e Implementabilità}{38}{subsection.6.4.2}%
-\contentsline {section}{\numberline {6.5}Analisi dell'Impatto degli Iperparametri}{40}{section.6.5}%
-\contentsline {subsection}{\numberline {6.5.1}Interazione Learning Rate vs Weight Decay}{40}{subsection.6.5.1}%
-\contentsline {subsection}{\numberline {6.5.2}Impatto della Capacità del Modello (Width)}{41}{subsection.6.5.2}%
-\contentsline {appendix}{\chapternumberline {A}Dettagli Metriche di Valutazione}{43}{appendix.Alph1}%
-\contentsline {chapter}{Conclusioni e Sviluppi Futuri}{44}{appendix*.4}%
-\contentsline {chapter}{Bibliografia}{51}{appendix*.15}%
+\contentsline {subsection}{\numberline {5.4.1}Configurazione Layer Dettagliata}{27}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}ECA Block: Implementazione Dettagliata}{28}{subsection.5.4.2}%
+\contentsline {subsubsection}{\numberline {5.4.2.1}Formula del Kernel Adattivo}{28}{subsubsection.5.4.2.1}%
+\contentsline {subsubsection}{\numberline {5.4.2.2}Pipeline Operativa}{29}{subsubsection.5.4.2.2}%
+\contentsline {section}{\numberline {5.5}Configurazione Sperimentale}{29}{section.5.5}%
+\contentsline {subsection}{\numberline {5.5.1}Strategie di Data Augmentation Avanzate}{29}{subsection.5.5.1}%
+\contentsline {subsection}{\numberline {5.5.2}Protocollo di Training}{30}{subsection.5.5.2}%
+\contentsline {subsection}{\numberline {5.5.3}Learning Rate Schedule}{30}{subsection.5.5.3}%
+\contentsline {section}{\numberline {5.6}Analisi della Complessità Teorica}{31}{section.5.6}%
+\contentsline {chapter}{\chapternumberline {6}Analisi dei Risultati}{32}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Ablation Study: Impatto delle Componenti}{32}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}Dinamiche di Addestramento}{33}{subsection.6.1.1}%
+\contentsline {section}{\numberline {6.2}Analisi del Modello Finale (MobileNetECA-Rep)}{35}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}Matrice di Confusione}{35}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.2}Curve ROC e AUC}{36}{subsection.6.2.2}%
+\contentsline {section}{\numberline {6.3}Analisi Qualitativa Avanzata}{37}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}Occlusion Sensitivity Analysis}{37}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.3.2}Analisi degli "Imperdonabili": High Confidence Errors}{37}{subsection.6.3.2}%
+\contentsline {section}{\numberline {6.4}Confronto Esteso con lo Stato dell'Arte}{38}{section.6.4}%
+\contentsline {section}{\numberline {6.5}Confronto con lo Stato dell'Arte: Efficienza}{40}{section.6.5}%
+\contentsline {subsection}{\numberline {6.5.1}Discussione}{40}{subsection.6.5.1}%
+\contentsline {subsection}{\numberline {6.5.2}Analisi Empirica della Latenza e Implementabilità}{41}{subsection.6.5.2}%
+\contentsline {section}{\numberline {6.6}Analisi dell'Impatto degli Iperparametri}{42}{section.6.6}%
+\contentsline {subsection}{\numberline {6.6.1}Interazione Learning Rate vs Weight Decay}{42}{subsection.6.6.1}%
+\contentsline {subsection}{\numberline {6.6.2}Impatto della Capacità del Modello sulla Regolarizzazione}{42}{subsection.6.6.2}%
+\contentsline {appendix}{\chapternumberline {A}Dettagli Metriche di Valutazione}{45}{appendix.Alph1}%
+\contentsline {chapter}{Conclusioni e Sviluppi Futuri}{46}{appendix*.3}%
+\contentsline {chapter}{Bibliografia}{53}{appendix*.14}%

@@ -139,6 +139,35 @@ def switch_to_deploy(self):
 
 Questo passaggio è fondamentale: trasforma un grafo computazionale complesso (multi-branch) in una semplice sequenza di operazioni lineari, riducendo la latenza di inferenza del 30-40\% su CPU e permettendo l'export verso formati ottimizzati come TFLite.
 
+\subsection{Configurazione Layer Dettagliata}
+Per garantire la piena riproducibilità, riportiamo in Tabella \ref{tab:layer_config} la configurazione esatta dei blocchi Inverted Residual utilizzati in MobileNetECA-Rep (Width Multiplier $0.5$).
+Ogni riga corrisponde a una sequenza di $n$ blocchi identici.
+\begin{table}[h]
+    \centering
+    \caption{Configurazione Architetturale di MobileNetECA-Rep ($0.5\times$)}
+    \label{tab:layer_config}
+    \begin{tabular}{c c c c c c}
+        \toprule
+        \textbf{Input} & \textbf{Operator} & \textbf{t (Exp)} & \textbf{c (Out)} & \textbf{n (Repeat)} & \textbf{s (Stride)} \\
+        \midrule
+        $32^2 \times 3$ & RepConv $3\times3$ & - & 16 & 1 & 1 \\
+        $32^2 \times 16$ & RepInvRes + ECA & 1 & 12 & 1 & 1 \\
+        $32^2 \times 12$ & RepInvRes + ECA & 6 & 16 & 2 & 2 \\
+        $16^2 \times 16$ & RepInvRes + ECA & 8 & 21 & 4 & 2 \\
+        $8^2 \times 21$ & RepInvRes + ECA & 8 & 26 & 2 & 1 \\
+        $8^2 \times 26$ & Conv $1\times1$ & - & 72 & 1 & 1 \\
+        $8^2 \times 72$ & GlobalAvgPool & - & - & 1 & - \\
+        $1 \times 1 \times 72$ & Linear (FC) & - & 10 & 1 & - \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Si noti in particolare:
+\begin{itemize}
+    \item \textbf{Stride Iniziale Conservativo}: I primi due stadi mantengono la risoluzione piena $32 \times 32$ (stride=1), preservando i dettagli spaziali fini.
+    \item \textbf{High Expansion Ratio}: Negli stadi profondi utilizziamo un fattore di espansione elevato ($t=8$) per compensare la ridotta larghezza dei canali ($c=21, 26$), permettendo alla rete di apprendere feature complesse in uno spazio latente ad alta dimensionalità prima della proiezione.
+\end{itemize}
+
 \subsection{ECA Block: Implementazione Dettagliata}
 L'implementazione del blocco ECA è cruiciale per mantenere l'efficienza. A differenza dei blocchi SE (Squeeze-and-Excitation) che usano due layer Fully Connected (FC) con riduzione di dimensionalità, ECA usa una convoluzione 1D adattiva (Figura \ref{fig:eca_detail}).
 
@@ -177,7 +206,9 @@ Per migliorare la robustezza del modello e prevenire l'overfitting su un dataset
 \end{itemize}
 
 \subsection{Protocollo di Training}
-L'addestramento è stato condotto su una workstation dotata di GPU \textbf{NVIDIA RTX 4090} (24GB VRAM) e CPU AMD Ryzen Threadripper 3965WX (32 Core). Abbiamo scelto di utilizzare l'algoritmo di ottimizzazione \textbf{SGD con Momentum} ($0.9$) e un weight decay di $5 \times 10^{-4}$. Sebbene ottimizzatori adattivi come Adam convergano più velocemente, SGD con momentum spesso raggiunge minimi locali più ampi e generalizzabili per compiti di classificazione immagini.
+L'addestramento è stato condotto su una workstation dotata di GPU \textbf{NVIDIA RTX 4090} (24GB VRAM) e CPU AMD Ryzen Threadripper 3965WX (32 Core). 
+In linea con le best practice per la classificazione di immagini, abbiamo scelto di utilizzare l'algoritmo di ottimizzazione \textbf{SGD (Stochastic Gradient Descent) con Momentum} ($0.9$) e un weight decay di $5 \times 10^{-4}$. 
+Sebbene ottimizzatori adattivi come Adam convergano più velocemente nelle fasi iniziali, la letteratura scientifica e i nostri esperimenti confermano che SGD con Momentum tende a raggiungere minimi locali più ampi e generalizzabili, portando a una migliore accuratezza finale sul test set.
 
 \subsection{Learning Rate Schedule}
 Per garantire una convergenza ottimale, è stato utilizzato un \textit{Cosine Annealing Schedule}.
