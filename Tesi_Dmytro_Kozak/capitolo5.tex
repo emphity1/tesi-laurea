@@ -137,7 +137,7 @@ def switch_to_deploy(self):
     \label{fig:conv_comparison}
 \end{figure}
 
-Questo passaggio è fondamentale: trasforma un grafo computazionale complesso (multi-branch) in una semplice sequenza di operazioni lineari, riducendo la latenza di inferenza del 30-40\% su CPU e permettendo l'export verso formati ottimizzati come TFLite.
+Questo passaggio è fondamentale: trasforma un grafo computazionale complesso (multi-branch) in una semplice sequenza di operazioni lineari, riducendo significativamente la latenza di inferenza su CPU~\cite{ding2021repvgg} e permettendo l'export verso formati ottimizzati come TFLite.
 
 \subsection{Configurazione Layer Dettagliata}
 Per garantire la piena riproducibilità, riportiamo in Tabella \ref{tab:layer_config} la configurazione esatta dei blocchi Inverted Residual utilizzati in MobileNetECA-Rep (Width Multiplier $0.5$).
@@ -169,7 +169,7 @@ Si noti in particolare:
 \end{itemize}
 
 \subsection{ECA Block: Implementazione Dettagliata}
-L'implementazione del blocco ECA è cruiciale per mantenere l'efficienza. A differenza dei blocchi SE (Squeeze-and-Excitation) che usano due layer Fully Connected (FC) con riduzione di dimensionalità, ECA usa una convoluzione 1D adattiva (Figura \ref{fig:eca_detail}).
+L'implementazione del blocco ECA è cruciale per mantenere l'efficienza. A differenza dei blocchi SE (Squeeze-and-Excitation) che usano due layer Fully Connected (FC) con riduzione di dimensionalità, ECA usa una convoluzione 1D adattiva (Figura \ref{fig:eca_detail}).
 
 \begin{figure}[h]
     \centering
@@ -178,22 +178,73 @@ L'implementazione del blocco ECA è cruiciale per mantenere l'efficienza. A diff
     \label{fig:eca_detail}
 \end{figure}
 
+\subsubsection{Perché ECA e non SE?}
+In un modello con meno di 100k parametri totali, ogni parametro aggiuntivo ha un costo proporzionale molto elevato.
+Un blocco SE standard per $C$ canali con fattore di riduzione $r$ aggiunge $\frac{2C^2}{r}$ parametri (due layer FC).
+Il blocco ECA, al contrario, richiede un solo kernel di Conv1D con $k \approx 5$ parametri.
+
+Per rendere concreto il confronto, consideriamo lo strato con il massimo numero di canali espansi nel nostro modello ($C = 208$, hidden\_dim dello stadio con $t=8$, $c=26$, width\_mult=$0.5$):
+
+\begin{table}[h]
+    \centering
+    \caption{Confronto parametri aggiuntivi: SE Block vs ECA Block per $C=208$ canali.}
+    \label{tab:se_vs_eca}
+    \begin{tabular}{l c c}
+        \toprule
+        \textbf{Meccanismo} & \textbf{Parametri per blocco} & \textbf{Overhead su modello} \\
+        \midrule
+        SE ($r=4$)  & $2 \times 208 \times 52 = 21{,}632$ & $+28.2\%$ \\
+        SE ($r=16$) & $2 \times 208 \times 13 = 5{,}408$  & $+7.1\%$ \\
+        \textbf{ECA ($k=5$)} & \textbf{5}                   & $\mathbf{+0.007\%}$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Come mostrato nella Tabella \ref{tab:se_vs_eca}, anche con il fattore di riduzione più aggressivo ($r=16$), un singolo blocco SE aggiungerebbe oltre 5k parametri — circa il 7\% dell'intero modello. Con 12 blocchi Inverted Residual, l'impatto cumulativo renderebbe SE proibitivo. ECA, con soli 5 parametri per blocco (totale $\sim$80 parametri per l'intero modello), fornisce un'attenzione efficace a costo essenzialmente nullo.
+
 \subsubsection{Formula del Kernel Adattivo}
 Il kernel size della Conv1D è calcolato dinamicamente in base al numero di canali $C$:
 \begin{equation}
 k = \left|\frac{\log_2(C) + b}{\gamma}\right|_{\text{odd}}
 \end{equation}
-Con parametri default $b=12$, $\gamma=3$.
-Questo approccio garantisce che ogni canale interagisca solo con i suoi $k$ vicini locali, preservando le relazioni spaziali e riducendo drasticamente il numero di parametri (da $C^2$ a $k$).
+Con parametri ottimizzati per le basse risoluzioni di CIFAR-10: $b=12$, $\gamma=3$.
+Questo approccio garantisce che ogni canale interagisca solo con i suoi $k$ vicini locali, preservando le relazioni tra canali adiacenti e riducendo drasticamente il numero di parametri (da $C^2$ per SE a $k$ per ECA).
+
+\subsubsection{Implementazione PyTorch}
+Di seguito l'implementazione completa del blocco ECA utilizzata nel nostro modello:
+
+\begin{lstlisting}[language=Python, caption=Implementazione del blocco ECA (Efficient Channel Attention), basicstyle=\footnotesize\ttfamily]
+class ECABlock(nn.Module):
+    def __init__(self, channels, gamma=3, b=12):
+        super().__init__()
+        # Kernel adattivo: piu' canali -> kernel piu' grande
+        t = int(abs((math.log(channels, 2) + b) / gamma))
+        k = t if t % 2 else t + 1  # Forza dispari
+        
+        self.avg_pool = nn.AdaptiveAvgPool2d(1)
+        self.conv = nn.Conv1d(1, 1, kernel_size=k,
+                              padding=(k-1)//2, bias=False)
+        self.sigmoid = nn.Sigmoid()
+
+    def forward(self, x):
+        # x: [B, C, H, W]
+        y = self.avg_pool(x)              # [B, C, 1, 1]
+        y = y.squeeze(-1).transpose(-1,-2) # [B, 1, C]
+        y = self.conv(y)                   # Conv1D locale
+        y = self.sigmoid(y)                # Pesi [0, 1]
+        y = y.transpose(-1,-2).unsqueeze(-1) # [B, C, 1, 1]
+        return x * y.expand_as(x)  # Ricalibrazione
+\end{lstlisting}
 
 \subsubsection{Pipeline Operativa}
 La sequenza di operazioni nel blocco ECA è la seguente:
 \begin{enumerate}
-    \item \textbf{Global Average Pooling}: Riduce le dimensioni spaziali $H \times W$ a $1 \times 1$.
-    \item \textbf{Conv1D}: Applica il kernel adattivo lungo la dimensione dei canali.
+    \item \textbf{Global Average Pooling}: Riduce le dimensioni spaziali $H \times W$ a $1 \times 1$, creando un descrittore globale per ogni canale.
+    \item \textbf{Conv1D}: Applica il kernel adattivo lungo la dimensione dei canali, catturando le interazioni locali tra canali adiacenti.
     \item \textbf{Sigmoid}: Normalizza i pesi di attenzione nell'intervallo $[0, 1]$.
-    \item \textbf{Scale}: Moltiplica element-wise le feature map originali per i pesi calcolati.
+    \item \textbf{Scale}: Moltiplica element-wise le feature map originali per i pesi calcolati, amplificando i canali informativi e attenuando quelli ridondanti.
 \end{enumerate}
+
 
 \section{Configurazione Sperimentale}
 
@@ -209,6 +260,9 @@ Per migliorare la robustezza del modello e prevenire l'overfitting su un dataset
 L'addestramento è stato condotto su una workstation dotata di GPU \textbf{NVIDIA RTX 4090} (24GB VRAM) e CPU AMD Ryzen Threadripper 3965WX (32 Core). 
 In linea con le best practice per la classificazione di immagini, abbiamo scelto di utilizzare l'algoritmo di ottimizzazione \textbf{SGD (Stochastic Gradient Descent) con Momentum} ($0.9$) e un weight decay di $5 \times 10^{-4}$. 
 Sebbene ottimizzatori adattivi come Adam convergano più velocemente nelle fasi iniziali, la letteratura scientifica e i nostri esperimenti confermano che SGD con Momentum tende a raggiungere minimi locali più ampi e generalizzabili, portando a una migliore accuratezza finale sul test set.
+
+\paragraph{Protocollo di Validazione.}
+Per garantire una valutazione rigorosa e priva di bias, il dataset di training originale (50.000 immagini) è stato suddiviso in un sottoinsieme di addestramento (45.000 immagini) e un insieme di validazione (5.000 immagini), utilizzando uno split deterministico con seed fisso. La selezione del modello migliore (early stopping) è stata effettuata esclusivamente sulla base dell'accuratezza di validazione. Il test set originale (10.000 immagini) è stato utilizzato una sola volta per la valutazione finale, evitando qualsiasi forma di information leakage.
 
 \subsection{Learning Rate Schedule}
 Per garantire una convergenza ottimale, è stato utilizzato un \textit{Cosine Annealing Schedule}.

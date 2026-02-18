@@ -13,7 +13,7 @@ Il progetto si è articolato in quattro fasi principali:
     
     \item \textbf{Grid search sistematica}: Esplorazione di centinaia di configurazioni di iperparametri attraverso un approccio two-phase (screening rapido + refinement), identificando empiricamente la combinazione ottimale di learning rate, width multiplier e weight decay.
     
-    \item \textbf{Validazione sperimentale}: Allenamento del modello ottimizzato per 200 epoche con SGD+momentum e Cosine Annealing schedule, raggiungendo un'accuratezza finale di \textbf{93.50\%} sul test set CIFAR-10, superando le baseline standard.
+    \item \textbf{Validazione sperimentale}: Allenamento del modello ottimizzato per 200 epoche con SGD+momentum e Cosine Annealing schedule, raggiungendo un'accuratezza finale di \textbf{93.23\%} sul test set CIFAR-10, superando le baseline standard.
 \end{enumerate}
 
 \section*{Risultati Principali}
@@ -21,7 +21,7 @@ Il progetto si è articolato in quattro fasi principali:
 MobileNetECA-Rep ha dimostrato un eccellente trade-off efficienza-accuratezza:
 
 \begin{itemize}
-    \item \textbf{Accuratezza}: 93.50\% su CIFAR-10 test set.
+    \item \textbf{Accuratezza}: 93.23\% su CIFAR-10 test set.
     \item \textbf{Parametri}: 76,600 (circa 13 volte meno di MobileNetV2 $\times$0.5).
     \item \textbf{FLOPs}: $\sim$10.7M MACs (circa 4 volte meno di MobileNetV2 $\times$0.5).
     \item \textbf{Dimensione Modello}: Meno di 300 KB (fit comodo in L2 cache).

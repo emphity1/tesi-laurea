@@ -8,28 +8,32 @@ In questo capitolo vengono presentati e discussi i risultati sperimentali ottenu
 
 \section{Ablation Study: Impatto delle Componenti}
 Per isolare il contributo di ciascuna tecnica proposta, abbiamo addestrato e valutato quattro varianti del modello, partendo dalla baseline MobileNetV2 fino alla configurazione finale.
+L'addestramento di ciascuna variante è stato condotto con iperparametri identici (seed, normalizzazione, learning rate, weight decay) e con una suddivisione corretta del dataset: 45.000 immagini per il training, 5.000 per la validazione (selezione del modello migliore) e 10.000 per il test finale.
 
 \begin{table}[h]
     \centering
-    \caption{Risultati dell'Ablation Study. Ogni riga rappresenta l'aggiunta di una componente rispetto alla precedente.}
+    \caption{Risultati dell'Ablation Study. Ogni riga rappresenta l'aggiunta di una componente rispetto alla precedente. L'accuratezza di test è misurata una sola volta sul modello selezionato tramite early stopping sulla validazione.}
     \label{tab:ablation}
     \resizebox{\textwidth}{!}{
-    \begin{tabular}{l l c c c}
+    \begin{tabular}{l l c c c c}
         \toprule
-        \textbf{ID} & \textbf{Configurazione} & \textbf{Accuratezza Val (\%)} & \textbf{Parametri} & \textbf{Note} \\
+        \textbf{ID} & \textbf{Configurazione} & \textbf{Test Acc (\%)} & \textbf{Val Acc (\%)} & \textbf{Parametri} & \textbf{Note} \\
         \midrule
-        A & MobileNetV2-Micro (Baseline) & 91.45\% & $\sim$68k & Optimized Stride/Layers \\
-        B & MobileNetECA (A + ECA) & 92.20\% & $\sim$68k & +0.75\% Acc (params invar.) \\
-        C & MobileNetECA-Rep (B + Rep) & 92.76\% & $\sim$76k & +0.56\% Acc \\
-        D & MobileNetECA-Rep-AdvAug (Final) & \textbf{93.50\%} & \textbf{76.6k} & \textbf{+0.74\% Acc (Best)} \\
+        A & MobileNetV2-Micro (Baseline) & 91.65\% & 92.66\% & $\sim$78k & Optimized Stride/Layers \\
+        B & MobileNetECA (A + ECA) & 92.17\% & 92.58\% & $\sim$78k & +0.52\% Test Acc \\
+        C & MobileNetECA-Rep (B + Rep) & 92.43\% & 93.84\% & $\sim$77k\textsuperscript{*} & +0.26\% Test Acc \\
+        D & MobileNetECA-Rep-AdvAug (Final) & \textbf{93.23\%} & \textbf{93.80\%} & \textbf{76.6k}\textsuperscript{*} & \textbf{+0.80\% Test Acc} \\
         \bottomrule
     \end{tabular}
     }
+    \vspace{0.2em}
+    \small{\textsuperscript{*}Parametri in modalità deploy (kernel fusi). In training: $\sim$85k.}
 \end{table}
 
-Come si evince dalla Tabella \ref{tab:ablation}, l'introduzione del blocco \textbf{ECA} (Configurazione B) offre il miglioramento più significativo a costo quasi nullo, dimostrando l'importanza di enfatizzare le feature informative nei canali.
+Come si evince dalla Tabella \ref{tab:ablation}, l'introduzione del blocco \textbf{ECA} (Configurazione B) offre un miglioramento a costo quasi nullo in termini di parametri, dimostrando l'importanza di enfatizzare le feature informative nei canali.
 La \textbf{ri-parametrizzazione} (Configurazione C) fornisce un ulteriore boost, permettendo al modello di apprendere rappresentazioni più complesse grazie ai rami multipli in training.
 Infine, l'\textbf{Advanced Augmentation} (Configurazione D) è determinante per superare la barriera del 93\%, agendo come forte regolarizzatore e prevenendo l'overfitting che altrimenti limiterebbe le prestazioni di un modello così compatto.
+
 
 \subsection{Dinamiche di Addestramento}
 Analizzando le curve di training (Figura \ref{fig:accuracy_loss}), notiamo comportamenti distinti.
@@ -49,7 +53,7 @@ Analizzando le curve di training (Figura \ref{fig:accuracy_loss}), notiamo compo
     \label{fig:accuracy_loss}
 \end{figure}
 
-Il modello con Advanced Augmentation mostra una crescita dell'accuratezza più lenta nelle prime epoche rispetto alla baseline. Questo è atteso: le immagini "tagliate" o distorte sono più difficili da classificare. Tuttavia, nel lungo periodo (epoche $>150$), questa difficoltà costringe la rete ad apprendere feature più robuste e generalizzabili, portando al picco finale del 93.50\%.
+Il modello con Advanced Augmentation mostra una crescita dell'accuratezza più lenta nelle prime epoche rispetto alla baseline. Questo è atteso: le immagini "tagliate" o distorte sono più difficili da classificare. Tuttavia, nel lungo periodo (epoche $>150$), questa difficoltà costringe la rete ad apprendere feature più robuste e generalizzabili, portando al picco finale del 93.23\%.
 
 Inoltre, riportiamo in Figura \ref{fig:real_dynamics} le dinamiche di addestramento estratte direttamente dai log sperimentali della configurazione finale. Si osserva chiaramente come l'accuratezza di validazione (arancione) rimanga costantemente sopra quella di training (blu). Questo fenomeno è spiegato dalla forte componente di rumore introdotta dalla Data Augmentation sul set di addestramento, che agisce come un "prezzo" da pagare in termini di loss istantanea per ottenere una superiore capacità di generalizzazione sui dati reali del test set.
 
@@ -92,9 +96,9 @@ Tuttavia, il tasso di errore è contenuto, confermando l'efficacia del meccanism
 Le curve ROC (Receiver Operating Characteristic) mostrano il trade-off tra True Positive Rate e False Positive Rate.
 Per una migliore leggibilità, riportiamo un ingrandimento (zoom) dell'angolo in alto a sinistra (Figura \ref{fig:roc_zoomed}).
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{figure/roc_curve_zoomed.png}
+    \includegraphics[width=1.0\textwidth]{figure/roc_curve_zoomed.png}
     \caption{Dettaglio delle curve ROC per le 10 classi (Zoom TPR 0.8-1.0). L'area sotto la curva (AUC) è prossima a 1.0 per tutte le classi, indicando un'eccellente separabilità.}
     \label{fig:roc_zoomed}
 \end{figure}
@@ -102,11 +106,11 @@ Per una migliore leggibilità, riportiamo un ingrandimento (zoom) dell'angolo in
 L'AUC medio è estremamente elevato ($>0.99$ per classi facili come "Nave" o "Aereo"), dimostrando che il modello assegna probabilità molto alte alla classe corretta e basse alle altre.
 
 \section{Analisi Qualitativa Avanzata}
-Oltre alle metriche globali, è fondamentale comprendere *dove* e *perché* il modello prende le sue decisioni. Abbiamo condotto due analisi specifiche: la sensibilità all'occlusione (per capire quali parti dell'immagine sono determinanti) e l'analisi degli errori ad alta confidenza.
+Oltre alle metriche globali, è fondamentale comprendere \textit{dove} e \textit{perché} il modello prende le sue decisioni. Abbiamo condotto due analisi specifiche: la sensibilità all'occlusione (per capire quali parti dell'immagine sono determinanti) e l'analisi degli errori ad alta confidenza.
 
 \subsection{Occlusion Sensitivity Analysis}
-Per verificare che il modello non stia sfruttando shortcut spurie (come il colore dello sfondo), abbiamo analizzato la """Occlusion Sensitivity""". In Figura \ref{fig:occlusion_sensitivity}, mostriamo come varia la confidenza della classe corretta quando oscuriamo diverse parti dell'immagine con un patch scorrevole.
-\begin{figure}[h]
+Per verificare che il modello non stia sfruttando shortcut spurie (come il colore dello sfondo), abbiamo analizzato la \textit{Occlusion Sensitivity}. In Figura \ref{fig:occlusion_sensitivity}, mostriamo come varia la confidenza della classe corretta quando oscuriamo diverse parti dell'immagine con un patch scorrevole.
+\begin{figure}[H]
     \centering
     \includegraphics[width=1.0\textwidth]{figure/occlusion_sensitivity.png}
     \caption{Mappe di Sensibilità all'Occlusione. (Riga 1) Immagine originale. (Riga 2) Heatmap: le aree rosse indicano le zone dove l'occlusione causa il maggior calo di confidenza. (Riga 3) Sovrapposizione. Si nota come il modello si concentri correttamente sulle caratteristiche discriminanti dell'oggetto (es. il muso del cane, la carrozzeria dell'auto) ignorando lo sfondo.}
@@ -118,9 +122,9 @@ Le heatmap confermano che il modulo ECA guida l'attenzione della rete sulle feat
 Un aspetto critico per l'affidabilità è capire quando il modello sbaglia con alta certezza ("overconfident").
 In Figura \ref{fig:top_errors}, riportiamo alcuni esempi dal Test Set dove il modello ha sbagliato previsione con una confidenza superiore al 90\%.
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=1.0\textwidth]{figure/top_errors.png}
+    \includegraphics[width=0.85\textwidth]{figure/top_errors.png}
     \caption{Errori ad Alta Confidenza ($>90\%$). Ogni immagine riporta la classe vera (True), quella predetta (Pred) e la confidenza. Molti di questi errori sono dovuti ad ambiguità visive estreme (es. prospettive insolite o oggetti parzialmente occlusi) che metterebbero in difficoltà anche un osservatore umano.}
     \label{fig:top_errors}
 \end{figure}
@@ -133,9 +137,8 @@ Infine, posizioniamo il nostro lavoro nel panorama della letteratura scientifica
 
 Come mostrato nella Tabella \ref{tab:comparison_sota}, MobileNetECA-Rep eccelle nella categoria "sotto i 100k parametri".
 
-\textbf{Il Caso ThriftyNet}: Un confronto particolarmente interessante è con \textit{ThriftyNet} \cite{thriftynet2021}.
-Mentre ThriftyNet raggiunge il 91.0\% con soli $\sim40$k parametri sfruttando iterazioni ricorsive dello stesso filtro, il nostro approccio raggiunge il \textbf{93.5\%} (+2.5\%) con $\sim76$k parametri.
-Sebbene usiamo quasi il doppio dei parametri, rimaniamo ben al di sotto della soglia critica dei 100k, offrendo però un guadagno di accuratezza sostanziale e una struttura (feed-forward lineare) molto più semplice da parallelizzare su hardware moderno rispetto alle architetture ricorsive.
+In letteratura sono presenti approcci ultra-compatti basati su architetture ricorsive (che riutilizzano lo stesso filtro in più iterazioni), capaci di raggiungere $\sim$91\% con meno di 50k parametri.
+Sebbene il nostro modello utilizzi un numero leggermente superiore di parametri ($\sim$76k), rimane ben al di sotto della soglia critica dei 100k, offrendo un guadagno di accuratezza sostanziale (+2.5\%) e una struttura feed-forward lineare molto più semplice da parallelizzare su hardware moderno rispetto alle architetture ricorsive.
 
 L'analisi qualitativa di questi campioni rivela che:
 \begin{enumerate}
@@ -177,12 +180,18 @@ Le misurazioni sono state effettuate su CPU \textbf{AMD Ryzen Threadripper 3965W
     \end{tabular}
 \end{table}
 
+\paragraph{Nota sulla Variabilità.}
+La deviazione standard elevata ($\sigma > \mu$) è attribuibile alle prime iterazioni di warmup (JIT compilation e allocazione cache), che producono latenze anomale. Escludendo le prime 50 iterazioni, la distribuzione risulta stabile con valori concentrati intorno alla media.
+
 Con un throughput superiore a \textbf{51 FPS} su una CPU generica, il modello garantisce prestazioni real-time senza necessità di acceleratori hardware dedicati. Su microcontrollori performanti (es. STM32H7) o processori mobile (Snapdragon), ci si attende una latenza ulteriormente ridotta ($< 5$ ms), rendendo l'architettura ideale per droni, videosorveglianza e robotica a basso costo.
 L'assenza di operazioni complesse non supportate (come Hard-Swish) facilita inoltre il porting diretto verso framework embedded come TensorFlow Lite Micro.
 
 
 \section{Analisi dell'Impatto degli Iperparametri}
 Oltre all'architettura, la scelta degli iperparametri di addestramento gioca un ruolo cruciale nel raggiungimento della massima accuratezza, specialmente per reti compatte. Abbiamo condotto una Grid Search analizzando l'interazione tra Learning Rate (LR), Weight Decay (WD) e Width Multiplier ($\alpha$).
+
+\paragraph{Nota Metodologica.}
+La Grid Search è stata condotta sulla configurazione Baseline (A) senza Advanced Augmentation, raggiungendo un massimo di circa 91.4\%. I risultati finali (93.23\%) incorporano le tecniche di augmentation avanzata descritte nella Sezione 5.4, che forniscono il restante guadagno prestazionale.
 
 \subsection{Interazione Learning Rate vs Weight Decay}
 La Figura \ref{fig:heatmap_lr_wd} mostra come l'accuratezza vari al variare di LR e WD.

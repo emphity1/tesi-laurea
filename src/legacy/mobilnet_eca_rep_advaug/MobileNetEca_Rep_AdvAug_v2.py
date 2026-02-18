@@ -89,17 +89,12 @@ class RepConv(nn.Module):
         else:
             # Identity branch: batchnorm. Generating identity kernel dynamically to avoid device mismatch.
             assert isinstance(branch, nn.BatchNorm2d)
-            if not hasattr(self, 'id_tensor'):
-                input_dim = self.in_channels // self.groups
-                kernel_value = torch.zeros((self.in_channels, input_dim, 3, 3), dtype=branch.weight.dtype, device=branch.weight.device)
-                for i in range(self.in_channels):
-                    kernel_value[i, i % input_dim, 1, 1] = 1
-                self.id_tensor = kernel_value
-            # Ensure id_tensor is on correct device
-            if self.id_tensor.device != branch.weight.device:
-                 self.id_tensor = self.id_tensor.to(branch.weight.device)
+            input_dim = self.in_channels // self.groups
+            kernel_value = torch.zeros((self.in_channels, input_dim, 3, 3), dtype=branch.weight.dtype, device=branch.weight.device)
+            for i in range(self.in_channels):
+                kernel_value[i, i % input_dim, 1, 1] = 1
             
-            kernel, running_mean, running_var, gamma, beta, eps = self.id_tensor, branch.running_mean, branch.running_var, branch.weight, branch.bias, branch.eps
+            kernel, running_mean, running_var, gamma, beta, eps = kernel_value, branch.running_mean, branch.running_var, branch.weight, branch.bias, branch.eps
         
         std = (running_var + eps).sqrt()
         t = (gamma / std).reshape(-1, 1, 1, 1)
@@ -265,13 +260,13 @@ model = MobileNetECARep_v2(width_mult=0.5).to(device)
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(model.parameters(), lr=LR, momentum=MOMENTUM, weight_decay=WEIGHT_DECAY)
-scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=EPOCHS)
+scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=max(1, EPOCHS - 1))
 
 # --- Training Loop ---
 best_acc = 0.0
 stats = {"train_loss": [], "train_acc": [], "val_acc": [], "lr": []}
 
-logging.INFO("Starting Training V2 (Optimized)...")
+logging.info("Starting Training V2 (Optimized)...")
 start_time = time.time()
 
 for epoch in range(EPOCHS):
@@ -330,6 +325,11 @@ for epoch in range(EPOCHS):
 total_time = time.time() - start_time
 print(f"Total Training Time: {total_time/60:.2f} min")
 print(f"Best Validation Accuracy: {best_acc:.2f}%")
+
+# Add params count
+total_params = sum(p.numel() for p in model.parameters())
+stats["params"] = total_params
+print(f"Total Parameters: {total_params}")
 
 # Save stats
 with open(os.path.join(_run_dir, "stats_v2.json"), "w") as f:
