@@ -55,7 +55,9 @@ Analizzando le curve di training (Figura \ref{fig:accuracy_loss}), notiamo compo
 
 Il modello con Advanced Augmentation mostra una crescita dell'accuratezza più lenta nelle prime epoche rispetto alla baseline. Questo è atteso: le immagini "tagliate" o distorte sono più difficili da classificare. Tuttavia, nel lungo periodo (epoche $>150$), questa difficoltà costringe la rete ad apprendere feature più robuste e generalizzabili, portando al picco finale del 93.23\%.
 
-Inoltre, riportiamo in Figura \ref{fig:real_dynamics} le dinamiche di addestramento estratte direttamente dai log sperimentali della configurazione finale. Si osserva chiaramente come l'accuratezza di validazione (arancione) rimanga costantemente sopra quella di training (blu). Questo fenomeno è spiegato dalla forte componente di rumore introdotta dalla Data Augmentation sul set di addestramento, che agisce come un "prezzo" da pagare in termini di loss istantanea per ottenere una superiore capacità di generalizzazione sui dati reali del test set.
+Inoltre, riportiamo in Figura \ref{fig:real_dynamics} le dinamiche di addestramento estratte direttamente dai log sperimentali della configurazione finale. Si osserva chiaramente come l'accuratezza di validazione (arancione) rimanga costantemente sopra quella di training (blu). Questo fenomeno è spiegato dalla forte componente di rumore introdotta dalla Data Augmentation sul set di addestramento, che agisce come un ``prezzo'' da pagare in termini di loss istantanea per ottenere una superiore capacità di generalizzazione sui dati reali del test set.
+
+Quantificando questo effetto: all'epoca finale (200), l'accuratezza di training è \textbf{90.48\%} contro una validazione di \textbf{93.70\%}, con un gap positivo di \textbf{+3.22 punti percentuali}. Il gap medio su tutte le 200 epoche è di +5.93 pp, con un massimo nelle prime fasi dell'addestramento dove l'augmentation ha l'effetto più marcato. Il modello raggiunge la migliore accuratezza di validazione (\textbf{93.80\%}) all'epoca 189. Questo ampio gap positivo (val $>$ train) conferma che l'augmentation agisce come forte regolarizzatore: il modello generalizza \textit{meglio} di quanto memorizzi i campioni di training.
 
 \begin{figure}[h]
     \centering
@@ -137,10 +139,9 @@ Infine, posizioniamo il nostro lavoro nel panorama della letteratura scientifica
 
 Come mostrato nella Tabella \ref{tab:comparison_sota}, MobileNetECA-Rep eccelle nella categoria "sotto i 100k parametri".
 
-In letteratura sono presenti approcci ultra-compatti basati su architetture ricorsive (che riutilizzano lo stesso filtro in più iterazioni), capaci di raggiungere $\sim$91\% con meno di 50k parametri.
-Sebbene il nostro modello utilizzi un numero leggermente superiore di parametri ($\sim$76k), rimane ben al di sotto della soglia critica dei 100k, offrendo un guadagno di accuratezza sostanziale (+2.5\%) e una struttura feed-forward lineare molto più semplice da parallelizzare su hardware moderno rispetto alle architetture ricorsive.
+In letteratura sono presenti approcci efficienti recenti come GhostNet~\cite{han2020ghostnet}, che raggiunge il 93.38\% con 0.43M parametri applicando il modulo Ghost a ResNet-56, e MobileNetV3-Small~\cite{howard2019searching}, che ottiene il 92.97\% con 2.54M parametri. Il nostro modello si distingue da entrambi per l'ordine di grandezza inferiore di parametri (\textbf{0.08M} vs 0.43M--2.54M), mantenendo un'accuratezza competitiva (93.23\%).
 
-L'analisi qualitativa di questi campioni rivela che:
+L'analisi qualitativa dei campioni classificati erroneamente rivela due categorie principali di errore:
 \begin{enumerate}
     \item \textbf{Background Confusion}: Alcuni \textit{Uccelli} (Bird) vengono classificati come \textit{Aerei} (Plane) se lo sfondo è azzurro uniforme. Questo indica che in alcuni casi il modello fa ancora troppo affidamento sul contesto (colore dello sfondo) piuttosto che sull'oggetto.
     \item \textbf{Fine-grained Features}: La distinzione tra \textit{Automobile} e \textit{Camion} (Truck) fallisce per i pickup, che possiedono caratteristiche ibride (cabina da auto, cassone da camion). La risoluzione $32 \times 32$ penalizza fortemente questo tipo di discriminazione fine-grained.
@@ -156,7 +157,7 @@ Come mostrato nella Tabella \ref{tab:comparison_sota} e visivamente nella Figura
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.9\textwidth]{figure/efficiency_params.png}
-    \caption{Efficiency Frontier: Accuratezza vs Numero di Parametri (scala logaritmica). Il nostro modello (stella rossa) si trova nettamente a sinistra (meno parametri) rispetto a modelli con accuratezza simile come ResNet-32 o VGG-16.}
+    \caption{Efficiency Frontier: Accuratezza vs Numero di Parametri (scala logaritmica). Il nostro modello (stella rossa) si trova nettamente a sinistra (meno parametri) rispetto a modelli con accuratezza simile come ResNet-32 o GhostNet.}
     \label{fig:efficiency}
 \end{figure}
 
@@ -168,22 +169,24 @@ Le misurazioni sono state effettuate su CPU \textbf{AMD Ryzen Threadripper 3965W
 
 \begin{table}[h]
     \centering
-    \caption{Latenza di Inferenza media su CPU (1000 iterazioni)}
+    \caption{Latenza di Inferenza su CPU (1000 iterazioni, escluse le prime 50 di warmup)}
     \label{tab:latency}
     \begin{tabular}{l c c}
         \toprule
-        \textbf{Metrica} & \textbf{Valore Misurato} & \textbf{Note} \\
+        \textbf{Metrica} & \textbf{Valore} & \textbf{Note} \\
         \midrule
-        Latenza Media & \textbf{19.38 ms} & $\sigma = 28.5$ ms \\
-        Throughput & \textbf{51.59 FPS} & Real-Time ($>30$ FPS) \\
+        Mediana (p50) & \textbf{2.68 ms} & Metrica rappresentativa \\
+        Media (escl.\ warmup) & 6.94 ms & $\sigma = 15.38$ ms \\
+        p95 & 62.97 ms & Spike periodici OS \\
+        Throughput & \textbf{144.0 FPS} & Real-Time ($>30$ FPS) \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-\paragraph{Nota sulla Variabilità.}
-La deviazione standard elevata ($\sigma > \mu$) è attribuibile alle prime iterazioni di warmup (JIT compilation e allocazione cache), che producono latenze anomale. Escludendo le prime 50 iterazioni, la distribuzione risulta stabile con valori concentrati intorno alla media.
+\paragraph{Nota Metodologica.}
+Le prime 50 iterazioni sono state escluse dal calcolo delle statistiche per eliminare l'effetto del warmup (JIT compilation, allocazione cache). La mediana di \textbf{2.68 ms} rappresenta la latenza tipica di una singola inferenza. La deviazione standard elevata e il p95 alto sono causati da spike periodici dovuti allo scheduling del sistema operativo, non dal modello stesso: la distribuzione presenta un cluster compatto intorno al valore mediano con outlier sporadici.
 
-Con un throughput superiore a \textbf{51 FPS} su una CPU generica, il modello garantisce prestazioni real-time senza necessità di acceleratori hardware dedicati. Su microcontrollori performanti (es. STM32H7) o processori mobile (Snapdragon), ci si attende una latenza ulteriormente ridotta ($< 5$ ms), rendendo l'architettura ideale per droni, videosorveglianza e robotica a basso costo.
+Con un throughput superiore a \textbf{144 FPS} su una CPU generica, il modello garantisce ampiamente prestazioni real-time senza necessità di acceleratori hardware dedicati. Su microcontrollori performanti (es. STM32H7) o processori mobile (Snapdragon), ci si attende una latenza ulteriormente ridotta, rendendo l'architettura ideale per droni, videosorveglianza e robotica a basso costo.
 L'assenza di operazioni complesse non supportate (come Hard-Swish) facilita inoltre il porting diretto verso framework embedded come TensorFlow Lite Micro.
 
 

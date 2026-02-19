@@ -41,14 +41,25 @@ X.~Ding, X.~Zhang, N.~Ma, J.~Han, G.~Ding, and J.~Sun, ``Repvgg: Making
   conference on computer vision and pattern recognition}, pp.~13733--13742,
   2021.
 
-\bibitem{simonyan2014very}
-K.~Simonyan and A.~Zisserman, ``Very deep convolutional networks for
-  large-scale image recognition,'' in {\em International Conference on Learning
-  Representations (ICLR)}, 2015.
+\bibitem{huang2017densely}
+G.~Huang, Z.~Liu, L.~Van Der~Maaten, and K.~Q. Weinberger, ``Densely connected
+  convolutional networks,'' in {\em Proceedings of the IEEE Conference on
+  Computer Vision and Pattern Recognition}, pp.~4700--4708, 2017.
+
+\bibitem{howard2019searching}
+A.~Howard, M.~Sandler, G.~Chu, L.-C. Chen, B.~Chen, M.~Tan, W.~Wang, Y.~Zhu,
+  R.~Pang, V.~Vasudevan, Q.~V. Le, and H.~Adam, ``Searching for mobilenetv3,''
+  in {\em Proceedings of the IEEE/CVF International Conference on Computer
+  Vision}, pp.~1314--1324, 2019.
 
 \bibitem{ma2018shufflenet}
 N.~Ma, X.~Zhang, H.-T. Zheng, and J.~Sun, ``Shufflenet v2: Practical guidelines
   for efficient cnn architecture design,'' in {\em Proceedings of the European
   conference on computer vision (ECCV)}, pp.~116--131, 2018.
+
+\bibitem{han2020ghostnet}
+K.~Han, Y.~Wang, Q.~Tian, J.~Guo, C.~Xu, and C.~Xu, ``Ghostnet: More features
+  from cheap operations,'' in {\em Proceedings of the IEEE/CVF Conference on
+  Computer Vision and Pattern Recognition}, pp.~1580--1589, 2020.
 
 \end{thebibliography}

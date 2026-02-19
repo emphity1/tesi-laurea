@@ -43,6 +43,7 @@ La sua derivata è 1 per $x > 0$ e 0 per $x < 0$. Questa proprietà, unitamente 
 Più recentemente, la GELU \cite{hendrycks2016gaussian} ha guadagnato popolarità, specialmente nei Transformers e in modelli di visione avanzati:
 $$ \text{GELU}(x) = x \Phi(x) \approx 0.5x(1 + \tanh(\sqrt{2/\pi}(x + 0.044715x^3))) $$
 GELU pondera l'input per la sua probabilità sotto una distribuzione gaussiana standard cumulativa $\Phi(x)$. Essendo una funzione liscia e non monotona, offre curvature migliori per l'ottimizzazione stocastica rispetto alla ReLU spezzata, permettendo ai neuroni di attivarsi parzialmente anche per valori negativi piccoli.
+Nella nostra architettura (Capitolo~\ref{cap:capitolo5}), utilizziamo GELU al posto di ReLU6 per compensare la ridotta larghezza dei canali, garantendo un flusso di gradienti più stabile.
 
 \section{Addestramento della Rete}
 
@@ -74,6 +75,7 @@ Per accelerare la convergenza e ridurre le oscillazioni (specialmente in burroni
 $$ v_{t+1} = \gamma v_t + \eta \nabla_\theta L(\theta_t) $$
 $$ \theta_{t+1} = \theta_t - v_{t+1} $$
 Il termine $\gamma$ (tipicamente 0.9) simula l'inerzia, permettendo all'algoritmo di mantenere la velocità nelle direzioni costanti e smorzare le oscillazioni.
+Nella nostra Grid Search (Capitolo~\ref{cap:capitolo6}), SGD con Momentum accoppiato a un Cosine Annealing schedule si è dimostrato superiore ad Adam per la generalizzazione del modello finale.
 
 \subsubsection{Adam (Adaptive Moment Estimation)}
 Adam calcola learning rate adattivi per ogni parametro basandosi sulle stime del primo momento (media) e del secondo momento (varianza non centrata) dei gradienti. Sebbene converga spesso più velocemente, recenti studi mostrano che SGD con Momentum ben calibrato, accoppiato con un Learning Rate Decay, può raggiungere una migliore generalizzazione finale su compiti di visione.
@@ -81,9 +83,11 @@ Adam calcola learning rate adattivi per ogni parametro basandosi sulle stime del
 \subsection{Tecniche di Regolarizzazione}
 \subsubsection{Batch Normalization}
 La BN normalizza l'input di ogni strato per avere media zero e varianza unitaria sul batch corrente. Questo mitiga il problema del \textit{Internal Covariate Shift}, permettendo learning rate più alti e fungendo da debole regolarizzatore.
+Nel nostro modello, BN è parte integrante dei blocchi RepConv: la fusione algebrica di BN con i pesi convoluzionali è ciò che rende possibile la reparametrizzazione strutturale a deploy time (Capitolo~\ref{cap:capitolo5}).
 
 \subsubsection{Dropout}
 Il Dropout disattiva casualmente neuroni (con probabilità $p$) durante il training, impedendo il co-adattamento delle feature.
 
 \subsubsection{Weight Decay (L2 Regularization)}
 Aggiunge una penalità alla loss function proporzionale alla norma quadrata dei pesi ($ \lambda ||w||^2 $), spingendo i pesi verso valori piccoli e riducendo la complessità del modello.
+Come emergerà dalla nostra analisi sperimentale (Sezione~6.5), la relazione inversa tra capacità del modello e weight decay ottimale è particolarmente evidente in reti ultra-compatte come la nostra.
