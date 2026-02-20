@@ -37,7 +37,7 @@ I principali contributi originali di questa tesi possono essere riassunti nei se
     Successivamente, l'adozione della \textit{Structural Reparameterization} ha permesso di arricchire la capacità rappresentativa durante il training (tramite rami multi-branch) mantenendo inalterata la complessità di inferenza, grazie alla tecnica di fusione dei layer (RepVGG-style).
 
     \item \textbf{Robustezza Finale (AdvAug)}:
-    L'ultimo step evolutivo ha riguardato l'addestramento con tecniche di \textit{Advanced Data Augmentation} (AutoAugment + Random Erasing), portando il modello finale (\textbf{MobileNetECA-Rep-AdvAug}) a raggiungere il \textbf{93.23\%} di accuratezza sul test set, un risultato eccezionale per la sua classe di dimensione.
+    L'ultimo step evolutivo ha riguardato l'addestramento con tecniche avanzate come \textit{Advanced Data Augmentation} (AutoAugment + Random Erasing), e distillazione di conoscenza (Knowledge Distillation) affiancata a EMA sui pesi, portando il modello finale (\textbf{MobileNetECA-Rep-AdvAug}) a raggiungere il \textbf{93.76\%} di accuratezza sul test set, un risultato eccezionale per la sua classe di dimensione.
 \end{enumerate}
 
 \section{Struttura della Tesi}

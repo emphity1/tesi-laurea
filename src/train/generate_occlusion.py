@@ -14,7 +14,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from train_D_eca_rep_advaug import MobileNetECARep
+from train_E_experiments import MobileNetECARep
 from shared_config import NORM_MEAN, NORM_STD, SEED
 
 CLASSES = ['Airplane', 'Automobile', 'Bird', 'Cat', 'Deer', 'Dog', 'Frog', 'Horse', 'Ship', 'Truck']
@@ -22,8 +22,9 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # Carica modello deploy
 model = MobileNetECARep().to(device)
-ckpt_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'results_D_eca_rep_advaug', 'best_model.pth')
-model.load_state_dict(torch.load(ckpt_path, map_location=device))
+model.deploy()
+ckpt_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'results_F_kd_ema', 'best_model_deploy.pth')
+model.load_state_dict(torch.load(ckpt_path, map_location=device, weights_only=True))
 model.eval()
 print(f"Modello caricato da {ckpt_path}")
 
@@ -118,7 +119,7 @@ axes[0, 0].set_ylabel('Originale', fontsize=12, rotation=90, labelpad=10)
 axes[1, 0].set_ylabel('Heatmap', fontsize=12, rotation=90, labelpad=10)
 axes[2, 0].set_ylabel('Overlay', fontsize=12, rotation=90, labelpad=10)
 
-fig.suptitle('Mappe di Sensibilità all\'Occlusione - MobileNetECA-Rep-AdvAug', fontsize=14, y=1.02)
+fig.suptitle('Mappe di Sensibilità all\'Occlusione - MobileNetECA-Rep-AdvAug (KD+EMA)', fontsize=14, y=1.02)
 fig.tight_layout()
 
 output_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'figures', 'occlusion_sensitivity.png')

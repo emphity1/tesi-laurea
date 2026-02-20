@@ -1,0 +1,52 @@
+
+
+
+L'intelligenza artificiale, e in particolare il Deep Learning, ha rivoluzionato il modo in cui le macchine percepiscono e interagiscono con il mondo. Dalla visione artificiale al riconoscimento del linguaggio naturale, le reti neurali hanno raggiunto prestazioni sovrumane in numerosi compiti complessi. Tuttavia, questo progresso ha avuto un costo: la richiesta di risorse computazionali sempre maggiori.
+
+\section{Contesto e Motivazione}
+L'adozione crescente di applicazioni di intelligenza artificiale su dispositivi \textit{edge} (smartphone, IoT, sistemi embedded, droni) ha reso cruciale lo sviluppo di modelli neurali non solo \textit{accurati}, ma anche \textit{efficienti}.
+Mentre i modelli dello Stato dell'Arte (SOTA) come Vision Transformers o grandi CNN (es. ResNet-101, DenseNet) raggiungono accuratezze elevatissime su benchmark standard, essi richiedono spesso centinaia di milioni di parametri e miliardi di operazioni (FLOPs) per una singola inferenza. Questo li rende inadatti al deployment su dispositivi con vincoli stringenti di batteria, memoria e potenza di calcolo.
+
+Il problema centrale affrontato in questa tesi è il \textbf{trade-off tra accuratezza ed efficienza computazionale}: è possibile mantenere prestazioni competitive riducendo drasticamente il numero di parametri e la complessità computazionale?
+
+\section{Obiettivi della Tesi}
+L'obiettivo principale di questo lavoro è progettare, implementare e validare un'architettura di rete neurale convoluzionale (CNN) estremamente leggera per la classificazione di immagini su dataset a bassa risoluzione (CIFAR-10), capace di competere con modelli molto più grandi.
+
+Nello specifico, gli obiettivi sono:
+\begin{enumerate}
+    \item \textbf{Efficienza Estrema}: Sviluppare un modello con meno di \textbf{100.000 parametri} (un ordine di grandezza inferiore rispetto a ResNet-20 o MobileNetV2 standard).
+    \item \textbf{Alta Accuratezza}: Raggiungere un'accuratezza superiore al \textbf{93\%} sul dataset di test CIFAR-10.
+    \item \textbf{Innovazione Architetturale}: Integrare tecniche moderne di ottimizzazione come \textit{Efficient Channel Attention (ECA)} e \textit{Structural Reparameterization (RepVGG)} su una backbone MobileNetV2.
+    \item \textbf{Analisi Comparativa}: Dimostrare la superiorità del modello proposto in termini di "Pareto Efficiency" rispetto alle alternative esistenti in letteratura.
+\end{enumerate}
+
+\section{Contributi del Lavoro}
+I principali contributi originali di questa tesi possono essere riassunti nei seguenti punti chiave:
+
+\begin{enumerate}
+    \item \textbf{Progettazione Micro-Architetturale (MobileNetV2-Micro)}:
+    Il punto di partenza è stato l'adattamento critico della backbone MobileNetV2 standard per operare in regime di vincoli estremi ($<$100k parametri). Questo ha comportato una ricerca manuale della configurazione ottimale di blocchi, canali e, soprattutto, dello \textit{stride} iniziale, cruciale per preservare le feature spaziali su immagini a bassa risoluzione (CIFAR-10).
+
+    \item \textbf{Ottimizzazione Iperparametri (Grid Search)}:
+    Per massimizzare il potenziale di questa micro-architettura base, è stata condotta una \textit{Grid Search} sistematica, identificando i valori ideali di learning rate, weight decay e width multiplier che garantissero la migliore convergenza possibile.
+
+    \item \textbf{Evoluzione tramite Meccanismi di Attenzione (MobileNetECA)}:
+    L'integrazione del modulo \textit{Efficient Channel Attention (ECA)} ha rappresentato il primo significativo salto prestazionale, dimostrando come la ricalibrazione dinamica delle feature map possa compensare la ridotta capacità (pochi canali) del modello leggero.
+
+    \item \textbf{Potenziamento Strutturale (MobileNetECA-Rep)}:
+    Successivamente, l'adozione della \textit{Structural Reparameterization} ha permesso di arricchire la capacità rappresentativa durante il training (tramite rami multi-branch) mantenendo inalterata la complessità di inferenza, grazie alla tecnica di fusione dei layer (RepVGG-style).
+
+    \item \textbf{Robustezza Finale (AdvAug)}:
+    L'ultimo step evolutivo ha riguardato l'addestramento con tecniche di \textit{Advanced Data Augmentation} (AutoAugment + Random Erasing), portando il modello finale (\textbf{MobileNetECA-Rep-AdvAug}) a raggiungere il \textbf{93.23\%} di accuratezza sul test set, un risultato eccezionale per la sua classe di dimensione.
+\end{enumerate}
+
+\section{Struttura della Tesi}
+Il resto dell'elaborato è organizzato come segue:
+\begin{itemize}
+    \item Il \textbf{Capitolo 2} introduce il dataset CIFAR-10 e le tecniche di preprocessing utilizzate.
+    \item Il \textbf{Capitolo 3} fornisce i fondamenti teorici delle reti neurali, coprendo il neurone artificiale, le funzioni di attivazione, la backpropagation e le tecniche di ottimizzazione e regolarizzazione.
+    \item Il \textbf{Capitolo 4} presenta lo stato dell'arte nella classificazione di immagini, con particolare attenzione alle architetture efficienti per dispositivi mobili, ai meccanismi di attenzione e alla reparametrizzazione strutturale.
+    \item Il \textbf{Capitolo 5} descrive in dettaglio la progettazione e l'architettura del sistema proposto, le scelte implementative e le strategie di data augmentation.
+    \item Il \textbf{Capitolo 6} presenta i risultati sperimentali, l'ablation study, l'analisi degli errori e il confronto con lo stato dell'arte.
+    \item Infine, le \textbf{Conclusioni} riassumono i risultati ottenuti e delineano possibili sviluppi futuri.
+\end{itemize}

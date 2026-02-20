@@ -275,22 +275,37 @@ Per garantire una convergenza ottimale, è stato utilizzato un \textit{Cosine An
 Come visibile in Figura \ref{fig:lr_schedule}, il learning rate decresce da un valore iniziale di $0.05$ a $0$ senza restart. Questa strategia permette al modello di esplorare ampie regioni dello spazio dei parametri nelle fasi iniziali (high LR) e di raffinare la soluzione in un minimo locale stabile nelle fasi finali (low LR).
 
 \section{Analisi della Complessità Teorica}
-Il modello finale \textbf{MobileNetECA-Rep} presenta caratteristiche di efficienza notevoli, come riassunto nella Tabella \ref{tab:complexity_new}.
+Il modello finale \textbf{MobileNetECA-Rep-AdvAug} presenta caratteristiche di efficienza notevoli, come riassunto nella Tabella \ref{tab:complexity_new}.
 
 \begin{table}[h]
     \centering
-    \caption{Confronto Complessità MobileNetECA-Rep vs Baseline}
+    \caption{Confronto Complessità: MobileNetECA-Rep-AdvAug vs Baseline e Letteratura}
     \label{tab:complexity_new}
     \begin{tabular}{l c c}
         \toprule
         \textbf{Modello} & \textbf{Parametri} & \textbf{FLOPs (M)} \\
         \midrule
         ResNet-20 & 0.27M & 41M \\
-        MobileNetV2 (0.5x) & 0.70M & 28M \\
-        \textbf{MobileNetECA-Rep (Ours)} & \textbf{0.076M} & \textbf{10.7M} \\
+        MobileNetV2-Standard (0.5x) \textit{da SOTA} & 0.70M & 25.3M \\
+        MobileNetV2-Micro (Nostra Baseline A) & 0.078M & 9.4M \\
+        \textbf{MobileNetECA-Rep-AdvAug (Finale)} & \textbf{0.062M} & \textbf{9.4M} \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-Con soli \textbf{76,600 parametri}, il nostro modello è circa \textbf{10 volte più piccolo} di una MobileNetV2 standard scalata (0.5x) e quasi \textbf{4 volte più leggero} di una ResNet-20.
-In termini di operazioni (FLOPs), richiediamo solo \textbf{10.7 Milioni} di operazioni per immagine, rendendo il modello idoneo all'esecuzione in real-time anche su microcontrollori di fascia molto bassa (es. STM32 o ESP32) che operano con budget di potenza nell'ordine dei milliwatt.
+Con soli \textbf{62,194 parametri} in fase di inferenza a parità di costo computazionale residuo (\textbf{9.4 Milioni di FLOPs}), il nostro modello finale non solo è \textbf{più snello del 20\% rispetto alla nostra stessa Baseline A} originaria (78k parametri), ma risulta circa \textbf{11 volte più compatto} e quasi \textbf{3 volte più efficiente} rispetto a una MobileNetV2 Standard proveniente dalla letteratura (scalata a 0.5x, con $\sim$0.70M parametri e 25.3M FLOPs).
+Il modello è inoltre oltre \textbf{4 volte più leggero} di una classica ResNet-20, rendendolo idoneo all'esecuzione in real-time anche su microcontrollori di fascia molto bassa (es. STM32 o ESP32) che operano con budget di potenza nell'ordine dei milliwatt.
+
+\subsection{Decostruzione della Complessità: il Collasso dei Parametri}
+Un aspetto che merita particolare attenzione è la discrepanza numerica tra i parametri della rete originaria Baseline (MobileNetV2-Micro, $\sim$78k parametri), i parametri della nostra architettura durante la fase di training ($\sim$85k) e l'inaspettato crollo finale a sole \textbf{62,194 unità} in fase di deploy. 
+Come è possibile che un modello a cui sono stati \textit{aggiunti} rami paralleli e moduli di attenzione extra (ECA) risulti alla fine \textit{più leggero} del suo predecessore Vanilla?
+
+La risposta risiede in due fenomeni matematici che collassano simultaneamente durante l'esecuzione della ri-parametrizzazione strutturale (\texttt{switch\_to\_deploy}):
+
+\begin{enumerate}
+    \item \textbf{La Fusione della Batch Normalization (BN)}: Nel modello Baseline, ogni strato convoluzionale è seguito da un layer di BN. In inferenza, PyTorch conserva i parametri della BN (peso $\gamma$, bias $\beta$, `running\_mean` e `running\_var`) come tensori computazionali separati. Nel nostro modello, come dimostrato formalmente nelle Equazioni 5.3 e 5.4, la BN viene matematicamente assorbita nei pesi ($W'$) e nei bias ($b'$) della convoluzione stessa. Questo elimina letteralmente migliaia di parametri lineari dal conteggio finale.
+    \item \textbf{L'Unificazione dei Rami}: I rami $1\times1$, $3\times3$ e l'identità spariscono assieme a tutte le loro rispettive pre-computazioni e BatchNorm, convergendo in una singola e densa matrice $3\times3$, trasformando un tensore multi-struttura in un puro "peso + bias".
+\end{enumerate}
+
+Per dimostrare empiricamente questo collasso algebrico, un'ispezione layer-by-layer del nostro script di validazione mostra come, ad esempio, nel primo stadio di espansione della rete (il macro-blocco \texttt{features.1}, che raggruppa 4 blocchi Inverted Residual consecutivi espansi di un fattore 6), il conteggio dei parametri utili del modello passi da 35.394 a \textbf{29.260}, vaporizzando oltre 6.000 pesi non essenziali in un singolo colpo. Pur rappresentando quasi la metà della capacità computazionale dell'intero modello (fondamentale per estrarre le feature spaziali ad alta risoluzione), l'ottimizzazione interviene drasticamente alleggerendone l'impatto.
+Questa deframmentazione rende \textbf{MobileNetECA-Rep-AdvAug} un gioiello di ottimizzazione per dispositivi edge rigidi: intrinsecamente complessa durante il training per massimizzare la topologia di apprendimento, ma estremamente snella in fase di esportazione.

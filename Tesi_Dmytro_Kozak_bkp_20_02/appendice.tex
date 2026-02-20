@@ -1,0 +1,31 @@
+\appendix
+\chapter{Dettagli Metriche di Valutazione}
+\label{app:metrics}
+
+In questa appendice riportiamo i valori dettagliati di Precision, Recall e F1-Score per ciascuna delle 10 classi del dataset CIFAR-10, ottenuti dal miglior modello \textit{MobileNetECA-Rep-AdvAug}.
+
+\begin{table}[h]
+    \centering
+    \caption{Report di Classificazione dettagliato per classe.}
+    \label{tab:class_report}
+    \begin{tabular}{l c c c c}
+        \toprule
+        \textbf{Classe} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Support} \\
+        \midrule
+        Airplane & 0.94 & 0.94 & 0.94 & 1000 \\
+        Automobile & 0.96 & 0.97 & 0.97 & 1000 \\
+        Bird & 0.92 & 0.90 & 0.91 & 1000 \\
+        Cat & 0.87 & 0.85 & 0.86 & 1000 \\
+        Deer & 0.94 & 0.94 & 0.94 & 1000 \\
+        Dog & 0.88 & 0.89 & 0.88 & 1000 \\
+        Frog & 0.93 & 0.95 & 0.94 & 1000 \\
+        Horse & 0.95 & 0.96 & 0.96 & 1000 \\
+        Ship & 0.96 & 0.96 & 0.96 & 1000 \\
+        Truck & 0.96 & 0.96 & 0.96 & 1000 \\
+        \midrule
+        \textbf{Accuracy} & & & \textbf{0.93} & 10000 \\
+        \textbf{Macro Avg} & 0.93 & 0.93 & 0.93 & 10000 \\
+        \textbf{Weighted Avg} & 0.93 & 0.93 & 0.93 & 10000 \\
+        \bottomrule
+    \end{tabular}
+\end{table}

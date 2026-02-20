@@ -1,0 +1,28 @@
+
+\begin{table}[h]
+    \centering
+    \caption{Confronto con lo Stato dell'Arte su CIFAR-10. Il nostro modello (MobileNetECA-Rep-AdvAug) ottiene risultati competitivi con una frazione dei parametri e dei FLOPs.}
+    \label{tab:comparison_sota}
+    \resizebox{\textwidth}{!}{
+    \begin{tabular}{l l c c c c}
+        \toprule
+        \textbf{Modello} & \textbf{Tipo} & \textbf{Accuratezza} & \textbf{Parametri} & \textbf{FLOPs} & \textbf{Rif.} \\
+        \midrule
+        ResNet-20 & CNN & 92.60\% & 0.27M & 40.81M & \cite{he2016deep} \\
+        ResNet-32 & CNN & 93.53\% & 0.47M & 69.12M & \cite{he2016deep} \\
+        ResNet-44 & CNN & 94.01\% & 0.66M & 97.44M & \cite{he2016deep} \\
+        ResNet-56 & CNN & 94.37\% & 0.86M & 125.75M & \cite{he2016deep} \\
+        DenseNet-BC (k=12) & CNN & 95.49\% & 0.77M & --- & \cite{huang2017densely} \\
+        MobileNetV2 (0.5x)$^\dagger$ & Efficient & 92.06\% & 0.70M & 25.33M & \cite{sandler2018mobilenetv2} \\
+        MobileNetV2 (1.0x)$^\dagger$ & Efficient & 94.11\% & 2.24M & 87.98M & \cite{sandler2018mobilenetv2} \\
+        MobileNetV3-Small & Efficient & 92.97\% & 2.54M & 60M & \cite{howard2019searching} \\
+        ShuffleNetV2 (0.5x)$^\dagger$ & Efficient & 90.45\% & 0.35M & 10.90M & \cite{ma2018shufflenet} \\
+        GhostNet (ResNet-56) & Efficient & 93.38\% & 0.43M & 63M & \cite{han2020ghostnet} \\
+        RepVGG-A0$^\dagger$ & Rep & 94.19\% & 7.04M & 489.08M & \cite{ding2021repvgg} \\
+        \textbf{MobileNetECA-Rep (Ours)} & \textbf{Hybrid} & \textbf{93.23\%} & \textbf{0.08M} & \textbf{10.73M} & This Work \\
+        \bottomrule
+    \end{tabular}
+    }
+    \vspace{2pt}
+    {\small $^\dagger$ Architetture originariamente valutate su ImageNet; i risultati CIFAR-10 sono ottenuti riproducendo i modelli con protocollo di training standard (200 epoche, SGD+Momentum, Cosine Annealing).}
+\end{table}

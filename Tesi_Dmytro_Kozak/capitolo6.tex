@@ -2,6 +2,7 @@
 In questo capitolo vengono presentati e discussi i risultati sperimentali ottenuti. L'analisi è suddivisa in tre parti:
 \begin{itemize}
     \item \textbf{Ablation Study}: Valutazione dell'impatto di ogni singola componente (ECA, Reparameterization, Augmentation) sulle prestazioni.
+    \item \textbf{Distillazione della Conoscenza}: Spinta finale delle prestazioni tramite Knowledge Distillation ed Exponential Moving Average sui pesi, per raggiungere i risultati di SOTA.
     \item \textbf{Analisi Dettagliata del Modello Finale}: Studio degli errori tramite matrice di confusione e curve ROC.
     \item \textbf{Confronto con lo Stato dell'Arte}: Posizionamento del nostro modello rispetto ad altre architetture note in letteratura in termini di efficienza (Pareto Frontier).
 \end{itemize}
@@ -10,7 +11,7 @@ In questo capitolo vengono presentati e discussi i risultati sperimentali ottenu
 Per isolare il contributo di ciascuna tecnica proposta, abbiamo addestrato e valutato quattro varianti del modello, partendo dalla baseline MobileNetV2 fino alla configurazione finale.
 L'addestramento di ciascuna variante è stato condotto con iperparametri identici (seed, normalizzazione, learning rate, weight decay) e con una suddivisione corretta del dataset: 45.000 immagini per il training, 5.000 per la validazione (selezione del modello migliore) e 10.000 per il test finale.
 
-\begin{table}[h]
+\begin{table}[H]
     \centering
     \caption{Risultati dell'Ablation Study. Ogni riga rappresenta l'aggiunta di una componente rispetto alla precedente. L'accuratezza di test è misurata una sola volta sul modello selezionato tramite early stopping sulla validazione.}
     \label{tab:ablation}
@@ -19,26 +20,57 @@ L'addestramento di ciascuna variante è stato condotto con iperparametri identic
         \toprule
         \textbf{ID} & \textbf{Configurazione} & \textbf{Test Acc (\%)} & \textbf{Val Acc (\%)} & \textbf{Parametri} & \textbf{Note} \\
         \midrule
-        A & MobileNetV2-Micro (Baseline) & 91.65\% & 92.66\% & $\sim$78k & Optimized Stride/Layers \\
-        B & MobileNetECA (A + ECA) & 92.17\% & 92.58\% & $\sim$78k & +0.52\% Test Acc \\
-        C & MobileNetECA-Rep (B + Rep) & 92.43\% & 93.84\% & $\sim$77k\textsuperscript{*} & +0.26\% Test Acc \\
-        D & MobileNetECA-Rep-AdvAug (Final) & \textbf{93.23\%} & \textbf{93.80\%} & \textbf{76.6k}\textsuperscript{*} & \textbf{+0.80\% Test Acc} \\
+        A & MobileNetV2-Micro (Baseline) & 91.65\% & 92.66\% & $\sim$78.0k & Optimized Stride/Layers \\
+        B & MobileNetECA (A + ECA) & 92.17\% & 92.58\% & $\sim$78.0k & +0.52\% Test Acc \\
+        C & MobileNetECA-Rep (B + Rep) & 92.43\% & 93.84\% & $\sim$62.2k$^*$ & +0.26\% Test Acc \\
+        D & MobileNetECA-Rep-AdvAug & 93.23\% & 93.80\% & $\sim$62.2k$^*$ & +0.80\% Test Acc \\
+        E & + KD \& EMA (Final) & \textbf{93.76\%} & \textbf{94.60\%} & \textbf{62.2k}$^*$ & \textbf{+0.53\% Test Acc} \\
         \bottomrule
     \end{tabular}
     }
     \vspace{0.2em}
-    \small{\textsuperscript{*}Parametri in modalità deploy (kernel fusi). In training: $\sim$85k.}
+    \small{\textsuperscript{*}Parametri in modalità deploy (rami fusi matematicamente). In training: $\sim$84.7k.}
 \end{table}
 
 Come si evince dalla Tabella \ref{tab:ablation}, l'introduzione del blocco \textbf{ECA} (Configurazione B) offre un miglioramento a costo quasi nullo in termini di parametri, dimostrando l'importanza di enfatizzare le feature informative nei canali.
 La \textbf{ri-parametrizzazione} (Configurazione C) fornisce un ulteriore boost, permettendo al modello di apprendere rappresentazioni più complesse grazie ai rami multipli in training.
-Infine, l'\textbf{Advanced Augmentation} (Configurazione D) è determinante per superare la barriera del 93\%, agendo come forte regolarizzatore e prevenendo l'overfitting che altrimenti limiterebbe le prestazioni di un modello così compatto.
+Infine, l'\textbf{Advanced Augmentation} (Configurazione D) è determinante per superare la barriera del 93\%, agendo come forte regolarizzatore e prevenendo l'overfitting. L'ulteriore applicazione di \textbf{Knowledge Distillation ed EMA} (Configurazione E) permette di estrarre il massimo potenziale dall'architettura compatta, raggiungendo il picco finale del 93.76\% senza alcuna aggiunta di parametri in inferenza.
 
+
+\section{Spinta Finale SOTA: Knowledge Distillation ed EMA}
+Essendo il modello \textbf{MobileNetECA-Rep-AdvAug} un'architettura ultra-compatta (solo $\sim$62.2k parametri reali calcolati in fase di inferenza/deploy), le tecniche di regolarizzazione standard come Label Smoothing e Mixup hanno mostrato risultati controproducenti, penalizzando l'accuratezza in quanto il modello è già severamente limitato in termini di capacità memorizzativa. Per superare questa barriera e spingere ulteriormente le prestazioni senza aumentare il costo computazionale in fase di inferenza, abbiamo adottato una strategia basata sulla \textbf{Knowledge Distillation (KD)} combinata con l'\textbf{Exponential Moving Average (EMA)} sui pesi.
+
+Per la Knowledge Distillation, abbiamo impiegato come "Teacher" il modello \textbf{RepVGG-A0}, addestrato ex novo (\textit{from scratch}) nell'ambito di questo lavoro sul medesimo dataset CIFAR-10, fino a fargli raggiungere un'accuratezza robusta del \textbf{94.19\%}. Il modello "Studente" (la nostra architettura) è stato poi addestrato per minimizzare una funzione di perdita composita, definita come una combinazione lineare tra la classica Cross-Entropy rispetto alle etichette reali (Hard Loss) e la Kullback-Leibler (KL) Divergence rispetto alle probabilità "ammorbidite" generate dal Teacher (Soft Loss):
+
+\begin{itemize}
+    \item \textbf{Temperatura ($T$)}: Impostata a $T = 4.0$ per "sfumare" le distribuzioni di probabilità del Teacher, consentendo allo Studente di apprendere le relazioni intrinseche tra classi simili (es. "questo cane ha forti tratti associabili anche alla classe gatto").
+    \item \textbf{Peso KD ($\alpha$)}: Fissato a $\alpha = 0.5$, assegnando identica importanza alla Hard Loss e alla Soft Loss.
+\end{itemize}
+
+Contestualmente, durante l'addestramento è stato mantenuto un modello ombra tramite EMA, i cui pesi venivano aggiornati ad ogni passo computando una media mobile esponenziale con un tasso di decadimento (\textit{decay}) pari a $0.999$. Questo meccanismo funge da regolarizzatore senza parametri, stabilizzando le traiettorie di ottimizzazione. I pesi EMA sono stati utilizzati per la valutazione sul Test Set.
+
+Come evidenziato nella Tabella \ref{tab:kd_results}, l'impiego sinergico di Knowledge Distillation ed EMA ha garantito un guadagno netto di \textbf{+0.53\%}, consentendo al modello di battere architetture significativamente più complesse (come ResNet-32, ferma a 93.53\%) mantenendo inalterato il costo computazionale a \textit{runtime}.
+
+\begin{table}[H]
+    \centering
+    \caption{Impatto della Knowledge Distillation ed EMA sull'architettura proposta}
+    \label{tab:kd_results}
+    \begin{tabular}{l c c}
+        \toprule
+        \textbf{Configurazione} & \textbf{Test Accuracy} & \textbf{Parametri (Deploy)} \\
+        \midrule
+        Ours (solo AdvAug) & 93.23\% & $\sim$62.2k \\
+        \textbf{Ours (AdvAug + KD + EMA)} & \textbf{93.76\%} & \textbf{$\sim$62.2k} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+In conclusione, \textbf{MobileNetECA-Rep-AdvAug} dimostra che è possibile ottenere prestazioni da "Server-Class" (\textbf{93.76\%}) con un budget di risorse da "Microcontroller-Class" ($\sim$62.2k parametri in deploy), grazie alla potente combinazione architetturale tra depthwise convolution, attenzione ECA, ri-parametrizzazione (che fa crollare i parametri utili post-training), e a tecniche di training avanzate come iterazioni di AutoAugment e Knowledge Distillation.
 
 \subsection{Dinamiche di Addestramento}
 Analizzando le curve di training (Figura \ref{fig:accuracy_loss}), notiamo comportamenti distinti.
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \begin{subfigure}{0.8\textwidth}
         \includegraphics[width=\textwidth]{figure/accuracy_comparison.png}
@@ -53,13 +85,13 @@ Analizzando le curve di training (Figura \ref{fig:accuracy_loss}), notiamo compo
     \label{fig:accuracy_loss}
 \end{figure}
 
-Il modello con Advanced Augmentation mostra una crescita dell'accuratezza più lenta nelle prime epoche rispetto alla baseline. Questo è atteso: le immagini "tagliate" o distorte sono più difficili da classificare. Tuttavia, nel lungo periodo (epoche $>150$), questa difficoltà costringe la rete ad apprendere feature più robuste e generalizzabili, portando al picco finale del 93.23\%.
+Il modello con Advanced Augmentation mostra una crescita dell'accuratezza più lenta nelle prime epoche rispetto alla baseline. Questo è atteso: le immagini "tagliate" o distorte sono più difficili da classificare. Tuttavia, nel lungo periodo (epoche $>150$), questa difficoltà costringe la rete ad apprendere feature più robuste e generalizzabili, portando al traguardo del 93.23\% per la configurazione D (successivamente spinto a 93.76\% grazie all'integrazione di KD ed EMA).
 
 Inoltre, riportiamo in Figura \ref{fig:real_dynamics} le dinamiche di addestramento estratte direttamente dai log sperimentali della configurazione finale. Si osserva chiaramente come l'accuratezza di validazione (arancione) rimanga costantemente sopra quella di training (blu). Questo fenomeno è spiegato dalla forte componente di rumore introdotta dalla Data Augmentation sul set di addestramento, che agisce come un ``prezzo'' da pagare in termini di loss istantanea per ottenere una superiore capacità di generalizzazione sui dati reali del test set.
 
 Quantificando questo effetto: all'epoca finale (200), l'accuratezza di training è \textbf{90.48\%} contro una validazione di \textbf{93.70\%}, con un gap positivo di \textbf{+3.22 punti percentuali}. Il gap medio su tutte le 200 epoche è di +5.93 pp, con un massimo nelle prime fasi dell'addestramento dove l'augmentation ha l'effetto più marcato. Il modello raggiunge la migliore accuratezza di validazione (\textbf{93.80\%}) all'epoca 189. Questo ampio gap positivo (val $>$ train) conferma che l'augmentation agisce come forte regolarizzatore: il modello generalizza \textit{meglio} di quanto memorizzi i campioni di training.
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \begin{subfigure}{0.48\textwidth}
         \includegraphics[width=\textwidth]{figure/v3_train_vs_val_acc.png}
@@ -74,16 +106,16 @@ Quantificando questo effetto: all'epoca finale (200), l'accuratezza di training 
     \label{fig:real_dynamics}
 \end{figure}
 
-\section{Analisi del Modello Finale (MobileNetECA-Rep)}
+\section{Analisi Dettagliata del Modello Finale (Configurazione E: KD+EMA)}
 Il modello finale è stato sottoposto a un'analisi più approfondita sul Test Set.
 
 \subsection{Matrice di Confusione}
 La matrice di confusione (Figura \ref{fig:confusion_matrix}) ci permette di visualizzare le classi in cui il modello commette più errori.
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{figure/confusion_matrix.png}
-    \caption{Matrice di Confusione del modello MobileNetECA-Rep sul Test Set.}
+    \caption{Matrice di Confusione del modello MobileNetECA-Rep-AdvAug sul Test Set.}
     \label{fig:confusion_matrix}
 \end{figure}
 
@@ -137,9 +169,9 @@ Infine, posizioniamo il nostro lavoro nel panorama della letteratura scientifica
 
 \input{reports/tables/sota_comparison.tex}
 
-Come mostrato nella Tabella \ref{tab:comparison_sota}, MobileNetECA-Rep eccelle nella categoria "sotto i 100k parametri".
+Come mostrato nella Tabella \ref{tab:comparison_sota}, MobileNetECA-Rep-AdvAug eccelle nella categoria "sotto i 100k parametri".
 
-In letteratura sono presenti approcci efficienti recenti come GhostNet~\cite{han2020ghostnet}, che raggiunge il 93.38\% con 0.43M parametri applicando il modulo Ghost a ResNet-56, e MobileNetV3-Small~\cite{howard2019searching}, che ottiene il 92.97\% con 2.54M parametri. Il nostro modello si distingue da entrambi per l'ordine di grandezza inferiore di parametri (\textbf{0.08M} vs 0.43M--2.54M), mantenendo un'accuratezza competitiva (93.23\%).
+In letteratura sono presenti approcci efficienti recenti come GhostNet~\cite{han2020ghostnet}, che raggiunge il 93.38\% con 0.43M parametri applicando il modulo Ghost a ResNet-56, e MobileNetV3-Small~\cite{howard2019searching}, che ottiene il 92.97\% con 2.54M parametri. Il nostro modello si distingue da entrambi per l'ordine di grandezza inferiore di parametri (\textbf{0.06M} vs 0.43M--2.54M), mantenendo un'accuratezza competitiva e persino superiore (93.76\%).
 
 L'analisi qualitativa dei campioni classificati erroneamente rivela due categorie principali di errore:
 \begin{enumerate}
@@ -154,20 +186,20 @@ Infine, posizioniamo il nostro lavoro nel panorama della letteratura scientifica
 
 Come mostrato nella Tabella \ref{tab:comparison_sota} e visivamente nella Figura \ref{fig:efficiency}, il nostro modello occupa una posizione di rilievo.
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{figure/efficiency_params.png}
+    \includegraphics[width=1\textwidth]{figure/efficiency_params.png}
     \caption{Efficiency Frontier: Accuratezza vs Numero di Parametri (scala logaritmica). Il nostro modello (stella rossa) si trova nettamente a sinistra (meno parametri) rispetto a modelli con accuratezza simile come ResNet-32 o GhostNet.}
     \label{fig:efficiency}
 \end{figure}
 
 \subsection{Discussione}
-\textbf{Confronto con ResNet}: Otteniamo performance simili a una ResNet-32/44 ma con una frazione dei parametri ($76k$ vs $\sim500k$).
+\textbf{Confronto con ResNet}: Otteniamo performance simili a una ResNet-32/44 ma con una frazione dei parametri ($62k$ vs $\sim500k$).
 \subsection{Analisi Empirica della Latenza e Implementabilità}
 Un aspetto cruciale per il deployment su dispositivi edge è la latenza di inferenza. Per validare l'efficacia della ri-parametrizzazione, abbiamo misurato le prestazioni del modello finale in modalità "deploy" (con kernel fusi, vedi Sez. 5.1).
 Le misurazioni sono state effettuate su CPU \textbf{AMD Ryzen Threadripper 3965WX} (32 Core @ 3.8GHz) utilizzando un batch size unitario ($N=1$) per simulare uno scenario real-time.
 
-\begin{table}[h]
+\begin{table}[H]
     \centering
     \caption{Latenza di Inferenza su CPU (1000 iterazioni, escluse le prime 50 di warmup)}
     \label{tab:latency}
@@ -186,29 +218,29 @@ Le misurazioni sono state effettuate su CPU \textbf{AMD Ryzen Threadripper 3965W
 \paragraph{Nota Metodologica.}
 Le prime 50 iterazioni sono state escluse dal calcolo delle statistiche per eliminare l'effetto del warmup (JIT compilation, allocazione cache). La mediana di \textbf{2.68 ms} rappresenta la latenza tipica di una singola inferenza. La deviazione standard elevata e il p95 alto sono causati da spike periodici dovuti allo scheduling del sistema operativo, non dal modello stesso: la distribuzione presenta un cluster compatto intorno al valore mediano con outlier sporadici.
 
-Con un throughput superiore a \textbf{144 FPS} su una CPU generica, il modello garantisce ampiamente prestazioni real-time senza necessità di acceleratori hardware dedicati. Su microcontrollori performanti (es. STM32H7) o processori mobile (Snapdragon), ci si attende una latenza ulteriormente ridotta, rendendo l'architettura ideale per droni, videosorveglianza e robotica a basso costo.
-L'assenza di operazioni complesse non supportate (come Hard-Swish) facilita inoltre il porting diretto verso framework embedded come TensorFlow Lite Micro.
+Con un throughput superiore a \textbf{144 FPS} su una CPU generica da workstation, il modello garantisce ampiamente prestazioni real-time senza necessità di acceleratori hardware dedicati. \textbf{Sebbene per questo lavoro non siano stati condotti benchmark fisici diretti su hardware edge}, le ridottissime metriche teoriche (sole 9.4M FLOPs e 62.2k parametri) suggeriscono fortemente che su microcontrollori performanti (es. STM32H7) o processori mobile si possa ragionevolmente stimare un'esecuzione fluida.
+L'assenza strutturale di operazioni complesse o esoteriche (come le attivazioni Hard-Swish) è stata pensata proprio per bypassare i colli di bottiglia nel porting verso framework embedded reali come TensorFlow Lite Micro.
 
 
 \section{Analisi dell'Impatto degli Iperparametri}
 Oltre all'architettura, la scelta degli iperparametri di addestramento gioca un ruolo cruciale nel raggiungimento della massima accuratezza, specialmente per reti compatte. Abbiamo condotto una Grid Search analizzando l'interazione tra Learning Rate (LR), Weight Decay (WD) e Width Multiplier ($\alpha$).
 
 \paragraph{Nota Metodologica.}
-La Grid Search è stata condotta sulla configurazione Baseline (A) senza Advanced Augmentation, raggiungendo un massimo di circa 91.4\%. I risultati finali (93.23\%) incorporano le tecniche di augmentation avanzata descritte nella Sezione 5.4, che forniscono il restante guadagno prestazionale.
+La Grid Search è stata condotta sulla configurazione Baseline (A) senza Advanced Augmentation, raggiungendo un massimo di circa 91.4\%. I risultati intermedi (93.23\%) incorporavano le tecniche di augmentation avanzata descritte nella Sezione 5.4, mentre il risultato finale (93.76\%) è ottenuto tramite le tecniche di distillazione descritte nella sezione successiva.
 
 \subsection{Interazione Learning Rate vs Weight Decay}
 La Figura \ref{fig:heatmap_lr_wd} mostra come l'accuratezza vari al variare di LR e WD.
-\begin{figure}[ht]
+Si nota una regione ottimale (zona chiara) lungo la diagonale, suggerendo che un learning rate aggressivo deve essere bilanciato da una regolarizzazione più forte per prevenire l'esplosione dei pesi.
+
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figure/heatmap_lr_wd.png}
     \caption{Heatmap dell'accuratezza (Validation Accuracy) al variare di Learning Rate e Weight Decay. Si osserva che alti valori di LR richiedono un decay maggiore per stabilizzare l'addestramento.}
     \label{fig:heatmap_lr_wd}
 \end{figure}
-Si nota una regione ottimale (zona chiara) lungo la diagonale, suggerendo che un learning rate aggressivo deve essere bilanciato da una regolarizzazione più forte per prevenire l'esplosione dei pesi.
 
 \subsection{Impatto della Capacità del Modello sulla Regolarizzazione}
 Analizzando l'interazione tra la larghezza della rete (Width Multiplier) e gli iperparametri, emergono trend coerenti.
 Aumentare la larghezza migliora monotonicamente le prestazioni, ma con ritorni decrescenti oltre $\alpha=0.75$. La nostra scelta di $\alpha=0.5$ rappresenta il punto di ginocchio (knee point) ottimale tra prestazioni e computazione.
 Inoltre, analisi estensive hanno confermato una relazione inversa tra capacità del modello e regolarizzazione ottimale: modelli più grandi richiedono un Weight Decay maggiore per prevenire l'overfitting, mentre reti molto sottili, avendo intrinsecamente meno capacità di memorizzazione, beneficiano di un approccio più conservativo.
 
-In conclusione, \textbf{MobileNetECA-Rep} dimostra che è possibile ottenere prestazioni da "Server-Class" (93\%+) con un budget di risorse da "Microcontroller-Class", grazie alla sinergia tra depthwise convolution, attenzione ECA e ri-parametrizzazione.

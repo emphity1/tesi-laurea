@@ -1,0 +1,14 @@
+{
+  "label_smoothing": true,
+  "label_smoothing_value": 0.1,
+  "mixup": false,
+  "mixup_alpha": 0,
+  "lr_warmup": true,
+  "warmup_epochs": 5,
+  "base_lr": 0.05,
+  "epochs": 200,
+  "weight_decay": 0.0005,
+  "momentum": 0.9,
+  "batch_size": 128,
+  "seed": 42
+}

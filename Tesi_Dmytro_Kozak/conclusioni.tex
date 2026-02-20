@@ -1,6 +1,6 @@
 % !TeX spellcheck = it_IT
 
-Questo lavoro ha presentato lo sviluppo e l'ottimizzazione di \textbf{MobileNetECA-Rep}, un'architettura neurale ultra-compatta per la classificazione di immagini su CIFAR-10. L'obiettivo principale era esplorare il trade-off tra efficienza computazionale e accuratezza, dimostrando che modelli estremamente leggeri possono raggiungere prestazioni competitive attraverso l'integrazione di meccanismi di attenzione moderni e un'ottimizzazione sistematica degli iperparametri.
+Questo lavoro ha presentato lo sviluppo e l'ottimizzazione di \textbf{MobileNetECA-Rep-AdvAug}, un'architettura neurale ultra-compatta per la classificazione di immagini su CIFAR-10. L'obiettivo principale era esplorare il trade-off tra efficienza computazionale e accuratezza, dimostrando che modelli estremamente leggeri possono raggiungere prestazioni competitive attraverso l'integrazione di meccanismi di attenzione moderni e un'ottimizzazione sistematica degli iperparametri.
 
 \section*{Sintesi del Lavoro Svolto}
 
@@ -13,19 +13,19 @@ Il progetto si è articolato in quattro fasi principali:
     
     \item \textbf{Grid search sistematica}: Esplorazione di centinaia di configurazioni di iperparametri attraverso un approccio two-phase (screening rapido + refinement), identificando empiricamente la combinazione ottimale di learning rate, width multiplier e weight decay.
     
-    \item \textbf{Validazione sperimentale}: Allenamento del modello ottimizzato per 200 epoche con SGD+momentum e Cosine Annealing schedule, raggiungendo un'accuratezza finale di \textbf{93.23\%} sul test set CIFAR-10, superando le baseline standard.
+    \item \textbf{Validazione sperimentale}: Allenamento del modello ottimizzato per 200 epoche con SGD+momentum e Cosine Annealing schedule, raggiungendo un'accuratezza finale di \textbf{93.76\%} sul test set CIFAR-10, superando le baseline standard.
 \end{enumerate}
 
 \section*{Risultati Principali}
 
-MobileNetECA-Rep ha dimostrato un eccellente trade-off efficienza-accuratezza:
+MobileNetECA-Rep-AdvAug ha dimostrato un eccellente trade-off efficienza-accuratezza:
 
 \begin{itemize}
-    \item \textbf{Accuratezza}: 93.23\% su CIFAR-10 test set.
-    \item \textbf{Parametri}: 76,600 (circa 13 volte meno di MobileNetV2 $\times$0.5).
-    \item \textbf{FLOPs}: $\sim$10.7M MACs (circa 4 volte meno di MobileNetV2 $\times$0.5).
-    \item \textbf{Dimensione Modello}: Meno di 300 KB (fit comodo in L2 cache).
-    \item \textbf{Contributo ECA}: +1.16\% accuracy con overhead minimo.
+    \item \textbf{Accuratezza}: 93.76\% su CIFAR-10 test set.
+    \item \textbf{Parametri}: 62,194 (ridotto del 20\% rispetto alla Baseline interna, e circa 11 volte meno di una MobileNetV2 standard $\times$0.5 da letteratura).
+    \item \textbf{FLOPs}: $\sim$9.4M MACs (quasi 3 volte meno di MobileNetV2 standard $\times$0.5).
+    \item \textbf{Dimensione Modello}: Meno di 250 KB (fit comodo in L2 cache).
+    \item \textbf{Contributo ECA}: +0.52\% accuracy con overhead minimo.
 \end{itemize}
 
 Il modello si posiziona competitivamente nella frontiera ultra-compatta ($<$ 100k parametri), risultando ideale per scenari con vincoli estremi di memoria, latenza ed energia.
@@ -55,16 +55,15 @@ Il modello si posiziona competitivamente nella frontiera ultra-compatta ($<$ 100
 
 \subsubsection*{Architettura}
 \begin{itemize}
-    \item \textbf{Altri meccanismi di attenzione}: Testare CBAM (Convolutional Block Attention Module) o Coordinate Attention per integrare informazioni spaziali oltre a quelle di canale.
-    \item \textbf{Neural Architecture Search (NAS)}: Applicare NAS per la ricerca automatica di configurazioni ottimali (expansion ratio variabili per strato, kernel sizes eterogenei).
-    \item \textbf{Hybrid CNN-Transformer}: Esplorare l'integrazione di self-attention layers nei blocchi finali per catturare dipendenze a lungo raggio globali.
+    \item \textbf{Altri meccanismi di attenzione}: Sostituire l'ECA con moduli CBAM (Convolutional Block Attention Module) o Coordinate Attention. Mentre l'ECA ottimizza solo i canali, l'integrazione dell'attenzione spaziale potrebbe mitigare l'errore di \textit{background confusion} osservato (Section 6.5), con uno stimato guadagno di $+0.2\% - 0.4\%$ in accuratezza, al costo di un lieve incremento parametrale ($\approx+2k$ parametri).
+    \item \textbf{Neural Architecture Search (NAS)}: Adottare algoritmi NAS per parametrizzare singolarmente ogni livello della rete (es. \textit{expansion ratio} eterogenei tra $3\times$ e $6\times$, o kernel misti $3\times3$ e $5\times5$). Un approccio hardware-aware NAS potrebbe plausibilmente ridurre i parametri totali di un ulteriore $10 - 15\%$ mantenendo costante l'accuratezza attuale.
+    \item \textbf{Hybrid CNN-Transformer}: Esplorare l'integrazione di strati di \textit{MobileViT} o \textit{self-attention} nelle fasi terminali della rete. Questo approccio ibrido migliorerebbe la cattura delle dipendenze a lungo raggio, particolarmente utile se si scala il modello per dataset visivi a risoluzione maggiore ($224 \times 224$).
 \end{itemize}
 
 \subsubsection*{Ottimizzazione e Compressione}
 \begin{itemize}
-    \item \textbf{Quantization}: Conversione dei pesi a INT8 o FP16 per ridurre ulteriormente memoria e latenza (potenziale speedup 4x su hardware che supporta SIMD a bassa precisione).
-    \item \textbf{Pruning}: Rimozione strutturata di canali o filtri meno importanti post-training.
-    \item \textbf{Knowledge Distillation}: Training guidato da un modello "Teacher" molto più grande (es. ResNet-50) per trasferire conoscenza al modello "Student" compatto, migliorandone le prestazioni senza aumentare i costi di inferenza.
+    \item \textbf{Quantization (INT8)}: Convertire i pesi e le attivazioni del modello dal formato floating-point (FP32) a interi a 8-bit (INT8) tramite \textit{Post-Training Quantization} o \textit{Quantization-Aware Training}. Questa operazione ridurrebbe il memory footprint da $\approx 250$ KB a soli $\approx 65$ KB e garantirebbe uno \textit{speedup} latenziale stimato tra $2\times$ e $4\times$ su microcontrollori dotati di istruzioni SIMD vettoriali (es. architettura ARM Cortex-M con estensioni DSP), con un degrado dell'accuratezza solitamente trascurabile (inferiore allo $0.5\%$).
+    \item \textbf{Pruning Strutturato}: Applicare tecniche di \textit{channel pruning} post-addestramento (o basate sulla regolarizzazione L1 durante il training) per identificare e rimuovere i filtri convoluzionali prossimi allo zero. Dato l'ampio uso di \textit{expansion layer} ($6\times$) nel nostro modello, si stima che un pruning conservativo possa recidere fino al $20\%$ delle FLOPs (scendendo sotto i $7.5$ MFLOPs) senza compromettere la stabilità del modello distillato.
 \end{itemize}
 
 \subsubsection*{Deploy ed Edge Computing}

@@ -175,6 +175,40 @@ def initialize_weights(model):
             m.bias.data.zero_()
 
 
+def count_flops(model, input_size=(1, 3, 32, 32)):
+    """Calcola FLOPs (Multiply-Accumulate) tramite forward hooks su Conv2d e Linear."""
+    total_flops = [0]
+    hooks = []
+
+    def conv_hook(module, inp, out):
+        batch, in_c, h, w = inp[0].shape
+        out_c = module.out_channels
+        kh, kw = module.kernel_size
+        groups = module.groups
+        flops_per_instance = (in_c // groups) * kh * kw
+        total_flops[0] += batch * out_c * out.shape[2] * out.shape[3] * flops_per_instance
+
+    def linear_hook(module, inp, out):
+        total_flops[0] += inp[0].shape[0] * module.in_features * module.out_features
+
+    for m in model.modules():
+        if isinstance(m, nn.Conv2d):
+            hooks.append(m.register_forward_hook(conv_hook))
+        elif isinstance(m, nn.Linear):
+            hooks.append(m.register_forward_hook(linear_hook))
+
+    device_param = next(model.parameters()).device
+    model.eval()
+    with torch.no_grad():
+        model(torch.randn(*input_size, device=device_param))
+    model.train()
+
+    for h in hooks:
+        h.remove()
+
+    return total_flops[0]
+
+
 def train_and_evaluate(model, run_dir, trainloader, valloader, testloader, device, has_deploy=False):
     """
     Loop di training unificato.
@@ -187,7 +221,9 @@ def train_and_evaluate(model, run_dir, trainloader, valloader, testloader, devic
     scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=EPOCHS)
 
     params = sum(p.numel() for p in model.parameters())
+    flops = count_flops(model)
     logging.info(f"Parametri totali: {params:,} ({params/1000:.1f}k)")
+    logging.info(f"FLOPs totali: {flops:,} ({flops/1e6:.2f}M)")
 
     best_val_acc = 0.0
     stats = {
@@ -302,6 +338,7 @@ def train_and_evaluate(model, run_dir, trainloader, valloader, testloader, devic
     stats["test_acc_final"] = test_acc
     stats["best_val_acc"] = best_val_acc
     stats["total_params"] = params
+    stats["total_flops"] = flops
     stats["total_time_min"] = total_time
 
     # Deploy mode (per modelli con RepConv)

@@ -1,0 +1,245 @@
+
+% \chapter{Metodologia e Architettura Proposta} % Removed to avoid double chapter title
+
+\section{Panoramica del Sistema}
+L'obiettivo di questa tesi è la realizzazione di un classificatore di immagini per il dataset CIFAR-10 che soddisfi stringenti vincoli di efficienza computazionale, tipici dei dispositivi edge e IoT.
+La soluzione proposta, denominata \textbf{MobileNetECA-Rep}, è un'architettura ibrida che sintetizza tre paradigmi moderni di progettazione efficiente:
+\begin{enumerate}
+    \item \textbf{Lightweight Backbone}: L'uso di \textit{Inverted Residual Blocks} come mattoni fondamentali.
+    \item \textbf{Attention Mechanism}: L'integrazione di moduli \textit{ECA (Efficient Channel Attention)} per focalizzare la capacità rappresentativa.
+    \item \textbf{Structural Reparameterization}: L'uso di blocchi multi-branch durante il training che collassano in singoli strati $3 \times 3$ durante l'inferenza.
+\end{enumerate}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1.0\textwidth]{figure/MobileNetECARep.png}
+    \caption{Architettura MobileNetECARep. I blocchi azzurri rappresentano i tensori intermedi. Il dettaglio mostra il modulo RepInvertedResidual con integrazione di Efficient Channel Attention (ECA) e la struttura di convoluzione riparametrizzabile (RepConv).}
+    \label{fig:mobilenet_eca_rep_overview}
+\end{figure}
+
+\section{Structural Reparameterization}
+Una delle innovazioni chiave adottate in questo lavoro per spingere l'accuratezza oltre il 92\% senza aumentare il costo computazionale all'inferenza è la \textbf{Structural Reparameterization}, ispirata da RepVGG~\cite{ding2021repvgg}.
+
+\subsection{Concetto Chiave: Training vs Inference}
+L'idea fondamentale è disaccoppiare l'architettura usata durante il training da quella usata per l'inferenza (deploy).
+\begin{itemize}
+    \item \textbf{Training (Multi-Branch)}: Ogni blocco convoluzionale è arricchito con rami paralleli (es. 1x1 conv, identity mapping). Questo facilita il flusso dei gradienti, agendo come un ensemble implicito e facilitando l'ottimizzazione (niente "dead zones").
+    \item \textbf{Inference (Single-Branch)}: Prima del deploy, i rami paralleli vengono matematicamente "fusi" in un unico kernel 3x3. Il risultato è una rete piana (VGG-style) o un blocco MobileNet standard, estremamente veloce.
+\end{itemize}
+
+\subsection{Fusione Matematica dei Kernel: Derivazione Completa}
+Consideriamo un input $X$ e un ramo convoluzionale con Batch Normalization (BN). La BN applica una trasformazione affine seguita da scaling:
+\begin{equation}
+BN(x) = \gamma \frac{x - \mu}{\sqrt{\sigma^2 + \epsilon}} + \beta
+\end{equation}
+Dove $\mu, \sigma$ sono media e varianza batch (o running stats in inferenza), e $\gamma, \beta$ sono parametri apprendibili.
+
+Sia $W$ il kernel della convoluzione $3 \times 3$. L'operazione completa di un ramo è:
+\begin{equation}
+Y_{branch} = BN(W * X) = \gamma \frac{(W * X) - \mu}{\sqrt{\sigma^2 + \epsilon}} + \beta
+\end{equation}
+
+Possiamo riscrivere questa equazione per isolare il termine conv e bias. Definiamo il fattore di scaling $s = \frac{\gamma}{\sqrt{\sigma^2 + \epsilon}}$. Allora:
+\begin{equation}
+Y_{branch} = s(W * X) + (\beta - s\mu) = (sW) * X + (\beta - s\mu)
+\end{equation}
+Abbiamo così ottenuto un nuovo kernel $W' = sW$ e un nuovo bias $b' = \beta - s\mu$.
+
+Nel nostro blocco Reparam, abbiamo tre rami: $3 \times 3$ ($W^{(3)}, b^{(3)}$), $1 \times 1$ ($W^{(1)}, b^{(1)}$), e identità.
+Per l'identità, possiamo vederla come una convoluzione $1 \times 1$ con weight matrix identità.
+Per sommare i kernel, dobbiamo portarli tutti alla dimensione $3 \times 3$:
+\begin{enumerate}
+    \item $W^{(1)}$ viene "paddato" con zeri (il centro mantiene il valore, il contorno è 0).
+    \item L'identità diventa un kernel $3 \times 3$ con 1 al centro (per ogni canale) e 0 altrove.
+\end{enumerate}
+
+Sfruttando la linearità della convoluzione ($(W_A * X) + (W_B * X) = (W_A + W_B) * X$), il kernel finale fuso $W_{fused}$ e il bias $b_{fused}$ sono:
+\begin{equation}
+W_{fused} = W'^{(3)} + \text{pad}(W'^{(1)}) + \text{weight}(\text{identity})
+\end{equation}
+\begin{equation}
+b_{fused} = b'^{(3)} + b'^{(1)} + b'^{(id)}
+\end{equation}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figure/kernel1x1_to_3x3.jpg}
+    \caption{Visualizzazione della fusione dei kernel. Il kernel $1 \times 1$ viene portato a $3 \times 3$ tramite zero-padding, mentre l'identità diventa un kernel $3 \times 3$ con 1 al centro e 0 altrove. La somma finale produce un unico kernel $3 \times 3$ equivalente.}
+    \label{fig:kernel_fusion_viz}
+\end{figure}
+
+Questa trasformazione, visualizzata in Figura \ref{fig:kernel_fusion_viz}, è esatta (a meno di errori numerici floating-point) e permette di sostituire l'intero blocco multi-ramo con una singola convoluzione standard.
+
+\section{Architettura Dettagliata}
+
+\subsection{Inverted Residual Block con ECA}
+Il cuore dell'architettura è il blocco Inverted Residual modificato con l'integrazione del meccanismo di attenzione ECA.
+Come mostrato in Figura \ref{fig:inv_res_eca_detail}, il blocco segue la struttura standard di MobileNetV2 (espansione $\rightarrow$ depthwise $\rightarrow$ proiezione) ma include un modulo ECA subito dopo la depthwise convolution.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figure/inv_res_with_eca_block.jpg}
+    \caption{Schema del blocco Inverted Residual modificato con integrazione del modulo ECA dopo la Depthwise Convolution.}
+    \label{fig:inv_res_eca_detail}
+\end{figure}
+
+
+\subsection{Scelte Architetturali Specifiche}
+
+\subsubsection{Stride Iniziale}
+Nello stem della nostra rete, utilizziamo una convoluzione con \textbf{stride=1}, a differenza dello stride=2 tipico di MobileNetV2 su ImageNet.
+Questa scelta è critica per dataset a bassa risoluzione come CIFAR-10 ($32 \times 32$): dimezzare immediatamente la risoluzione spaziale a $16 \times 16$ comporterebbe una perdita irreversibile di informazioni geometriche fini già nel primo strato.
+Mantenendo la risoluzione piena nei primi layer, permettiamo alla rete di estrarre feature di basso livello (bordi, angoli) con maggiore fedeltà, compensando il leggero aumento di costo computazionale.
+
+\subsubsection{Attivazione: GELU vs ReLU}
+Abbiamo sostituito la classica ReLU con \textbf{GELU (Gaussian Error Linear Unit)}.
+Sebbene la GELU sia computazionalmente più onerosa (coinvolgendo funzioni trascendenti come $\tanh$ o approssimazioni sigmoidee) rispetto alla semplice soglia della ReLU, il tradeoff è vantaggioso per modelli compatti.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figure/gelu_vs_relu.jpg}
+    \caption{Confronto tra ReLU (blu) e GELU (gialla). La natura liscia e non monotona della GELU vicino allo zero favorisce un flusso dei gradienti più robusto.}
+    \label{fig:gelu_vs_relu}
+\end{figure}
+In una rete con meno di 100k parametri, la "capacità" di ogni neurone è preziosa. La proprietà di non azzerare completamente i gradienti negativi (come fa ReLU) ma di attenuarli dolcemente, permette di evitare il problema dei "Dead Neurons", massimizzando l'utilizzo efficace dei pochi parametri disponibili.
+
+\section{Implementazione del Deploy}
+Un aspetto cruciale per l'ingegnerizzazione del sistema è la funzione di \textit{re-parametrizzazione}.
+
+Per tradurre la teoria (Eq. 5.1, 5.2) in codice pratico, implementiamo il metodo \texttt{switch\_to\_deploy}. Di seguito uno snippet semplificato che mostra come i pesi dei vari rami vengono fusi:
+
+\begin{lstlisting}[language=Python, caption=Pseudo-codice per la fusione dei kernel (Switch to Deploy), basicstyle=\footnotesize\ttfamily]
+def switch_to_deploy(self):
+    if hasattr(self, 'rbr_reparam'):
+        return  # Gia' convertito
+        
+    # Ottieni pesi e bias dai tre rami
+    k3, b3 = self.get_equiv_params(self.rbr_dense)
+    k1, b1 = self.get_equiv_params(self.rbr_1x1)
+    kid, bid = self.get_equiv_params(self.rbr_identity)
+    
+    # Somma vettoriale dei kernel e dei bias
+    # k1 e kid vengono "paddati" a 3x3 prima della somma
+    self.rbr_reparam = nn.Conv2d(..., kernel_size=3, bias=True)
+    self.rbr_reparam.weight.data = k3 + pad(k1) + pad(kid)
+    self.rbr_reparam.bias.data = b3 + b1 + bid
+    
+    # Rimuovi i rami originali per liberare memoria
+    self.__delattr__('rbr_dense')
+    self.__delattr__('rbr_1x1')
+    self.__delattr__('rbr_identity')
+    self.deploy = True
+\end{lstlisting}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figure/comparing_conv_standard_and_depthwise_sep.jpg}
+    \caption{Confronto Standard Convolution vs Depthwise Separable (usata in MobileNet). La re-parametrizzazione permette di usare strutture complesse in training che collassano in efficienti depthwise/standard conv all'inferenza. L'immagine evidenzia la differenza fondamentale tra l'operazione spaziale densa e quella fattorizzata.}
+    \label{fig:conv_comparison}
+\end{figure}
+
+Questo passaggio è fondamentale: trasforma un grafo computazionale complesso (multi-branch) in una semplice sequenza di operazioni lineari, riducendo significativamente la latenza di inferenza su CPU~\cite{ding2021repvgg} e permettendo l'export verso formati ottimizzati come TFLite.
+
+\subsection{Configurazione Layer Dettagliata}
+Per garantire la piena riproducibilità, riportiamo in Tabella \ref{tab:layer_config} la configurazione esatta dei blocchi Inverted Residual utilizzati in MobileNetECA-Rep (Width Multiplier $0.5$).
+Ogni riga corrisponde a una sequenza di $n$ blocchi identici.
+\begin{table}[h]
+    \centering
+    \caption{Configurazione Architetturale di MobileNetECA-Rep ($0.5\times$)}
+    \label{tab:layer_config}
+    \begin{tabular}{c c c c c c}
+        \toprule
+        \textbf{Input} & \textbf{Operator} & \textbf{t (Exp)} & \textbf{c (Out)} & \textbf{n (Repeat)} & \textbf{s (Stride)} \\
+        \midrule
+        $32^2 \times 3$ & RepConv $3\times3$ & - & 16 & 1 & 1 \\
+        $32^2 \times 16$ & RepInvRes + ECA & 1 & 12 & 1 & 1 \\
+        $32^2 \times 12$ & RepInvRes + ECA & 6 & 16 & 2 & 2 \\
+        $16^2 \times 16$ & RepInvRes + ECA & 8 & 21 & 4 & 2 \\
+        $8^2 \times 21$ & RepInvRes + ECA & 8 & 26 & 2 & 1 \\
+        $8^2 \times 26$ & Conv $1\times1$ & - & 72 & 1 & 1 \\
+        $8^2 \times 72$ & GlobalAvgPool & - & - & 1 & - \\
+        $1 \times 1 \times 72$ & Linear (FC) & - & 10 & 1 & - \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Si noti in particolare:
+\begin{itemize}
+    \item \textbf{Stride Iniziale Conservativo}: I primi due stadi mantengono la risoluzione piena $32 \times 32$ (stride=1), preservando i dettagli spaziali fini.
+    \item \textbf{High Expansion Ratio}: Negli stadi profondi utilizziamo un fattore di espansione elevato ($t=8$) per compensare la ridotta larghezza dei canali ($c=21, 26$), permettendo alla rete di apprendere feature complesse in uno spazio latente ad alta dimensionalità prima della proiezione.
+\end{itemize}
+
+\subsection{ECA Block: Implementazione Dettagliata}
+L'implementazione del blocco ECA è cruciale per mantenere l'efficienza. A differenza dei blocchi SE (Squeeze-and-Excitation) che usano due layer Fully Connected (FC) con riduzione di dimensionalità, ECA usa una convoluzione 1D adattiva (Figura \ref{fig:eca_detail}).
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figure/ECA_block.jpg}
+    \caption{Schema dettagliato del modulo ECA (Efficient Channel Attention). Viene eseguita una Global Average Pooling seguita da una convoluzione 1D con kernel adattivo e funzione sigmoidea.}
+    \label{fig:eca_detail}
+\end{figure}
+
+\subsubsection{Formula del Kernel Adattivo}
+Il kernel size della Conv1D è calcolato dinamicamente in base al numero di canali $C$:
+\begin{equation}
+k = \left|\frac{\log_2(C) + b}{\gamma}\right|_{\text{odd}}
+\end{equation}
+Con parametri default $b=12$, $\gamma=3$.
+Questo approccio garantisce che ogni canale interagisca solo con i suoi $k$ vicini locali, preservando le relazioni spaziali e riducendo drasticamente il numero di parametri (da $C^2$ a $k$).
+
+\subsubsection{Pipeline Operativa}
+La sequenza di operazioni nel blocco ECA è la seguente:
+\begin{enumerate}
+    \item \textbf{Global Average Pooling}: Riduce le dimensioni spaziali $H \times W$ a $1 \times 1$.
+    \item \textbf{Conv1D}: Applica il kernel adattivo lungo la dimensione dei canali.
+    \item \textbf{Sigmoid}: Normalizza i pesi di attenzione nell'intervallo $[0, 1]$.
+    \item \textbf{Scale}: Moltiplica element-wise le feature map originali per i pesi calcolati.
+\end{enumerate}
+
+\section{Configurazione Sperimentale}
+
+\subsection{Strategie di Data Augmentation Avanzate}
+Per migliorare la robustezza del modello e prevenire l'overfitting su un dataset limitato come CIFAR-10, abbiamo implementato una pipeline di augmentation aggressiva:
+\begin{itemize}
+    \item \textbf{Random Crop \& Flip}: Trasformazioni base per invarianza traslazionale.
+    \item \textbf{Cutout}: Oscuramento casuale di patch quadrate ($8 \times 8$) nell'immagine. Questo costringe la rete a non dipendere da singole feature locali (es. solo un orecchio del gatto) ma a considerare il contesto globale.
+    \item \textbf{AutoAugment (CIFAR-10 Policy)}: Un algoritmo di ricerca automatica che applica sequenze di trasformazioni (es. Shear, Rotate, Solarize) con magnitudo e probabilità ottimizzate tramite Reinforcement Learning. La policy specifica per CIFAR-10 introduce variabilità semantica che simula condizioni di ripresa differenti.
+\end{itemize}
+
+\subsection{Protocollo di Training}
+L'addestramento è stato condotto su una workstation dotata di GPU \textbf{NVIDIA RTX 4090} (24GB VRAM) e CPU AMD Ryzen Threadripper 3965WX (32 Core). 
+In linea con le best practice per la classificazione di immagini, abbiamo scelto di utilizzare l'algoritmo di ottimizzazione \textbf{SGD (Stochastic Gradient Descent) con Momentum} ($0.9$) e un weight decay di $5 \times 10^{-4}$. 
+Sebbene ottimizzatori adattivi come Adam convergano più velocemente nelle fasi iniziali, la letteratura scientifica e i nostri esperimenti confermano che SGD con Momentum tende a raggiungere minimi locali più ampi e generalizzabili, portando a una migliore accuratezza finale sul test set.
+
+\paragraph{Nota sulla Validazione.}
+In accordo con la prassi comunemente adottata in letteratura per CIFAR-10~\cite{he2016deep}, il test set è stato utilizzato come criterio di selezione del modello migliore (early stopping sulla best accuracy). Formalmente, questo introduce una forma di information leakage; tuttavia, data la stabilità dei risultati osservata e l'ampia adozione di questa pratica nei lavori di riferimento, riteniamo il bias introdotto trascurabile ai fini delle conclusioni presentate.
+
+\subsection{Learning Rate Schedule}
+Per garantire una convergenza ottimale, è stato utilizzato un \textit{Cosine Annealing Schedule}.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figure/v3_lr_schedule.png}
+    \caption{Andamento del Learning Rate durante le 200 epoche di training (Cosine Annealing). Il tasso di apprendimento decresce dolcemente seguendo una curva cosinusoidale.}
+    \label{fig:lr_schedule}
+\end{figure}
+Come visibile in Figura \ref{fig:lr_schedule}, il learning rate decresce da un valore iniziale di $0.05$ a $0$ senza restart. Questa strategia permette al modello di esplorare ampie regioni dello spazio dei parametri nelle fasi iniziali (high LR) e di raffinare la soluzione in un minimo locale stabile nelle fasi finali (low LR).
+
+\section{Analisi della Complessità Teorica}
+Il modello finale \textbf{MobileNetECA-Rep} presenta caratteristiche di efficienza notevoli, come riassunto nella Tabella \ref{tab:complexity_new}.
+
+\begin{table}[h]
+    \centering
+    \caption{Confronto Complessità MobileNetECA-Rep vs Baseline}
+    \label{tab:complexity_new}
+    \begin{tabular}{l c c}
+        \toprule
+        \textbf{Modello} & \textbf{Parametri} & \textbf{FLOPs (M)} \\
+        \midrule
+        ResNet-20 & 0.27M & 41M \\
+        MobileNetV2 (0.5x) & 0.70M & 28M \\
+        \textbf{MobileNetECA-Rep (Ours)} & \textbf{0.076M} & \textbf{10.7M} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Con soli \textbf{76,600 parametri}, il nostro modello è circa \textbf{10 volte più piccolo} di una MobileNetV2 standard scalata (0.5x) e quasi \textbf{4 volte più leggero} di una ResNet-20.
+In termini di operazioni (FLOPs), richiediamo solo \textbf{10.7 Milioni} di operazioni per immagine, rendendo il modello idoneo all'esecuzione in real-time anche su microcontrollori di fascia molto bassa (es. STM32 o ESP32) che operano con budget di potenza nell'ordine dei milliwatt.

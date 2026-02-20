@@ -68,24 +68,26 @@
 \contentsline {paragraph}{Protocollo di Validazione.}{33}{section*.3}%
 \contentsline {subsection}{\numberline {5.5.3}Learning Rate Schedule}{33}{subsection.5.5.3}%
 \contentsline {section}{\numberline {5.6}Analisi della Complessità Teorica}{34}{section.5.6}%
-\contentsline {chapter}{\chapternumberline {6}Analisi dei Risultati}{35}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Ablation Study: Impatto delle Componenti}{35}{section.6.1}%
-\contentsline {subsection}{\numberline {6.1.1}Dinamiche di Addestramento}{36}{subsection.6.1.1}%
-\contentsline {section}{\numberline {6.2}Analisi del Modello Finale (MobileNetECA-Rep)}{37}{section.6.2}%
-\contentsline {subsection}{\numberline {6.2.1}Matrice di Confusione}{37}{subsection.6.2.1}%
-\contentsline {subsection}{\numberline {6.2.2}Curve ROC e AUC}{38}{subsection.6.2.2}%
-\contentsline {section}{\numberline {6.3}Analisi Qualitativa Avanzata}{39}{section.6.3}%
-\contentsline {subsection}{\numberline {6.3.1}Occlusion Sensitivity Analysis}{40}{subsection.6.3.1}%
-\contentsline {subsection}{\numberline {6.3.2}Analisi degli "Imperdonabili": High Confidence Errors}{41}{subsection.6.3.2}%
-\contentsline {section}{\numberline {6.4}Confronto Esteso con lo Stato dell'Arte}{42}{section.6.4}%
-\contentsline {section}{\numberline {6.5}Confronto con lo Stato dell'Arte: Efficienza}{43}{section.6.5}%
-\contentsline {subsection}{\numberline {6.5.1}Discussione}{43}{subsection.6.5.1}%
-\contentsline {subsection}{\numberline {6.5.2}Analisi Empirica della Latenza e Implementabilità}{43}{subsection.6.5.2}%
-\contentsline {paragraph}{Nota Metodologica.}{44}{section*.4}%
-\contentsline {section}{\numberline {6.6}Analisi dell'Impatto degli Iperparametri}{45}{section.6.6}%
-\contentsline {paragraph}{Nota Metodologica.}{45}{section*.5}%
-\contentsline {subsection}{\numberline {6.6.1}Interazione Learning Rate vs Weight Decay}{45}{subsection.6.6.1}%
-\contentsline {subsection}{\numberline {6.6.2}Impatto della Capacità del Modello sulla Regolarizzazione}{45}{subsection.6.6.2}%
-\contentsline {appendix}{\chapternumberline {A}Dettagli Metriche di Valutazione}{51}{appendix.Alph1}%
-\contentsline {chapter}{Conclusioni e Sviluppi Futuri}{52}{appendix*.6}%
-\contentsline {chapter}{Bibliografia}{59}{appendix*.17}%
+\contentsline {subsection}{\numberline {5.6.1}Decostruzione della Complessità: il Collasso dei Parametri}{35}{subsection.5.6.1}%
+\contentsline {chapter}{\chapternumberline {6}Analisi dei Risultati}{37}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Ablation Study: Impatto delle Componenti}{38}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Spinta Finale SOTA: Knowledge Distillation ed EMA}{39}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}Dinamiche di Addestramento}{40}{subsection.6.2.1}%
+\contentsline {section}{\numberline {6.3}Analisi Dettagliata del Modello Finale (Configurazione E: KD+EMA)}{43}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}Matrice di Confusione}{43}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.3.2}Curve ROC e AUC}{44}{subsection.6.3.2}%
+\contentsline {section}{\numberline {6.4}Analisi Qualitativa Avanzata}{45}{section.6.4}%
+\contentsline {subsection}{\numberline {6.4.1}Occlusion Sensitivity Analysis}{46}{subsection.6.4.1}%
+\contentsline {subsection}{\numberline {6.4.2}Analisi degli "Imperdonabili": High Confidence Errors}{47}{subsection.6.4.2}%
+\contentsline {section}{\numberline {6.5}Confronto Esteso con lo Stato dell'Arte}{48}{section.6.5}%
+\contentsline {section}{\numberline {6.6}Confronto con lo Stato dell'Arte: Efficienza}{49}{section.6.6}%
+\contentsline {subsection}{\numberline {6.6.1}Discussione}{50}{subsection.6.6.1}%
+\contentsline {subsection}{\numberline {6.6.2}Analisi Empirica della Latenza e Implementabilità}{50}{subsection.6.6.2}%
+\contentsline {paragraph}{Nota Metodologica.}{51}{section*.4}%
+\contentsline {section}{\numberline {6.7}Analisi dell'Impatto degli Iperparametri}{51}{section.6.7}%
+\contentsline {paragraph}{Nota Metodologica.}{52}{section*.5}%
+\contentsline {subsection}{\numberline {6.7.1}Interazione Learning Rate vs Weight Decay}{52}{subsection.6.7.1}%
+\contentsline {subsection}{\numberline {6.7.2}Impatto della Capacità del Modello sulla Regolarizzazione}{53}{subsection.6.7.2}%
+\contentsline {chapter}{Conclusioni e Sviluppi Futuri}{55}{chapter*.6}%
+\contentsline {chapter}{Dettagli Metriche di Valutazione}{60}{appendix*.15}%
+\contentsline {chapter}{Bibliografia}{63}{appendix*.18}%

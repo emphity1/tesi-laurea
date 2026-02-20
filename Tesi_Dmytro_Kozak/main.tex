@@ -49,7 +49,7 @@
 \clearpage
 \begin{abstract}
     In questa tesi viene proposta un'architettura ibrida per la classificazione efficiente di immagini su dispositivi edge, basata su MobileNetV2, Attention Mechanisms (ECA) e Structural Reparameterization.
-    Il modello proposto, MobileNetECA-Rep, raggiunge un'accuratezza del 93.23\% sul dataset CIFAR-10 utilizzando meno di 80k parametri, dimostrando un eccellente trade-off Accuracy/FLOPs.
+    Il modello proposto, MobileNetECA-Rep-AdvAug, raggiunge un'accuratezza del 93.76\% sul dataset CIFAR-10 utilizzando circa 62k parametri, dimostrando un eccellente trade-off Accuracy/FLOPs.
     Vengono analizzati nel dettaglio i contributi delle singole componenti tramite ablation study e viene fornita una caratterizzazione qualitativa degli errori.
     I risultati dimostrano che l'ottimizzazione architetturale mirata può compensare la riduzione drastica della capacità del modello.
 \end{abstract}
@@ -74,12 +74,13 @@
 \capitolo{Analisi dei Risultati}{capitolo6}
 %\capitolo{Titolo Capitolo 6}{capitolo6}
 
-% Appendice
-\include{appendice}
-
 % ----- Parte finale della tesi (obbligatorio)
 \backmatter
 \conclusioni{conclusioni}
+
+% Appendice
+\include{appendice}
+
 \ringraziamenti{ringraziamenti}
 
 % Bibliografia con BibTeX (obbligatoria)

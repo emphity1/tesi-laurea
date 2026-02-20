@@ -1,0 +1,53 @@
+
+
+
+Dopo aver introdotto i fondamenti delle reti neurali, in questo capitolo analizziamo l'evoluzione dello stato dell'arte nella classificazione di immagini, con un focus particolare sulle architetture efficienti progettate per dispositivi mobili.
+
+\section{Evoluzione delle Architetture CNN}
+
+\subsection{Dalle Origini al Deep Learning Moderno}
+L'evoluzione delle CNN moderne parte dalla pionieristica \textbf{LeNet-5} (1998), progettata per il riconoscimento di cifre, fino alla rivoluzione di \textbf{AlexNet} (2012) che, introducendo ReLU e Dropout su GPU, ha ridotto l'errore su ImageNet dal 26\% al 15.3\%. Successivamente, \textbf{VGGNet} (2014) ha dimostrato l'efficacia di pile profonde di filtri piccoli ($3 \times 3$), mentre \textbf{ResNet} (2015) \cite{he2016deep} ha risolto il problema della degradazione del gradiente tramite \textit{skip connections}, abilitando l'addestramento di reti con centinaia di strati.
+Queste architetture, pur fondamentali, erano ottimizzate per l'accuratezza senza vincoli di risorse, risultando spesso proibitive per dispositivi mobili.
+
+\section{Architetture Efficienti per Mobile}
+
+Con la necessità di eseguire modelli su smartphone e IoT, l'attenzione si è spostata dalla pura accuratezza alla riduzione dei FLOPs (Floating Point Operations).
+
+\subsection{Depthwise Separable Convolutions}
+Introdotte in MobileNetV1 \cite{howard2017mobilenets}, fattorizzano la convoluzione standard in due passi:
+\begin{enumerate}
+    \item \textbf{Depthwise Convolution}: Una convoluzione spatial $K \times K$ per ogni singolo canale di input. Questo passo filtra le feature spazialmente ma non le combina tra canali.
+    \item \textbf{Pointwise Convolution}: Una convoluzione $1 \times 1$ che combina linearmente i canali filtrati per creare nuove feature.
+\end{enumerate}
+Il costo computazionale si riduce drasticamente:
+$$ \frac{1}{N} + \frac{1}{D_K^2} $$
+Per un kernel $3 \times 3$, la riduzione è di circa 8-9 volte rispetto alla convoluzione standard.
+
+\subsection{MobileNetV2: Inverted Residuals}
+MobileNetV2 \cite{sandler2018mobilenetv2} ha migliorato ulteriormente l'efficienza introducendo l'\textbf{Inverted Residual Block}.
+In una ResNet classica, il blocco residuo segue lo schema "bottleneck" (Wide $\rightarrow$ Narrow $\rightarrow$ Wide) per comprimere le informazioni. In MobileNetV2, lo schema è invertito (Narrow $\rightarrow$ Wide $\rightarrow$ Narrow):
+\begin{itemize}
+    \item \textbf{Expansion}: Una conv $1 \times 1$ espande i canali di input ad una dimensione elevata (es. fattore $t=6$).
+    \item \textbf{Depthwise}: La conv $3 \times 3$ depthwise opera nello spazio ad alta dimensione, estraendo feature ricche.
+    \item \textbf{Projection}: Una conv $1 \times 1$ proietta nuovamente in un numero ridotto di canali.
+\end{itemize}
+Crucialmente, l'ultima proiezione non ha funzione di attivazione non-lineare (\textit{Linear Bottleneck}) per evitare la distruzione dell'informazione in spazi a bassa dimensionalità a causa della ReLU. Questo design permette di mantenere tensori di attivazione piccoli in memoria, ottimizzando l'uso della cache.
+
+\section{Meccanismi di Attenzione}
+L'attenzione in Deep Learning permette di pesare dinamicamente l'importanza delle feature, mimando il sistema visivo umano.
+
+\subsection{Squeeze-and-Excitation (SE)}
+I blocchi SE \cite{hu2018squeeze} modellano le interdipendenze tra canali. Attraverso un Global Average Pooling (Squeeze) seguito da una rete neurale a due strati (Excitation), la rete impara a scalare i canali importanti e sopprimere quelli inutili.
+Sebbene efficaci, i layer FC aggiungono complessità quadratica rispetto al numero di canali.
+
+\subsection{Efficient Channel Attention (ECA)}
+ECA \cite{wang2020eca} risolve l'inefficienza dei blocchi SE proponendo un'interazione locale tra canali tramite una \textbf{convoluzione 1D}.
+$$ \omega = \sigma(C1D_k(\mathbf{y})) $$
+Senza riduzione di dimensionalità, ECA preserva meglio l'informazione e richiede un numero trascurabile di parametri aggiuntivi ($k \approx 3 \sim 7$), rendendolo ideale per reti leggere. Questo modulo sarà il componente chiave della nostra architettura proposta.
+
+\section{Structural Reparameterization (RepVGG)}
+Più recentemente, si è affermato un nuovo paradigma: la \textbf{Structural Reparameterization}. Introdotta con RepVGG \cite{ding2021repvgg}, questa tecnica sfida il dogma "Depth vs Width" proponendo di disaccoppiare l'architettura di training da quella di inferenza.
+
+\subsection{Il Principio di Equivalenza}
+Durante il training, la rete utilizza una topologia multi-branch complessa (simile a ResNet/Inception), che facilita la propagazione dei gradienti e la convergenza. Durante l'inferenza, grazie alla linearità delle convoluzioni, i rami paralleli vengono matematicamente fusi in un unico kernel $3 \times 3$.
+Questo permette di ottenere un'architettura "VGG-style" piana, priva di ramificazioni o addizioni costose in termini di accesso alla memoria (MAC), massimizzando il parallelismo su GPU e CPU moderne. MobileNetECA-Rep adotta questo principio per ottenere la massima efficienza su edge.

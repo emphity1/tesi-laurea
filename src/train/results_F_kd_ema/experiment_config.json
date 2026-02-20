@@ -1,0 +1,12 @@
+{
+  "kd_temperature": 4.0,
+  "kd_alpha": 0.5,
+  "ema": true,
+  "ema_decay": 0.999,
+  "base_lr": 0.05,
+  "epochs": 200,
+  "weight_decay": 0.0005,
+  "momentum": 0.9,
+  "batch_size": 128,
+  "seed": 42
+}

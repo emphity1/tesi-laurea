@@ -1,0 +1,93 @@
+
+
+
+Questo capitolo fornisce una panoramica esaustiva dei fondamenti teorici del Deep Learning, analizzando le componenti matematiche che costituiscono le moderne reti neurali. Partendo dai paradigmi di apprendimento automatico, esploreremo in dettaglio il funzionamento del neurone artificiale, le funzioni di attivazione e gli algoritmi di ottimizzazione che permettono l'addestramento di modelli complessi.
+
+\section{Apprendimento Automatico}
+
+\subsection{Paradigmi di Apprendimento}
+Il Machine Learning (Apprendimento Automatico) è una branca dell'intelligenza artificiale che si occupa di creare sistemi in grado di apprendere dai dati. Si divide tradizionalmente in tre paradigmi principali:
+\begin{enumerate}
+    \item \textbf{Apprendimento Supervisionato}: Il sistema apprende una funzione $f: X \rightarrow Y$ mappando input $x$ a output desiderati $y$ (etichette), minimizzando una funzione di costo $J(\theta)$ calcolata sulla discrepanza tra predizione e realtà. Esempi classici includono la regressione (predizione di valori continui) e la classificazione (predizione di categorie discrete).
+    \item \textbf{Apprendimento Non Supervisionato}: Il sistema cerca di identificare strutture nascoste nei dati non etichettati, come cluster o densità di probabilità $P(x)$. Esempi sono il K-Means clustering e la Principal Component Analysis (PCA).
+    \item \textbf{Apprendimento per Rinforzo}: Un agente impara a prendere decisioni sequenziali in un ambiente per massimizzare una ricompensa cumulativa futura.
+\end{enumerate}
+
+Le Reti Neurali Profonde (Deep Learning) si inseriscono trasversalmente in questi paradigmi, eccellendo nell'\textit{Apprendimento della Rappresentazione} (Representation Learning): invece di utilizzare feature ingegnerizzate manualmente (es. SIFT, HOG per immagini), le reti apprendono una gerarchia di concetti astratti direttamente dai dati grezzi, passando da caratteristiche di basso livello (bordi, colori) a quelle di alto livello (oggetti, scene).
+
+\subsection{Il Perceptron e il Neurone Artificiale}
+L'unità computazionale di base è il \textit{neurone artificiale}, ispirato al modello biologico del neurone. Matematicamente, un neurone con $n$ input calcola una combinazione lineare seguita da una non-linearità:
+\begin{equation}
+    z = \sum_{i=1}^{n} w_i x_i + b = \mathbf{w}^T \mathbf{x} + b
+\end{equation}
+\begin{equation}
+    a = \sigma(z)
+\end{equation}
+dove $\mathbf{w}$ è il vettore dei pesi (pesi sinaptici), $b$ è il bias (soglia di attivazione), e $\sigma(\cdot)$ è la funzione di attivazione.
+
+\section{Funzioni di Attivazione}
+La scelta della funzione di attivazione è critica per la capacità della rete di apprendere funzioni non lineari complesse e per la dinamica dell'ottimizzazione.
+
+\subsection{Sigmoide e Tanh}
+Storicamente, le prime reti utilizzavano funzioni sigmoidali:
+$$ \sigma(x) = \frac{1}{1 + e^{-x}}, \quad \tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}} $$
+La funzione sigmoide mappa l'input in $(0, 1)$, interpretabile come una probabilità di attivazione. La tangente iperbolica mappa in $(-1, 1)$, offrendo un output centrato sullo zero che facilita la convergenza.
+Tuttavia, queste funzioni soffrono del problema della \textit{saturazione}: per valori di input molto grandi o molto piccoli, la derivata tende a zero. Durante la backpropagation, questo causa l'annullamento del gradiente, impedendo l'aggiornamento dei pesi nei layer profondi (Vanishing Gradient Problem).
+
+\subsection{ReLU (Rectified Linear Unit)}
+Introdotta per risolvere la saturazione, la ReLU è definita come:
+$$ f(x) = \max(0, x) $$
+La sua derivata è 1 per $x > 0$ e 0 per $x < 0$. Questa proprietà, unitamente alla sua scarsità (output zero per input negativi), la rende computazionalmente efficiente e facilita l'addestramento di reti molto profonde. Unico svantaggio è il problema del "Dying ReLU", dove neuroni con bias fortemente negativi smettono di attivarsi permanentemente e non recuperano più.
+
+\subsection{GELU (Gaussian Error Linear Unit)}
+Più recentemente, la GELU \cite{hendrycks2016gaussian} ha guadagnato popolarità, specialmente nei Transformers e in modelli di visione avanzati:
+$$ \text{GELU}(x) = x \Phi(x) \approx 0.5x(1 + \tanh(\sqrt{2/\pi}(x + 0.044715x^3))) $$
+GELU pondera l'input per la sua probabilità sotto una distribuzione gaussiana standard cumulativa $\Phi(x)$. Essendo una funzione liscia e non monotona, offre curvature migliori per l'ottimizzazione stocastica rispetto alla ReLU spezzata, permettendo ai neuroni di attivarsi parzialmente anche per valori negativi piccoli.
+Nella nostra architettura (Capitolo~\ref{cap:capitolo5}), utilizziamo GELU al posto di ReLU6 per compensare la ridotta larghezza dei canali, garantendo un flusso di gradienti più stabile.
+
+\section{Addestramento della Rete}
+
+\subsection{Funzione di Costo (Loss Function)}
+L'obiettivo dell'addestramento è minimizzare una funzione di costo che quantifica l'errore del modello. Per problemi di classificazione multi-classe come CIFAR-10, si utilizza la \textbf{Cross-Entropy Loss}:
+\begin{equation}
+    L(\mathbf{y}, \mathbf{\hat{y}}) = - \sum_{i=1}^{C} y_i \log(\hat{y}_i)
+\end{equation}
+dove $\mathbf{y}$ è il vettore one-hot della classe vera (es. $[0, 0, 1, 0, \dots]$ per la classe 2) e $\mathbf{\hat{y}}$ è il vettore di probabilità predetto dalla rete tramite funzione Softmax:
+$$ \hat{y}_i = \frac{e^{z_i}}{\sum_{j=1}^{C} e^{z_j}} $$
+Questa loss penalizza fortemente le predizioni sicure ma errate.
+
+\subsection{Algoritmo di Backpropagation}
+Il calcolo dei gradienti $\nabla_\theta L$ rispetto a ogni parametro $\theta$ della rete avviene tramite la \textit{Backpropagation}. Utilizzando la regola della catena (Chain Rule) del calcolo differenziale, l'errore calcolato sull'output viene propagato all'indietro verso l'input, permettendo di calcolare il contributo di ogni peso all'errore totale.
+Matematicamente, per un peso $w_{ij}$ tra il layer $l$ e $l+1$:
+$$ \frac{\partial L}{\partial w_{ij}^{(l)}} = \frac{\partial L}{\partial a_j^{(l+1)}} \cdot \frac{\partial a_j^{(l+1)}}{\partial z_j^{(l+1)}} \cdot \frac{\partial z_j^{(l+1)}}{\partial w_{ij}^{(l)}} $$
+Questo processo viene ripetuto iterativamente per tutti i layer.
+
+\section{Ottimizzazione e Regolarizzazione}
+
+\subsection{Ottimizzatori}
+\subsubsection{Stochastic Gradient Descent (SGD)}
+L'algoritmo base aggiorna i pesi nella direzione opposta al gradiente:
+$$ \theta_{t+1} = \theta_t - \eta \nabla_\theta L(\theta_t; x^{(i)}, y^{(i)}) $$
+dove $\eta$ è il \textit{learning rate}. SGD usa un piccolo sottoinsieme di dati (mini-batch) per stimare il gradiente, introducendo rumore che aiuta a evadere minimi locali superficiali e punti di sella.
+
+\subsubsection{SGD con Momentum}
+Per accelerare la convergenza e ridurre le oscillazioni (specialmente in burroni stretti della loss surface), si introduce il \textit{momentum}, che accumula una media mobile dei gradienti passati:
+$$ v_{t+1} = \gamma v_t + \eta \nabla_\theta L(\theta_t) $$
+$$ \theta_{t+1} = \theta_t - v_{t+1} $$
+Il termine $\gamma$ (tipicamente 0.9) simula l'inerzia, permettendo all'algoritmo di mantenere la velocità nelle direzioni costanti e smorzare le oscillazioni.
+Nella nostra Grid Search (Capitolo~\ref{cap:capitolo6}), SGD con Momentum accoppiato a un Cosine Annealing schedule si è dimostrato superiore ad Adam per la generalizzazione del modello finale.
+
+\subsubsection{Adam (Adaptive Moment Estimation)}
+Adam calcola learning rate adattivi per ogni parametro basandosi sulle stime del primo momento (media) e del secondo momento (varianza non centrata) dei gradienti. Sebbene converga spesso più velocemente, recenti studi mostrano che SGD con Momentum ben calibrato, accoppiato con un Learning Rate Decay, può raggiungere una migliore generalizzazione finale su compiti di visione.
+
+\subsection{Tecniche di Regolarizzazione}
+\subsubsection{Batch Normalization}
+La BN normalizza l'input di ogni strato per avere media zero e varianza unitaria sul batch corrente. Questo mitiga il problema del \textit{Internal Covariate Shift}, permettendo learning rate più alti e fungendo da debole regolarizzatore.
+Nel nostro modello, BN è parte integrante dei blocchi RepConv: la fusione algebrica di BN con i pesi convoluzionali è ciò che rende possibile la reparametrizzazione strutturale a deploy time (Capitolo~\ref{cap:capitolo5}).
+
+\subsubsection{Dropout}
+Il Dropout disattiva casualmente neuroni (con probabilità $p$) durante il training, impedendo il co-adattamento delle feature.
+
+\subsubsection{Weight Decay (L2 Regularization)}
+Aggiunge una penalità alla loss function proporzionale alla norma quadrata dei pesi ($ \lambda ||w||^2 $), spingendo i pesi verso valori piccoli e riducendo la complessità del modello.
+Come emergerà dalla nostra analisi sperimentale (Sezione~6.5), la relazione inversa tra capacità del modello e weight decay ottimale è particolarmente evidente in reti ultra-compatte come la nostra.
