@@ -9,16 +9,16 @@ Il progetto si è articolato in quattro fasi principali:
 \begin{enumerate}
     \item \textbf{Progettazione architetturale}: Implementazione di MobileNetECA combinando blocchi Inverted Residual (da MobileNetV2) con meccanismi Efficient Channel Attention (ECA), utilizzando GELU come funzione di attivazione per maggiore stabilità.
     
-    \item \textbf{Structural Reparameterization}: L'adozione di tecniche di ri-parametrizzazione strutturale ha permesso di addestrare una rete più capace e complessa (multi-branch) che collassa in un modello efficiente all'inferenza.
+    \item \textbf{Structural Reparameterization}: L'adozione di queste tecniche di ri-parametrizzazione strutturale ha permesso di addestrare una rete più capace e complessa (multi-branch) che collassa in un modello efficiente all'inferenza.
     
     \item \textbf{Grid search sistematica}: Esplorazione di centinaia di configurazioni di iperparametri attraverso un approccio two-phase (screening rapido + refinement), identificando empiricamente la combinazione ottimale di learning rate, width multiplier e weight decay.
     
-    \item \textbf{Validazione sperimentale}: Allenamento del modello ottimizzato per 200 epoche con SGD+momentum e Cosine Annealing schedule, raggiungendo un'accuratezza finale di \textbf{93.76\%} sul test set CIFAR-10, superando le baseline standard.
+    \item \textbf{Validazione sperimentale}: Allenamento del modello ottimizzato per 200 epoche con SGD+momentum e Cosine Annealing, raggiungendo un'accuratezza finale di \textbf{93.76\%} sul test set CIFAR-10, superando le baseline standard.
 \end{enumerate}
 
 \section*{Risultati Principali}
 
-MobileNetECA-Rep-AdvAug ha dimostrato un eccellente trade-off efficienza-accuratezza:
+Mo\-bile\-Net\-ECA-Rep-AdvAug ha dimostrato un eccellente trade-off efficienza-accuratezza:
 
 \begin{itemize}
     \item \textbf{Accuratezza}: 93.76\% su CIFAR-10 test set.
@@ -63,7 +63,7 @@ Il modello si posiziona competitivamente nella frontiera ultra-compatta ($<$ 100
 \subsubsection*{Ottimizzazione e Compressione}
 \begin{itemize}
     \item \textbf{Quantization (INT8)}: Convertire i pesi e le attivazioni del modello dal formato floating-point (FP32) a interi a 8-bit (INT8) tramite \textit{Post-Training Quantization} o \textit{Quantization-Aware Training}. Questa operazione ridurrebbe il memory footprint da $\approx 250$ KB a soli $\approx 65$ KB e garantirebbe uno \textit{speedup} latenziale stimato tra $2\times$ e $4\times$ su microcontrollori dotati di istruzioni SIMD vettoriali (es. architettura ARM Cortex-M con estensioni DSP), con un degrado dell'accuratezza solitamente trascurabile (inferiore allo $0.5\%$).
-    \item \textbf{Pruning Strutturato}: Applicare tecniche di \textit{channel pruning} post-addestramento (o basate sulla regolarizzazione L1 durante il training) per identificare e rimuovere i filtri convoluzionali prossimi allo zero. Dato l'ampio uso di \textit{expansion layer} ($6\times$) nel nostro modello, si stima che un pruning conservativo possa recidere fino al $20\%$ delle FLOPs (scendendo sotto i $7.5$ MFLOPs) senza compromettere la stabilità del modello distillato.
+    \item \textbf{Pruning Strutturato}: Applicare algoritmi di \textit{channel pruning} post-addestramento (o basati sulla regolarizzazione L1 nel training) per recidere i filtri prossimi allo zero. Dato l'ampio uso di \textit{expansion layer} ($6\times$) nel nostro modello, si stima che un pruning conservativo possa recidere fino al $20\%$ delle FLOPs (scendendo sotto i $7.5$ MFLOPs) senza compromettere la stabilità del modello distillato.
 \end{itemize}
 
 \subsubsection*{Deploy ed Edge Computing}

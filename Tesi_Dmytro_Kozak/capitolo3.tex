@@ -9,7 +9,7 @@ Questo capitolo fornisce una panoramica esaustiva dei fondamenti teorici del Dee
 Il Machine Learning (Apprendimento Automatico) è una branca dell'intelligenza artificiale che si occupa di creare sistemi in grado di apprendere dai dati. Si divide tradizionalmente in tre paradigmi principali:
 \begin{enumerate}
     \item \textbf{Apprendimento Supervisionato}: Il sistema apprende una funzione $f: X \rightarrow Y$ mappando input $x$ a output desiderati $y$ (etichette), minimizzando una funzione di costo $J(\theta)$ calcolata sulla discrepanza tra predizione e realtà. Esempi classici includono la regressione (predizione di valori continui) e la classificazione (predizione di categorie discrete).
-    \item \textbf{Apprendimento Non Supervisionato}: Il sistema cerca di identificare strutture nascoste nei dati non etichettati, come cluster o densità di probabilità $P(x)$. Esempi sono il K-Means clustering e la Principal Component Analysis (PCA).
+    \item \textbf{Apprendimento Non Supervisionato}: Il sistema identifica strutture nascoste nei dati in input, come cluster o densità di probabilità $P(x)$. Esempi tipici sono il K-Means clustering e la Principal Component Analysis (PCA).
     \item \textbf{Apprendimento per Rinforzo}: Un agente impara a prendere decisioni sequenziali in un ambiente per massimizzare una ricompensa cumulativa futura.
 \end{enumerate}
 
@@ -91,3 +91,19 @@ Il Dropout disattiva casualmente neuroni (con probabilità $p$) durante il train
 \subsubsection{Weight Decay (L2 Regularization)}
 Aggiunge una penalità alla loss function proporzionale alla norma quadrata dei pesi ($ \lambda ||w||^2 $), spingendo i pesi verso valori piccoli e riducendo la complessità del modello.
 Come emergerà dalla nostra analisi sperimentale (Sezione~6.5), la relazione inversa tra capacità del modello e weight decay ottimale è particolarmente evidente in reti ultra-compatte come la nostra.
+
+\subsubsection{Exponential Moving Average dei Pesi (EMA)}
+L'\textbf{Exponential Moving Average (EMA)} dei pesi è una tecnica di regolarizzazione \textit{parameter-free} il cui principio risale alla teoria classica dell'ottimizzazione stocastica~\cite{polyak1992acceleration}, nota in letteratura anche come \textit{Polyak-Ruppert averaging}. 
+L'intuizione fondante è che il percorso di discesa del gradiente in uno spazio di parametri ad altissima dimensionalità non converga mai a un singolo punto fisso deterministico, bensì oscilli continuamente attorno a un minimo a causa della natura intrinsecamente stocastica dei mini-batch. La traiettoria media di tali oscillazioni nervose, tuttavia, rappresenta uno stimatore infinitamente più stabile, accurato e affidabile del minimo reale.
+
+Formalmente, durante il ciclo di addestramento, il modello mantiene in memoria una copia "ombra" dei propri pesi. Ad ogni passo temporale $t$, i pesi storici EMA ($\tilde{\theta}_t$) vengono dolcemente aggiornati inglobando i pesi freschi dell'ottimizzatore corrente ($\theta_t$):
+
+\begin{equation}
+    \tilde{\theta}_t = \lambda \cdot \tilde{\theta}_{t-1} + (1 - \lambda) \cdot \theta_t
+\end{equation}
+
+dove $\lambda \in [0, 1)$ è il \textit{decay rate} (impostato a $0.999$ nell'ambito sperimentale di questa tesi). Mantenendo un parametro inerziale prossimo a $1$, il modello EMA calcola una media esponenzialmente pesata degli storici dei gradienti acquisiti (circa $1000$ update), attenuando l'impatto del forte rumore stocastico e l'elevata varianza introdotta dall'aggiornamento dei pesi all'interno dei singoli mini-batch.
+
+\textbf{Il paradigma dei Minimi Piatti}. L'analisi delle dinamiche di ottimizzazione in architetture profonde~\cite{morales2024exponential} evidenzia che le soluzioni asintotiche dell'EMA presentano proprietà topologiche distinte rispetto alle iterazioni standard della discesa del gradiente stocastico. Nello specifico, l'operazione di media progressiva favorisce la convergenza verso \textbf{minimi ampi e piatti} (\textit{flat minima}) all'interno della \textit{loss surface}. Come dimostrato sia empiricamente che teoricamente~\cite{keskar2016large}, il consolidamento dei pesi in queste regioni piane incrementa significativamente la stabilità predittiva su dati non visti: lievi perturbazioni nei parametri producono oscillazioni trascurabili del valore della loss, garantendo così una superiore capacità di generalizzazione.
+
+\textbf{EMA come Regolarizzazione Implicita}. All'interno della pipeline di addestramento adottata, l'accumulatore EMA assolve alla funzione di uno \textit{shadow model} ausiliario. Nelle fasi di apprendimento iniziali, contraddistinte da valori di \textit{learning rate} marcatamente elevati e conseguente instabilità parametrica, il modello EMA esibisce performance di validazione intrinsecamente più stabili. Tale architettura temporale trova una sinergia ottimale con la tecnica \textit{Knowledge Distillation} (Capitolo 4): coerentemente al decremento progressivo del tasso di apprendimento regolato dal \textit{Cosine Annealing}, l'EMA consolida stabilmente la conoscenza trasferita dal modello Teacher. Questa stabilizzazione attenua efficacemente il fenomeno del \textit{late-stage overfitting}, un deperimento strutturale delle prestazioni che affligge tipicamente le reti a bassa capacità sottoposte a estensivi cicli di iterazioni.

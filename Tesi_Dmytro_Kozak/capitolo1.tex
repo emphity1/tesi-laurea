@@ -30,14 +30,14 @@ I principali contributi originali di questa tesi possono essere riassunti nei se
     \item \textbf{Ottimizzazione Iperparametri (Grid Search)}:
     Per massimizzare il potenziale di questa micro-architettura base, è stata condotta una \textit{Grid Search} sistematica, identificando i valori ideali di learning rate, weight decay e width multiplier che garantissero la migliore convergenza possibile.
 
-    \item \textbf{Evoluzione tramite Meccanismi di Attenzione (MobileNetECA)}:
+    \item \textbf{Evoluzione tramite Meccanismi di Attenzione (Mo\-bile\-Net\-ECA)}:
     L'integrazione del modulo \textit{Efficient Channel Attention (ECA)} ha rappresentato il primo significativo salto prestazionale, dimostrando come la ricalibrazione dinamica delle feature map possa compensare la ridotta capacità (pochi canali) del modello leggero.
 
     \item \textbf{Potenziamento Strutturale (MobileNetECA-Rep)}:
     Successivamente, l'adozione della \textit{Structural Reparameterization} ha permesso di arricchire la capacità rappresentativa durante il training (tramite rami multi-branch) mantenendo inalterata la complessità di inferenza, grazie alla tecnica di fusione dei layer (RepVGG-style).
 
     \item \textbf{Robustezza Finale (AdvAug)}:
-    L'ultimo step evolutivo ha riguardato l'addestramento con tecniche avanzate come \textit{Advanced Data Augmentation} (AutoAugment + Random Erasing), e distillazione di conoscenza (Knowledge Distillation) affiancata a EMA sui pesi, portando il modello finale (\textbf{MobileNetECA-Rep-AdvAug}) a raggiungere il \textbf{93.76\%} di accuratezza sul test set, un risultato eccezionale per la sua classe di dimensione.
+    L'ultimo step evolutivo ha riguardato l'addestramento con tecniche avanzate come \textit{Advanced Data Augmentation} (AutoAugment + Random Erasing), e distillazione di conoscenza (Knowledge Distillation) affiancata a EMA sui pesi, portando il modello finale (\textbf{Mo\-bile\-Net\-ECA-Rep-AdvAug}) a raggiungere il \textbf{93.76\%} di accuratezza sul test set, un risultato eccezionale per la sua classe di dimensione.
 \end{enumerate}
 
 \section{Struttura della Tesi}

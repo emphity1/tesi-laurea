@@ -5,7 +5,7 @@
 %\usepackage{hyperref}
 \usepackage{xurl} % Facoltativo per migliorare il wrapping degli URL
 
-\titolo{\textbf{Modelli di classificazione immagini per CIFAR-10}}
+\titolo{Sviluppo di Architetture Neurali Ultra-Compatte tramite Attention Mechanisms, Reparameterization e Knowledge Distillation}
 \autore{Dmytro Kozak}
 \matricola{538593}
 \relatore{Prof. Giuseppe Sansonetti}
@@ -48,10 +48,10 @@
 \generaFrontespizio
 \clearpage
 \begin{abstract}
-    In questa tesi viene proposta un'architettura ibrida per la classificazione efficiente di immagini su dispositivi edge, basata su MobileNetV2, Attention Mechanisms (ECA) e Structural Reparameterization.
-    Il modello proposto, MobileNetECA-Rep-AdvAug, raggiunge un'accuratezza del 93.76\% sul dataset CIFAR-10 utilizzando circa 62k parametri, dimostrando un eccellente trade-off Accuracy/FLOPs.
-    Vengono analizzati nel dettaglio i contributi delle singole componenti tramite ablation study e viene fornita una caratterizzazione qualitativa degli errori.
-    I risultati dimostrano che l'ottimizzazione architetturale mirata può compensare la riduzione drastica della capacità del modello.
+    In questa tesi viene proposta un'architettura ibrida e ultra-compatta per la classificazione efficiente di immagini su dispositivi edge, che integra i principi di \textit{MobileNetV2}, \textit{Efficient Channel Attention (ECA)} e \textit{Structural Reparameterization}. 
+    Al fine di mitigare la severa riduzione della capacità parametrica, il framework di addestramento è stato potenziato mediante tecniche avanzate di regolarizzazione, integrando la \textit{Knowledge Distillation} da un modello Teacher pre-addestrato e l'\textit{Exponential Moving Average (EMA)} dei pesi. 
+    Il modello studiato e finalizzato, denominato \textit{MobileNetECA-Rep}, raggiunge un'accuratezza del 93.76\% sul dataset CIFAR-10 con un footprint di soli $\sim$62k parametri, dimostrando risultati competitivi con architetture nettamente superiori in termini di complessità complessiva e computazionale. 
+    L'elaborato analizza rigorosamente le dinamiche di ottimizzazione, quantifica l'impatto architetturale con l'impiego capillare di \textit{ablation study} e valuta empiricamente la latenza di inferenza, testando e validando la fruizione dell'architettura in uno scenario di applicabilità \textit{real-time}.
 \end{abstract}
 \clearpage
 
@@ -74,12 +74,12 @@
 \capitolo{Analisi dei Risultati}{capitolo6}
 %\capitolo{Titolo Capitolo 6}{capitolo6}
 
+% Appendice
+\include{appendice}
+
 % ----- Parte finale della tesi (obbligatorio)
 \backmatter
 \conclusioni{conclusioni}
-
-% Appendice
-\include{appendice}
 
 \ringraziamenti{ringraziamenti}
 

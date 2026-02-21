@@ -3,7 +3,7 @@
 
 \section{Panoramica del Sistema}
 L'obiettivo di questa tesi è la realizzazione di un classificatore di immagini per il dataset CIFAR-10 che soddisfi stringenti vincoli di efficienza computazionale, tipici dei dispositivi edge e IoT.
-La soluzione proposta, denominata \textbf{MobileNetECA-Rep}, è un'architettura ibrida che sintetizza tre paradigmi moderni di progettazione efficiente:
+La soluzione proposta (visualizzata in Figura~\ref{fig:mobilenet_eca_rep_overview}), denominata \textbf{MobileNetECA-Rep}, è un'architettura ibrida che sintetizza tre paradigmi moderni di progettazione efficiente:
 \begin{enumerate}
     \item \textbf{Lightweight Backbone}: L'uso di \textit{Inverted Residual Blocks} come mattoni fondamentali.
     \item \textbf{Attention Mechanism}: L'integrazione di moduli \textit{ECA (Efficient Channel Attention)} per focalizzare la capacità rappresentativa.
@@ -13,7 +13,7 @@ La soluzione proposta, denominata \textbf{MobileNetECA-Rep}, è un'architettura 
 \begin{figure}[h]
     \centering
     \includegraphics[width=1.0\textwidth]{figure/MobileNetECARep.png}
-    \caption{Architettura MobileNetECARep. I blocchi azzurri rappresentano i tensori intermedi. Il dettaglio mostra il modulo RepInvertedResidual con integrazione di Efficient Channel Attention (ECA) e la struttura di convoluzione riparametrizzabile (RepConv).}
+    \caption[Architettura MobileNetECARep.]{Architettura MobileNetECARep. I blocchi azzurri rappresentano i tensori intermedi. Il dettaglio mostra il modulo RepInvertedResidual con integrazione di Efficient Channel Attention (ECA) e la struttura di convoluzione riparametrizzabile (RepConv).}
     \label{fig:mobilenet_eca_rep_overview}
 \end{figure}
 
@@ -64,7 +64,7 @@ b_{fused} = b'^{(3)} + b'^{(1)} + b'^{(id)}
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.7\textwidth]{figure/kernel1x1_to_3x3.jpg}
-    \caption{Visualizzazione della fusione dei kernel. Il kernel $1 \times 1$ viene portato a $3 \times 3$ tramite zero-padding, mentre l'identità diventa un kernel $3 \times 3$ con 1 al centro e 0 altrove. La somma finale produce un unico kernel $3 \times 3$ equivalente.}
+    \caption[Visualizzazione della fusione dei kernel.]{Visualizzazione della fusione dei kernel. Il kernel $1 \times 1$ viene portato a $3 \times 3$ tramite zero-padding, mentre l'identità diventa un kernel $3 \times 3$ con 1 al centro e 0 altrove. La somma finale produce un unico kernel $3 \times 3$ equivalente.}
     \label{fig:kernel_fusion_viz}
 \end{figure}
 
@@ -92,18 +92,18 @@ Questa scelta è critica per dataset a bassa risoluzione come CIFAR-10 ($32 \tim
 Mantenendo la risoluzione piena nei primi layer, permettiamo alla rete di estrarre feature di basso livello (bordi, angoli) con maggiore fedeltà, compensando il leggero aumento di costo computazionale.
 
 \subsubsection{Attivazione: GELU vs ReLU}
-Abbiamo sostituito la classica ReLU con \textbf{GELU (Gaussian Error Linear Unit)}.
+Abbiamo sostituito la classica ReLU con \textbf{GELU (Gaussian Error Linear Unit)} (confronto visivo in Figura~\ref{fig:gelu_vs_relu}).
 Sebbene la GELU sia computazionalmente più onerosa (coinvolgendo funzioni trascendenti come $\tanh$ o approssimazioni sigmoidee) rispetto alla semplice soglia della ReLU, il tradeoff è vantaggioso per modelli compatti.
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.9\textwidth]{figure/gelu_vs_relu.jpg}
-    \caption{Confronto tra ReLU (blu) e GELU (gialla). La natura liscia e non monotona della GELU vicino allo zero favorisce un flusso dei gradienti più robusto.}
+    \caption[Confronto tra ReLU e GELU.]{Confronto tra ReLU (blu) e GELU (gialla). La natura liscia e non monotona della GELU vicino allo zero favorisce un flusso dei gradienti più robusto.}
     \label{fig:gelu_vs_relu}
 \end{figure}
 In una rete con meno di 100k parametri, la "capacità" di ogni neurone è preziosa. La proprietà di non azzerare completamente i gradienti negativi (come fa ReLU) ma di attenuarli dolcemente, permette di evitare il problema dei "Dead Neurons", massimizzando l'utilizzo efficace dei pochi parametri disponibili.
 
 \section{Implementazione del Deploy}
-Un aspetto cruciale per l'ingegnerizzazione del sistema è la funzione di \textit{re-parametrizzazione}.
+Un aspetto cruciale per l'ingegnizzazione del sistema consiste nella codifica della funzione di \textit{re-parametrizzazione}.
 
 Per tradurre la teoria (Eq. 5.1, 5.2) in codice pratico, implementiamo il metodo \texttt{switch\_to\_deploy}. Di seguito uno snippet semplificato che mostra come i pesi dei vari rami vengono fusi:
 
@@ -133,11 +133,11 @@ def switch_to_deploy(self):
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.8\textwidth]{figure/comparing_conv_standard_and_depthwise_sep.jpg}
-    \caption{Confronto Standard Convolution vs Depthwise Separable (usata in MobileNet). La re-parametrizzazione permette di usare strutture complesse in training che collassano in efficienti depthwise/standard conv all'inferenza. L'immagine evidenzia la differenza fondamentale tra l'operazione spaziale densa e quella fattorizzata.}
+    \caption[Confronto Standard Convolution vs Depthwise Separable.]{Confronto Standard Convolution vs Depthwise Separable (usata in MobileNet). La re-parametrizzazione permette di usare strutture complesse in training che collassano in efficienti depthwise/standard conv all'inferenza. L'immagine evidenzia la differenza fondamentale tra l'operazione spaziale densa e quella fattorizzata.}
     \label{fig:conv_comparison}
 \end{figure}
 
-Questo passaggio è fondamentale: trasforma un grafo computazionale complesso (multi-branch) in una semplice sequenza di operazioni lineari, riducendo significativamente la latenza di inferenza su CPU~\cite{ding2021repvgg} e permettendo l'export verso formati ottimizzati come TFLite.
+Come contestualizzato anche visivamente in Figura~\ref{fig:conv_comparison}, questo passaggio è fondamentale: trasforma un grafo computazionale complesso (multi-branch) in una semplice sequenza di operazioni lineari, riducendo significativamente la latenza di inferenza su CPU~\cite{ding2021repvgg} e permettendo l'export verso formati ottimizzati come TFLite.
 
 \subsection{Configurazione Layer Dettagliata}
 Per garantire la piena riproducibilità, riportiamo in Tabella \ref{tab:layer_config} la configurazione esatta dei blocchi Inverted Residual utilizzati in MobileNetECA-Rep (Width Multiplier $0.5$).
@@ -146,7 +146,7 @@ Ogni riga corrisponde a una sequenza di $n$ blocchi identici.
     \centering
     \caption{Configurazione Architetturale di MobileNetECA-Rep ($0.5\times$)}
     \label{tab:layer_config}
-    \begin{tabular}{c c c c c c}
+    \begin{tabular}{cccccc}
         \toprule
         \textbf{Input} & \textbf{Operator} & \textbf{t (Exp)} & \textbf{c (Out)} & \textbf{n (Repeat)} & \textbf{s (Stride)} \\
         \midrule
@@ -174,7 +174,7 @@ L'implementazione del blocco ECA è cruciale per mantenere l'efficienza. A diffe
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.7\textwidth]{figure/ECA_block.jpg}
-    \caption{Schema dettagliato del modulo ECA (Efficient Channel Attention). Viene eseguita una Global Average Pooling seguita da una convoluzione 1D con kernel adattivo e funzione sigmoidea.}
+    \caption[Schema dettagliato del modulo ECA.]{Schema dettagliato del modulo ECA (Efficient Channel Attention). Viene eseguita una Global Average Pooling seguita da una convoluzione 1D con kernel adattivo e funzione sigmoidea.}
     \label{fig:eca_detail}
 \end{figure}
 
@@ -261,7 +261,7 @@ L'addestramento è stato condotto su una workstation dotata di GPU \textbf{NVIDI
 In linea con le best practice per la classificazione di immagini, abbiamo scelto di utilizzare l'algoritmo di ottimizzazione \textbf{SGD (Stochastic Gradient Descent) con Momentum} ($0.9$) e un weight decay di $5 \times 10^{-4}$. 
 Sebbene ottimizzatori adattivi come Adam convergano più velocemente nelle fasi iniziali, la letteratura scientifica e i nostri esperimenti confermano che SGD con Momentum tende a raggiungere minimi locali più ampi e generalizzabili, portando a una migliore accuratezza finale sul test set.
 
-\paragraph{Protocollo di Validazione.}
+\paragraph{Protocollo di Validazione}
 Per garantire una valutazione rigorosa e priva di bias, il dataset di training originale (50.000 immagini) è stato suddiviso in un sottoinsieme di addestramento (45.000 immagini) e un insieme di validazione (5.000 immagini), utilizzando uno split deterministico con seed fisso. La selezione del modello migliore (early stopping) è stata effettuata esclusivamente sulla base dell'accuratezza di validazione. Il test set originale (10.000 immagini) è stato utilizzato una sola volta per la valutazione finale, evitando qualsiasi forma di information leakage.
 
 \subsection{Learning Rate Schedule}
@@ -269,7 +269,7 @@ Per garantire una convergenza ottimale, è stato utilizzato un \textit{Cosine An
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.8\textwidth]{figure/v3_lr_schedule.png}
-    \caption{Andamento del Learning Rate durante le 200 epoche di training (Cosine Annealing). Il tasso di apprendimento decresce dolcemente seguendo una curva cosinusoidale.}
+    \caption[Andamento del Learning Rate durante le 200 epoche di training.]{Andamento del Learning Rate durante le 200 epoche di training (Cosine Annealing). Il tasso di apprendimento decresce dolcemente seguendo una curva cosinusoidale.}
     \label{fig:lr_schedule}
 \end{figure}
 Come visibile in Figura \ref{fig:lr_schedule}, il learning rate decresce da un valore iniziale di $0.05$ a $0$ senza restart. Questa strategia permette al modello di esplorare ampie regioni dello spazio dei parametri nelle fasi iniziali (high LR) e di raffinare la soluzione in un minimo locale stabile nelle fasi finali (low LR).
@@ -308,4 +308,4 @@ La risposta risiede in due fenomeni matematici che collassano simultaneamente du
 \end{enumerate}
 
 Per dimostrare empiricamente questo collasso algebrico, un'ispezione layer-by-layer del nostro script di validazione mostra come, ad esempio, nel primo stadio di espansione della rete (il macro-blocco \texttt{features.1}, che raggruppa 4 blocchi Inverted Residual consecutivi espansi di un fattore 6), il conteggio dei parametri utili del modello passi da 35.394 a \textbf{29.260}, vaporizzando oltre 6.000 pesi non essenziali in un singolo colpo. Pur rappresentando quasi la metà della capacità computazionale dell'intero modello (fondamentale per estrarre le feature spaziali ad alta risoluzione), l'ottimizzazione interviene drasticamente alleggerendone l'impatto.
-Questa deframmentazione rende \textbf{MobileNetECA-Rep-AdvAug} un gioiello di ottimizzazione per dispositivi edge rigidi: intrinsecamente complessa durante il training per massimizzare la topologia di apprendimento, ma estremamente snella in fase di esportazione.
+Questa riparametrizzazione strutturale rende \textbf{MobileNetECA-Rep-AdvAug} particolarmente efficiente per il deployment su dispositivi edge: il modello mantiene una complessa topologia multi-ramo durante il training per massimizzare l'apprendimento, per poi essere convertito in un'architettura estremamente lineare e snella in fase di inferenza.

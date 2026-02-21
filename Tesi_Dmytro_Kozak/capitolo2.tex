@@ -27,12 +27,12 @@ Il dataset è suddiviso in due sottoinsiemi principali:
 \end{itemize}
 
 Ogni immagine è rappresentata come un tensore di dimensioni $3 \times 32 \times 32$ (Canali, Altezza, Larghezza). I valori dei pixel sono interi nell'intervallo $[0, 255]$.
-La bassa risoluzione ($32 \times 32$) rende il compito di classificazione difficile per l'occhio umano in alcuni casi (ambiguità), ma ideale per testare l'efficienza di architetture leggere.
+La bassa risoluzione ($32 \times 32$), come visibile negli esempi in Figura~\ref{fig:cifar10_sample}, rende il compito di classificazione difficile per l'occhio umano in alcuni casi (ambiguità), ma ideale per testare l'efficienza di architetture leggere.
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.8\textwidth]{figure/cifar10_images.png}
-    \caption{Esempi di Immagini dal Dataset CIFAR-10. La bassa risoluzione ($32 \times 32$) rende il compito di classificazione sfidante anche per l'occhio umano, specialmente per classi visivamente simili.}
+    \caption[Esempi di Immagini dal Dataset CIFAR-10.]{Esempi di Immagini dal Dataset CIFAR-10. La bassa risoluzione ($32 \times 32$) rende il compito di classificazione sfidante anche per l'occhio umano, specialmente per classi visivamente simili.}
     \label{fig:cifar10_sample}
 \end{figure}
 
@@ -42,7 +42,7 @@ Prima di essere utilizzate per l'addestramento, le immagini subiscono una serie 
 \subsection{Normalizzazione}
 I valori dei pixel $[0, 255]$ vengono scalati nell'intervallo $[0, 1]$ dividendo per 255. Successivamente, si applica una standardizzazione basata sulle statistiche del dataset CIFAR-10:
 $$ x_{norm} = \frac{x - \mu}{\sigma} $$
-dove $\mu = (0.4914, 0.4822, 0.4465)$ sono le medie dei canali RGB e $\sigma = (0.2023, 0.1994, 0.2010)$ le deviazioni standard.
+dove le medie dei canali RGB sono $\mu = (0.4914, 0.4822, 0.4465)$ le deviazioni standard sono $\sigma = (0.2023, 0.1994, 0.2010)$.
 Questa operazione centra i dati intorno allo zero, migliorando la stabilità numerica e la velocità di addestramento.
 
 \subsection{Data Augmentation Standard}

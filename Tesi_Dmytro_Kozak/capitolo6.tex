@@ -13,7 +13,7 @@ L'addestramento di ciascuna variante è stato condotto con iperparametri identic
 
 \begin{table}[H]
     \centering
-    \caption{Risultati dell'Ablation Study. Ogni riga rappresenta l'aggiunta di una componente rispetto alla precedente. L'accuratezza di test è misurata una sola volta sul modello selezionato tramite early stopping sulla validazione.}
+    \caption[Risultati dell'Ablation Study.]{Risultati dell'Ablation Study. Ogni riga rappresenta l'aggiunta di una componente rispetto alla precedente. L'accuratezza di test è misurata una sola volta sul modello selezionato tramite early stopping sulla validazione.}
     \label{tab:ablation}
     \resizebox{\textwidth}{!}{
     \begin{tabular}{l l c c c c}
@@ -38,7 +38,7 @@ Infine, l'\textbf{Advanced Augmentation} (Configurazione D) è determinante per 
 
 
 \section{Spinta Finale SOTA: Knowledge Distillation ed EMA}
-Essendo il modello \textbf{MobileNetECA-Rep-AdvAug} un'architettura ultra-compatta (solo $\sim$62.2k parametri reali calcolati in fase di inferenza/deploy), le tecniche di regolarizzazione standard come Label Smoothing e Mixup hanno mostrato risultati controproducenti, penalizzando l'accuratezza in quanto il modello è già severamente limitato in termini di capacità memorizzativa. Per superare questa barriera e spingere ulteriormente le prestazioni senza aumentare il costo computazionale in fase di inferenza, abbiamo adottato una strategia basata sulla \textbf{Knowledge Distillation (KD)} combinata con l'\textbf{Exponential Moving Average (EMA)} sui pesi.
+Essendo il modello \textbf{Mo\-bile\-Net\-ECA-Rep-AdvAug} un'architettura ultra-compatta (solo $\sim$62.2k parametri reali calcolati in fase di inferenza/deploy), le tecniche di regolarizzazione standard come Label Smoothing e Mixup hanno mostrato risultati controproducenti, penalizzando l'accuratezza in quanto il modello è già severamente limitato in termini di capacità memorizzativa. Per superare questa barriera e spingere ulteriormente le prestazioni senza aumentare il costo computazionale in fase di inferenza, abbiamo adottato una strategia basata sulla \textbf{Knowledge Distillation (KD)} combinata con l'\textbf{Exponential Moving Average (EMA)} sui pesi.
 
 Per la Knowledge Distillation, abbiamo impiegato come "Teacher" il modello \textbf{RepVGG-A0}, addestrato ex novo (\textit{from scratch}) nell'ambito di questo lavoro sul medesimo dataset CIFAR-10, fino a fargli raggiungere un'accuratezza robusta del \textbf{94.19\%}. Il modello "Studente" (la nostra architettura) è stato poi addestrato per minimizzare una funzione di perdita composita, definita come una combinazione lineare tra la classica Cross-Entropy rispetto alle etichette reali (Hard Loss) e la Kullback-Leibler (KL) Divergence rispetto alle probabilità "ammorbidite" generate dal Teacher (Soft Loss):
 
@@ -65,7 +65,7 @@ Come evidenziato nella Tabella \ref{tab:kd_results}, l'impiego sinergico di Know
     \end{tabular}
 \end{table}
 
-In conclusione, \textbf{MobileNetECA-Rep-AdvAug} dimostra che è possibile ottenere prestazioni da "Server-Class" (\textbf{93.76\%}) con un budget di risorse da "Microcontroller-Class" ($\sim$62.2k parametri in deploy), grazie alla potente combinazione architetturale tra depthwise convolution, attenzione ECA, ri-parametrizzazione (che fa crollare i parametri utili post-training), e a tecniche di training avanzate come iterazioni di AutoAugment e Knowledge Distillation.
+In conclusione, \textbf{Mo\-bile\-Net\-ECA-Rep-AdvAug} dimostra che è possibile ottenere prestazioni da "Server-Class" (\textbf{93.76\%}) con un budget di risorse hardware da "Microcontroller-Class" ($\sim$62.2k parametri in deploy), grazie alla potente combinazione architetturale tra depthwise convolution, attenzione ECA, ri-parametrizzazione (che fa crollare i parametri utili post-training), e a tecniche di training avanzate come iterazioni di AutoAugment e Knowledge Distillation.
 
 \subsection{Dinamiche di Addestramento}
 Analizzando le curve di training (Figura \ref{fig:accuracy_loss}), notiamo comportamenti distinti.
@@ -81,7 +81,7 @@ Analizzando le curve di training (Figura \ref{fig:accuracy_loss}), notiamo compo
         \includegraphics[width=\textwidth]{figure/loss_comparison.png}
         \caption{Confronto Loss di Training (Smoothed)}
     \end{subfigure}
-    \caption{Dinamiche di apprendimento per le diverse configurazioni. Si noti come la configurazione finale (rossa) converga a un'accuratezza superiore nonostante una loss iniziale più alta dovuta alla difficoltà introdotta dall'augmentation.}
+    \caption[Dinamiche di apprendimento per le diverse configurazioni.]{Dinamiche di apprendimento per le diverse configurazioni. Si noti come la configurazione finale (rossa) converga a un'accuratezza superiore nonostante una loss iniziale più alta dovuta alla difficoltà introdotta dall'augmentation.}
     \label{fig:accuracy_loss}
 \end{figure}
 
@@ -102,12 +102,12 @@ Quantificando questo effetto: all'epoca finale (200), l'accuratezza di training 
         \includegraphics[width=\textwidth]{figure/v3_train_loss.png}
         \caption{Progressione Loss di Training}
     \end{subfigure}
-    \caption{Dinamiche reali dell'addestramento finale (200 epoche). I dati evidenziano la stabilità della convergenza grazie allo schedule Cosine Annealing.}
+    \caption[Dinamiche reali dell'addestramento finale.]{Dinamiche reali dell'addestramento finale (200 epoche). I dati evidenziano la stabilità della convergenza grazie allo schedule Cosine Annealing.}
     \label{fig:real_dynamics}
 \end{figure}
 
 \section{Analisi Dettagliata del Modello Finale (Configurazione E: KD+EMA)}
-Il modello finale è stato sottoposto a un'analisi più approfondita sul Test Set.
+Il modello finale è stato sottoposto a un'analisi più approfondita sul Test Set (per una scomposizione chirurgica delle metriche su ogni singola classe, si rimanda all'Appendice~\ref{app:metrics}).
 
 \subsection{Matrice di Confusione}
 La matrice di confusione (Figura \ref{fig:confusion_matrix}) ci permette di visualizzare le classi in cui il modello commette più errori.
@@ -133,7 +133,7 @@ Per una migliore leggibilità, riportiamo un ingrandimento (zoom) dell'angolo in
 \begin{figure}[H]
     \centering
     \includegraphics[width=1.0\textwidth]{figure/roc_curve_zoomed.png}
-    \caption{Dettaglio delle curve ROC per le 10 classi (Zoom TPR 0.8-1.0). L'area sotto la curva (AUC) è prossima a 1.0 per tutte le classi, indicando un'eccellente separabilità.}
+    \caption[Dettaglio delle curve ROC per le 10 classi.]{Dettaglio delle curve ROC per le 10 classi (Zoom TPR 0.8-1.0). L'area sotto la curva (AUC) è prossima a 1.0 per tutte le classi, indicando un'eccellente separabilità.}
     \label{fig:roc_zoomed}
 \end{figure}
 
@@ -147,7 +147,7 @@ Per verificare che il modello non stia sfruttando shortcut spurie (come il color
 \begin{figure}[H]
     \centering
     \includegraphics[width=1.0\textwidth]{figure/occlusion_sensitivity.png}
-    \caption{Mappe di Sensibilità all'Occlusione. (Riga 1) Immagine originale. (Riga 2) Heatmap: le aree rosse indicano le zone dove l'occlusione causa il maggior calo di confidenza. (Riga 3) Sovrapposizione. Si nota come il modello si concentri correttamente sulle caratteristiche discriminanti dell'oggetto (es. il muso del cane, la carrozzeria dell'auto) ignorando lo sfondo.}
+    \caption[Mappe di Sensibilità all'Occlusione.]{Mappe di Sensibilità all'Occlusione. (Riga 1) Immagine originale. (Riga 2) Heatmap: le aree rosse indicano le zone dove l'occlusione causa il maggior calo di confidenza. (Riga 3) Sovrapposizione. Si nota come il modello si concentri correttamente sulle caratteristiche discriminanti dell'oggetto (es. il muso del cane, la carrozzeria dell'auto) ignorando lo sfondo.}
     \label{fig:occlusion_sensitivity}
 \end{figure}
 Le heatmap confermano che il modulo ECA guida l'attenzione della rete sulle feature morfologiche rilevanti dell'oggetto, ignorando efficacemente il background. Questo comportamento è indice di una buona generalizzazione.
@@ -159,7 +159,7 @@ In Figura \ref{fig:top_errors}, riportiamo alcuni esempi dal Test Set dove il mo
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.85\textwidth]{figure/top_errors.png}
-    \caption{Errori ad Alta Confidenza ($>90\%$). Ogni immagine riporta la classe vera (True), quella predetta (Pred) e la confidenza. Molti di questi errori sono dovuti ad ambiguità visive estreme (es. prospettive insolite o oggetti parzialmente occlusi) che metterebbero in difficoltà anche un osservatore umano.}
+    \caption[Errori ad Alta Confidenza ($>90\%$).]{Errori ad Alta Confidenza ($>90\%$). Ogni immagine riporta la classe vera (True), quella predetta (Pred) e la confidenza. Molti di questi errori sono dovuti ad ambiguità visive estreme (es. prospettive insolite o oggetti parzialmente occlusi) che metterebbero in difficoltà anche un osservatore umano.}
     \label{fig:top_errors}
 \end{figure}
 L'analisi rivela che molti di questi "errori" sono in realtà casi limite o etichettature discutibili nel dataset stesso (noisy labels), scagionando parzialmente l'architettura.
@@ -189,14 +189,14 @@ Come mostrato nella Tabella \ref{tab:comparison_sota} e visivamente nella Figura
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{figure/efficiency_params.png}
-    \caption{Efficiency Frontier: Accuratezza vs Numero di Parametri (scala logaritmica). Il nostro modello (stella rossa) si trova nettamente a sinistra (meno parametri) rispetto a modelli con accuratezza simile come ResNet-32 o GhostNet.}
+    \caption[Efficiency Frontier: Accuratezza vs Numero di Parametri.]{Efficiency Frontier: Accuratezza vs Numero di Parametri (scala logaritmica). Il nostro modello (stella rossa) si trova nettamente a sinistra (meno parametri) rispetto a modelli con accuratezza simile come ResNet-32 o GhostNet.}
     \label{fig:efficiency}
 \end{figure}
 
 \subsection{Discussione}
 \textbf{Confronto con ResNet}: Otteniamo performance simili a una ResNet-32/44 ma con una frazione dei parametri ($62k$ vs $\sim500k$).
 \subsection{Analisi Empirica della Latenza e Implementabilità}
-Un aspetto cruciale per il deployment su dispositivi edge è la latenza di inferenza. Per validare l'efficacia della ri-parametrizzazione, abbiamo misurato le prestazioni del modello finale in modalità "deploy" (con kernel fusi, vedi Sez. 5.1).
+Un aspetto cruciale per il deployment su dispositivi edge è la latenza di inferenza (riassunta in Tabella~\ref{tab:latency}). Per validare l'efficacia della ri-parametrizzazione, abbiamo misurato le prestazioni del modello finale in modalità "deploy" (con kernel fusi, vedi Sez. 5.1).
 Le misurazioni sono state effettuate su CPU \textbf{AMD Ryzen Threadripper 3965WX} (32 Core @ 3.8GHz) utilizzando un batch size unitario ($N=1$) per simulare uno scenario real-time.
 
 \begin{table}[H]
@@ -215,7 +215,7 @@ Le misurazioni sono state effettuate su CPU \textbf{AMD Ryzen Threadripper 3965W
     \end{tabular}
 \end{table}
 
-\paragraph{Nota Metodologica.}
+\paragraph{Nota Metodologica}
 Le prime 50 iterazioni sono state escluse dal calcolo delle statistiche per eliminare l'effetto del warmup (JIT compilation, allocazione cache). La mediana di \textbf{2.68 ms} rappresenta la latenza tipica di una singola inferenza. La deviazione standard elevata e il p95 alto sono causati da spike periodici dovuti allo scheduling del sistema operativo, non dal modello stesso: la distribuzione presenta un cluster compatto intorno al valore mediano con outlier sporadici.
 
 Con un throughput superiore a \textbf{144 FPS} su una CPU generica da workstation, il modello garantisce ampiamente prestazioni real-time senza necessità di acceleratori hardware dedicati. \textbf{Sebbene per questo lavoro non siano stati condotti benchmark fisici diretti su hardware edge}, le ridottissime metriche teoriche (sole 9.4M FLOPs e 62.2k parametri) suggeriscono fortemente che su microcontrollori performanti (es. STM32H7) o processori mobile si possa ragionevolmente stimare un'esecuzione fluida.
@@ -225,7 +225,7 @@ L'assenza strutturale di operazioni complesse o esoteriche (come le attivazioni 
 \section{Analisi dell'Impatto degli Iperparametri}
 Oltre all'architettura, la scelta degli iperparametri di addestramento gioca un ruolo cruciale nel raggiungimento della massima accuratezza, specialmente per reti compatte. Abbiamo condotto una Grid Search analizzando l'interazione tra Learning Rate (LR), Weight Decay (WD) e Width Multiplier ($\alpha$).
 
-\paragraph{Nota Metodologica.}
+\paragraph{Nota Metodologica}
 La Grid Search è stata condotta sulla configurazione Baseline (A) senza Advanced Augmentation, raggiungendo un massimo di circa 91.4\%. I risultati intermedi (93.23\%) incorporavano le tecniche di augmentation avanzata descritte nella Sezione 5.4, mentre il risultato finale (93.76\%) è ottenuto tramite le tecniche di distillazione descritte nella sezione successiva.
 
 \subsection{Interazione Learning Rate vs Weight Decay}
@@ -235,7 +235,7 @@ Si nota una regione ottimale (zona chiara) lungo la diagonale, suggerendo che un
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figure/heatmap_lr_wd.png}
-    \caption{Heatmap dell'accuratezza (Validation Accuracy) al variare di Learning Rate e Weight Decay. Si osserva che alti valori di LR richiedono un decay maggiore per stabilizzare l'addestramento.}
+    \caption[Heatmap dell'accuratezza al variare di Learning Rate e Weight Decay.]{Heatmap dell'accuratezza (Validation Accuracy) al variare di Learning Rate e Weight Decay. Si osserva che alti valori di LR richiedono un decay maggiore per stabilizzare l'addestramento.}
     \label{fig:heatmap_lr_wd}
 \end{figure}
 

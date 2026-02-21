@@ -6,8 +6,17 @@ Dopo aver introdotto i fondamenti delle reti neurali, in questo capitolo analizz
 \section{Evoluzione delle Architetture CNN}
 
 \subsection{Dalle Origini al Deep Learning Moderno}
-L'evoluzione delle CNN moderne parte dalla pionieristica \textbf{LeNet-5} (1998), progettata per il riconoscimento di cifre, fino alla rivoluzione di \textbf{AlexNet} (2012) che, introducendo ReLU e Dropout su GPU, ha ridotto l'errore su ImageNet dal 26\% al 15.3\%. Successivamente, \textbf{VGGNet} (2014) ha dimostrato l'efficacia di pile profonde di filtri piccoli ($3 \times 3$), mentre \textbf{ResNet} (2015) \cite{he2016deep} ha risolto il problema della degradazione del gradiente tramite \textit{skip connections}, abilitando l'addestramento di reti con centinaia di strati.
-Queste architetture, pur fondamentali, erano ottimizzate per l'accuratezza senza vincoli di risorse, risultando spesso proibitive per dispositivi mobili.
+L'evoluzione delle CNN moderne parte dalla pionieristica \textbf{LeNet-5} (1998), progettata per il riconoscimento di cifre, fino alla rivoluzione di \textbf{AlexNet} (2012) che, introducendo ReLU e Dropout su GPU, ha ridotto l'errore su ImageNet dal 26\% al 15.3\%. 
+
+Un passo concettuale fondamentale fu compiuto da Simonyan e Zisserman nel 2014 con la pubblicazione di \textbf{VGGNet}~\cite{simonyan2014very}, un'architettura che dimostrò in modo rigoroso come la \textit{profondità} della rete fosse il fattore dominante per la qualità delle rappresentazioni apprese. Il contributo chiave di VGGNet non fu tanto l'accuratezza in sé --- sebbene ottenesse il primo posto nella localizzazione e il secondo nella classificazione all'ILSVRC 2014 --- quanto la semplicità della sua concezione. La filosofia di VGGNet era radicale nella sua essenzialità: utilizzare esclusivamente filtri convoluzionali $3\times3$ impilati in sequenza, rigettando i filtri spaziali eterogenei e pesanti ($5\times5$, $7\times7$, $11\times11$) usati nei modelli precedenti. 
+
+La giustificazione matematica alla base di questa scelta è estremamente elegante: due strati convoluzionali $3\times3$ consecutivi (separati da non-linearità ma non da pooling) possiedono matematicamente lo stesso \textbf{campo recettivo effettivo} (\textit{effective receptive field}) di un singolo strato $5\times5$, ma con un numero di parametri significativamente ridotto (ovvero $2 \times 3^2 = 18$ contro i $5^2 = 25$ parametri di base per ogni canale). Oltre a questa efficiente compressione parametrica, l'impiego di filtri impilati offre il vantaggio critico di poter inserire un'ulteriore funzione di attivazione tra i due strati, aumentando la capacità discriminativa e la highly non-linear representation del modello. Analogamente, tre strati $3\times3$ in cascata equivalgono all'area spaziale esplorata da un massiccio e inefficiente kernel $7\times7$, ottenendo un risparmio computazionale notevole pur preservando un campo visivo ampio.
+
+Questo principio di \textit{decomposizione} --- ossia scomporre macro-operazioni pesanti in sequenze concatenate di micro-operazioni modulari --- è il filo concettuale che collega storicamente VGGNet alle moderne architetture efficienti analizzate in questo lavoro. In questo contesto, la \textbf{Structural Reparameterization} di \textbf{RepVGG}~\cite{ding2021repvgg} (che approfondiremo nella Sezione~\ref{sec:repvgg}) può essere vista come l'estensione dinamica di questa intuizione: durante l'addestramento (\textit{training phase}) il blocco base viene arricchito con diramazioni parallele (per favorire il flusso dell'ottimizzazione e aggirare i minimi locali simili al paradigma residuo), ma all'atto del rilascio in produzione (\textit{inference phase}) l'intera struttura viene algebricamente collassata in un'unica convoluzione piana $3\times3$ --- riproducendo di fatto l'efficienza computazionale tipica dello stile VGG. Non a caso Ding et al. hanno battezzato la loro architettura "RepVGG" proprio per onorare in modo esplicito questa eredità concettuale~\cite{ding2021repvgg}.
+
+Successivamente a VGGNet, altre architetture rivoluzionarie come \textbf{ResNet} (2015)~\cite{he2016deep} hanno scosso il panorama risolvendo il distruttivo problema del \textit{vanishing gradient} tramite l'introduzione di \textit{skip connections}, abilitando l'addestramento stabile di reti iper-profonde fino a centinaia e migliaia di strati. 
+
+Tuttavia, nonostante il loro notevole impatto storico, processori fondazionali come VGGNet, ResNet e DenseNet sono stati originariamente progettati mirando principalmente alla massimizzazione dell'accuratezza assoluta, relegando in secondo piano i vincoli di memoria e il power budget dell'hardware di destinazione. Questa elevata densità parametrica e computazionale le rende architetture spesso inadatte per un deployment diretto o in tempo reale su dispositivi edge.
 
 \section{Architetture Efficienti per Mobile}
 
@@ -46,8 +55,57 @@ $$ \omega = \sigma(C1D_k(\mathbf{y})) $$
 Senza riduzione di dimensionalità, ECA preserva meglio l'informazione e richiede un numero trascurabile di parametri aggiuntivi ($k \approx 3 \sim 7$), rendendolo ideale per reti leggere. Questo modulo sarà il componente chiave della nostra architettura proposta.
 
 \section{Structural Reparameterization (RepVGG)}
+\label{sec:repvgg}
 Più recentemente, si è affermato un nuovo paradigma: la \textbf{Structural Reparameterization}. Introdotta con RepVGG \cite{ding2021repvgg}, questa tecnica sfida il dogma "Depth vs Width" proponendo di disaccoppiare l'architettura di training da quella di inferenza.
 
 \subsection{Il Principio di Equivalenza}
-Durante il training, la rete utilizza una topologia multi-branch complessa (simile a ResNet/Inception), che facilita la propagazione dei gradienti e la convergenza. Durante l'inferenza, grazie alla linearità delle convoluzioni, i rami paralleli vengono matematicamente fusi in un unico kernel $3 \times 3$.
 Questo permette di ottenere un'architettura "VGG-style" piana, priva di ramificazioni o addizioni costose in termini di accesso alla memoria (MAC), massimizzando il parallelismo su GPU e CPU moderne. MobileNetECA-Rep adotta questo principio per ottenere la massima efficienza su edge.
+
+\section{Knowledge Distillation}
+\label{sec:kd_theory}
+La \textbf{Knowledge Distillation} (KD) è una potente tecnica di trasferimento della conoscenza introdotta formalmente da Hinton, Vinyals e Dean nel 2015~\cite{hinton2015distilling}. L'obiettivo primario della KD è addestrare un modello compatto e leggero (lo \textit{Studente}) a imitare o replicare il comportamento predittivo di un modello molto più grande, complesso e accurato (l'\textit{Insegnante} o \textit{Teacher}). Attraverso questo trasferimento, lo studente riesce tipicamente a ottenere prestazioni superiori rispetto a quelle che otterrebbe se fosse addestrato direttamente e unicamente sulle etichette reali (Hard Labels) del dataset.
+
+\subsection{Il Limite delle Hard Labels}
+In un task di classificazione standard, le etichette fornite per il training sono vettori \textit{one-hot}: per esempio, l'immagine di un cane riceve una probabilità categorica di $1.0$ per la classe vera "cane" e $0.0$ assoluto per tutte le altre classi. Questa rappresentazione è "fredda" e informativamente povera: non cattura il fatto intrinseco che l'immagine di un certo cane possa assomigliare, per via di orecchie a punta o pelo, anche a un gatto o a una volpe, o che una certa auto abbia caratteristiche visive comuni a un camion.
+Con le etichette \textit{hard}, il modello impara solo la decisione finale ("cosa è giusto"), ignorando totalmente le intricate relazioni di similarità tra le classi.
+
+\subsection{Soft Targets, Temperatura e \textit{Dark Knowledge}}
+Un modello Teacher di grandi dimensioni, ben addestrato e performante, al contrario, produce in output distribuzioni di probabilità ben più sfumate e \textit{morbide} (\textit{Soft Targets}). Tali distribuzioni contengono preziose informazioni probabilistiche implicite: le classi incorrette non hanno tutte una probabilità zero assoluto, ma riflettono le somiglianze apprese dal Teacher. 
+
+Hinton et al. definiscono questa conoscenza ricca, latente e relazionale come \textbf{Dark Knowledge}.
+Per amplificare questa Dark Knowledge e renderla più decifrabile e utile per lo Studente, la tecnica introduce un parametro di "ammorbidimento", chiamato \textbf{Temperatura ($T$)}, direttamente nella funzione Softmax dell'ultimo layer:
+
+\begin{equation}
+    q_i = \frac{\exp(z_i / T)}{\sum_j \exp(z_j / T)}
+\end{equation}
+
+dove $z_i$ sono i logit (l'output grezzo) pre-Softmax prodotti dalla rete per la classe $i$. 
+Con $T = 1$ si ottiene la funzione Softmax standard. Aumentando il valore di $T$, la distribuzione di probabilità si "sgonfia" diventando sempre più piatta e uniforme. In questo modo, le minuscole differenze tra le probabilità delle macro-classi errate (che a $T=1$ sarebbero vicinissime allo zero) diventano molto più visibili e significative in termini di gradiente, trasmettendo allo studente informazioni ricchissime sulle relazioni inter-classe. 
+Ad esempio, se sottomettiamo una temperatura $T=4$ (il valore empiricamente ottimale riscontrato in questo lavoro), una rete Teacher che confonde sistematicamente le sembianze di un "gatto" con quelle di un "cane" trasmette questo segnale esplicitamente allo Studente tramite la probabilità assegnata. Lo studente, imitandolo, non impara una categorizzazione "a martellate", ma traccia una funzione di decisione nello spazio molto più morbida e capace di generalizzare.
+
+\subsection{La Funzione di Perdita Composita}
+Come illustrato nello schema generale in Figura~\ref{fig:kd_schema}, durante il training, il modello Studente non abbandona del tutto le etichette reali, bensì minimizza una combinazione lineare tra due perdite, guidato da un parametro di bilanciamento $\alpha$:
+
+\begin{equation}
+    \mathcal{L}_{KD} = \alpha \cdot \mathcal{L}_{soft}(q_{teacher}^{T}, q_{student}^{T}) + (1 - \alpha) \cdot \mathcal{L}_{CE}(y, q_{student}^{1})
+\end{equation}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1.0\textwidth]{figure/kd_figure.png}
+    \caption[Schema operativo della Knowledge Distillation.]{Schema operativo della Knowledge Distillation. Il Teacher (RepVGG-A0, frozen) genera soft targets a temperatura $T=4$. La perdita composita $\mathcal{L}_{KD}$ combina la KL-Divergence rispetto ai soft targets e la Cross-Entropy rispetto alle etichette reali, con peso bilanciato $\alpha=0.5$. Il gradiente aggiorna esclusivamente i pesi dello Student.}
+    \label{fig:kd_schema}
+\end{figure}
+
+dove:
+\begin{itemize}
+    \item $\mathcal{L}_{soft}$ è tipicamente calcolata come \textit{Kullback-Leibler (KL) Divergence} tra le due distribuzioni di probabilità ammorbidite dello studente e del teacher (entrambe processate a Temperatura $T$).
+    \item $\mathcal{L}_{CE}$ è la classica Cross-Entropy Loss rispetto alle etichette reali, calcolata con i logit dello studente ma a temperatura standard ($T=1$).
+\end{itemize}
+
+Questi sono i pesi che abbiamo accuratamente bilanciato nel nostro setup finale, dove l'impatto di ciascuna componente viene tarato con l'hyperparameter $\alpha$.
+
+\subsection{KD nei Modelli Ultra-Compatti}
+La letteratura sottolinea sistematicamente come la Knowledge Distillation sia particolarmente salvifica ed efficace per architetture fortemente limitate "by design", ovvero con una capacità parametrica minima, esattamente come il modello oggetto di nostro studio ($\approx 62$k parametri alla base). 
+In modelli così microscopicamente vincolati in termini di expressivity, le canoniche tecniche di Data Augmentation avversaria (come Label Smoothing o interazioni via Mixup) tendono a risultare addirittura controproducenti: queste iniezioni alterano lo spazio introducendo rumore a un modello in cui i neuroni disponibili sono già insufficienti per fittare i soli dati puliti. 
+Al contrario, i Soft Targets distillati dal Teacher forniscono un segnale supervisionato infinitamente più pulito, stabile e coerente, che guida magistralmente la traiettoria di un parametrizzatore debole verso regioni di convergenza migliori senza appesantire minimamente il costo in fase di deploy (poiché la Dark Knowledge impatta solo durante il calcolo del gradiente di training).
