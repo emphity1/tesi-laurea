@@ -6,37 +6,37 @@ A level-1 auxiliary file: appendice.aux
 Database file #1: bibliografia.bib
 You've used 17 entries,
             1876 wiz_defined-function locations,
-            565 strings with 6893 characters,
-and the built_in function-call counts, 5398 in all, are:
-= -- 494
+            564 strings with 6845 characters,
+and the built_in function-call counts, 5393 in all, are:
+= -- 491
 > -- 258
 < -- 0
 + -- 92
 - -- 75
-* -- 378
-:= -- 749
-add.period$ -- 18
+* -- 380
+:= -- 751
+add.period$ -- 17
 call.type$ -- 17
 change.case$ -- 18
 chr.to.int$ -- 0
 cite$ -- 17
-duplicate$ -- 283
-empty$ -- 513
+duplicate$ -- 288
+empty$ -- 512
 format.name$ -- 75
-if$ -- 1297
+if$ -- 1293
 int.to.chr$ -- 0
 int.to.str$ -- 17
-missing$ -- 15
-newline$ -- 55
+missing$ -- 16
+newline$ -- 54
 num.names$ -- 17
-pop$ -- 96
+pop$ -- 94
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 189
+skip$ -- 187
 stack$ -- 0
 substring$ -- 392
-swap$ -- 113
+swap$ -- 114
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
@@ -44,4 +44,4 @@ type$ -- 0
 warning$ -- 0
 while$ -- 47
 width$ -- 19
-write$ -- 153
+write$ -- 151

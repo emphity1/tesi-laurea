@@ -48,11 +48,10 @@
 \generaFrontespizio
 \clearpage
 \begin{abstract}
-    In questa tesi viene proposta un'architettura ibrida e ultra-compatta per la classificazione efficiente di immagini su dispositivi edge, rispondendo alla crescente necessità di modelli leggeri per applicazioni in tempo reale come la guida autonoma e la robotica mobile. Il modello integra i principi di \textit{MobileNetV2}, \textit{Efficient Channel Attention (ECA)} e \textit{Structural Reparameterization}.
-
-    Al fine di mitigare la severa riduzione della capacità parametrica e ottimizzare le prestazioni su hardware limitato, il framework di addestramento è stato potenziato mediante tecniche avanzate di regolarizzazione, integrando la \textit{Knowledge Distillation} da un modello Teacher pre-addestrato e l’\textit{Exponential Moving Average (EMA)} dei pesi. Il modello finale, denominato \textit{MobileNetECA-Rep}, raggiunge un’accuratezza del 93.76\% sul dataset CIFAR-10 con un footprint di soli $\sim$62k parametri.
-
-    Tali risultati dimostrano come l'ottimizzazione architettonica permetta di ottenere prestazioni competitive con modelli nettamente più complessi, garantendo al contempo consumi energetici ridotti e una latenza di inferenza minima. L’elaborato analizza rigorosamente le dinamiche di ottimizzazione attraverso \textit{ablation study} sistematici, validando l’efficacia dell’architettura in scenari di applicabilità \textit{real-time}, dove la velocità di risposta è un requisito critico per la sicurezza e l'affidabilità del sistema.
+    In questa tesi viene proposta un'architettura ibrida e ultra-compatta per la classificazione efficiente di immagini su dispositivi edge, che integra i principi di \textit{MobileNetV2}, \textit{Efficient Channel Attention (ECA)} e \textit{Structural Reparameterization}. 
+    Al fine di mitigare la severa riduzione della capacità parametrica, il framework di addestramento è stato potenziato mediante tecniche avanzate di regolarizzazione, integrando la \textit{Knowledge Distillation} da un modello Teacher pre-addestrato e l'\textit{Exponential Moving Average (EMA)} dei pesi. 
+    Il modello studiato e finalizzato, denominato \textit{MobileNetECA-Rep}, raggiunge un'accuratezza del 93.76\% sul dataset CIFAR-10 con un footprint di soli $\sim$62k parametri, dimostrando risultati competitivi con architetture nettamente superiori in termini di complessità complessiva e computazionale. 
+    L'elaborato analizza rigorosamente le dinamiche di ottimizzazione, quantifica l'impatto architetturale con l'impiego capillare di \textit{ablation study} e valuta empiricamente la latenza di inferenza, testando e validando la fruizione dell'architettura in uno scenario di applicabilità \textit{real-time}.
 \end{abstract}
 \clearpage
 
@@ -66,8 +65,8 @@
 \mainmatter
 % il comando ``capitolo'' ha come parametri:
 % 1) il titolo del capitolo
-% \capitolo{Introduzione}{capitolo1}
-\introduzione{introduzione}
+% 2) il nome del file tex (senza estensione) che contiene il capitolo. Tale nome \`e usato anche come label del capitolo
+\capitolo{Introduzione}{capitolo1}
 \capitolo{Il Dataset CIFAR-10}{capitolo2}
 \capitolo{Fondamenti delle Reti Neurali}{capitolo3}
 \capitolo{Stato dell'Arte e Tecniche di Efficienza}{capitolo4}

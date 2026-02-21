@@ -2,26 +2,26 @@
 \babel@toc {italian}{}\relax 
 \addvspace {10pt}
 \addvspace {10pt}
-\contentsline {figure}{\numberline {2.1}{\ignorespaces Esempi di Immagini dal Dataset CIFAR-10.}}{7}{figure.2.1}%
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Esempi di Immagini dal Dataset CIFAR-10.}}{6}{figure.2.1}%
 \addvspace {10pt}
 \addvspace {10pt}
-\contentsline {figure}{\numberline {4.1}{\ignorespaces Schema operativo della Knowledge Distillation.}}{25}{figure.4.1}%
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Schema operativo della Knowledge Distillation.}}{24}{figure.4.1}%
 \addvspace {10pt}
-\contentsline {figure}{\numberline {5.1}{\ignorespaces Architettura MobileNetECARep.}}{28}{figure.5.1}%
-\contentsline {figure}{\numberline {5.2}{\ignorespaces Visualizzazione della fusione dei kernel.}}{30}{figure.5.2}%
-\contentsline {figure}{\numberline {5.3}{\ignorespaces Schema del blocco Inverted Residual modificato con integrazione del modulo ECA dopo la Depthwise Convolution.\relax }}{31}{figure.5.3}%
-\contentsline {figure}{\numberline {5.4}{\ignorespaces Confronto tra ReLU e GELU.}}{32}{figure.5.4}%
-\contentsline {figure}{\numberline {5.5}{\ignorespaces Confronto Standard Convolution vs Depthwise Separable.}}{34}{figure.5.5}%
-\contentsline {figure}{\numberline {5.6}{\ignorespaces Schema dettagliato del modulo ECA.}}{35}{figure.5.6}%
-\contentsline {figure}{\numberline {5.7}{\ignorespaces Andamento del Learning Rate durante le 200 epoche di training.}}{40}{figure.5.7}%
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Architettura MobileNetECARep.}}{27}{figure.5.1}%
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Visualizzazione della fusione dei kernel.}}{29}{figure.5.2}%
+\contentsline {figure}{\numberline {5.3}{\ignorespaces Schema del blocco Inverted Residual modificato con integrazione del modulo ECA dopo la Depthwise Convolution.\relax }}{30}{figure.5.3}%
+\contentsline {figure}{\numberline {5.4}{\ignorespaces Confronto tra ReLU e GELU.}}{31}{figure.5.4}%
+\contentsline {figure}{\numberline {5.5}{\ignorespaces Confronto Standard Convolution vs Depthwise Separable.}}{33}{figure.5.5}%
+\contentsline {figure}{\numberline {5.6}{\ignorespaces Schema dettagliato del modulo ECA.}}{34}{figure.5.6}%
+\contentsline {figure}{\numberline {5.7}{\ignorespaces Andamento del Learning Rate durante le 200 epoche di training.}}{39}{figure.5.7}%
 \addvspace {10pt}
-\contentsline {figure}{\numberline {6.1}{\ignorespaces Dinamiche di apprendimento per le diverse configurazioni.}}{47}{figure.6.1}%
-\contentsline {figure}{\numberline {6.2}{\ignorespaces Dinamiche reali dell'addestramento finale.}}{48}{figure.6.2}%
-\contentsline {figure}{\numberline {6.3}{\ignorespaces Matrice di Confusione del modello MobileNetECA-Rep-AdvAug sul Test Set.\relax }}{50}{figure.6.3}%
-\contentsline {figure}{\numberline {6.4}{\ignorespaces Dettaglio delle curve ROC per le 10 classi.}}{51}{figure.6.4}%
-\contentsline {figure}{\numberline {6.5}{\ignorespaces Mappe di Sensibilità all'Occlusione.}}{53}{figure.6.5}%
-\contentsline {figure}{\numberline {6.6}{\ignorespaces Errori ad Alta Confidenza ($>90\%$).}}{54}{figure.6.6}%
-\contentsline {figure}{\numberline {6.7}{\ignorespaces Efficiency Frontier: Accuratezza vs Numero di Parametri.}}{56}{figure.6.7}%
-\contentsline {figure}{\numberline {6.8}{\ignorespaces Heatmap dell'accuratezza al variare di Learning Rate e Weight Decay.}}{59}{figure.6.8}%
+\contentsline {figure}{\numberline {6.1}{\ignorespaces Dinamiche di apprendimento per le diverse configurazioni.}}{46}{figure.6.1}%
+\contentsline {figure}{\numberline {6.2}{\ignorespaces Dinamiche reali dell'addestramento finale.}}{47}{figure.6.2}%
+\contentsline {figure}{\numberline {6.3}{\ignorespaces Matrice di Confusione del modello MobileNetECA-Rep-AdvAug sul Test Set.\relax }}{49}{figure.6.3}%
+\contentsline {figure}{\numberline {6.4}{\ignorespaces Dettaglio delle curve ROC per le 10 classi.}}{50}{figure.6.4}%
+\contentsline {figure}{\numberline {6.5}{\ignorespaces Mappe di Sensibilità all'Occlusione.}}{52}{figure.6.5}%
+\contentsline {figure}{\numberline {6.6}{\ignorespaces Errori ad Alta Confidenza ($>90\%$).}}{53}{figure.6.6}%
+\contentsline {figure}{\numberline {6.7}{\ignorespaces Efficiency Frontier: Accuratezza vs Numero di Parametri.}}{55}{figure.6.7}%
+\contentsline {figure}{\numberline {6.8}{\ignorespaces Heatmap dell'accuratezza al variare di Learning Rate e Weight Decay.}}{58}{figure.6.8}%
 \addvspace {10pt}
 \addvspace {10pt}

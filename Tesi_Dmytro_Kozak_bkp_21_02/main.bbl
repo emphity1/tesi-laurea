@@ -4,13 +4,6 @@
 A.~Krizhevsky and G.~Hinton, ``Learning multiple layers of features from tiny
   images,'' tech. rep., Citeseer, 2009.
 
-\bibitem{pytorch_cifar10}
-P.~Contributors, ``Training a classifier --- pytorch tutorials 2.5.0+cu124
-  documentation.''
-  \url{https://docs.pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html},
-  2024.
-\newblock Accessed: 2024-02-21.
-
 \bibitem{hendrycks2016gaussian}
 D.~Hendrycks and K.~Gimpel, ``Gaussian error linear units (gelus),'' {\em arXiv
   preprint arXiv:1606.08415}, 2016.
@@ -19,6 +12,11 @@ D.~Hendrycks and K.~Gimpel, ``Gaussian error linear units (gelus),'' {\em arXiv
 B.~T. Polyak and A.~B. Juditsky, ``Acceleration of stochastic approximation by
   averaging,'' {\em SIAM journal on control and optimization}, vol.~30, no.~4,
   pp.~838--855, 1992.
+
+\bibitem{morales2024exponential}
+e.~a. Morales-Brotons, ``Exponential moving average of weights in deep
+  learning: Dynamics and benefits,'' {\em arXiv preprint arXiv:2411.18704},
+  2024.
 
 \bibitem{keskar2016large}
 N.~S. Keskar, D.~Mudigere, J.~Nocedal, M.~Smelyanskiy, and P.~T.~P. Tang, ``On

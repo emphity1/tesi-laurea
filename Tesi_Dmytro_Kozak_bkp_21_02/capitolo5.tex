@@ -259,7 +259,7 @@ Per migliorare la robustezza del modello e prevenire l'overfitting su un dataset
 \subsection{Protocollo di Training}
 L'addestramento è stato condotto su una workstation dotata di GPU \textbf{NVIDIA RTX 4090} (24GB VRAM) e CPU AMD Ryzen Threadripper 3965WX (32 Core). 
 In linea con le best practice per la classificazione di immagini, abbiamo scelto di utilizzare l'algoritmo di ottimizzazione \textbf{SGD (Stochastic Gradient Descent) con Momentum} ($0.9$) e un weight decay di $5 \times 10^{-4}$. 
-Sebbene ottimizzatori adattivi come Adam convergano più velocemente nelle fasi iniziali, la letteratura scientifica conferma che SGD con Momentum tende a raggiungere minimi locali più ampi e generalizzabili, portando a una migliore accuratezza finale sul test set.
+Sebbene ottimizzatori adattivi come Adam convergano più velocemente nelle fasi iniziali, la letteratura scientifica e i nostri esperimenti confermano che SGD con Momentum tende a raggiungere minimi locali più ampi e generalizzabili, portando a una migliore accuratezza finale sul test set.
 
 \paragraph{Protocollo di Validazione}
 Per garantire una valutazione rigorosa e priva di bias, il dataset di training originale (50.000 immagini) è stato suddiviso in un sottoinsieme di addestramento (45.000 immagini) e un insieme di validazione (5.000 immagini), utilizzando uno split deterministico con seed fisso. La selezione del modello migliore (early stopping) è stata effettuata esclusivamente sulla base dell'accuratezza di validazione. Il test set originale (10.000 immagini) è stato utilizzato una sola volta per la valutazione finale, evitando qualsiasi forma di information leakage.
@@ -294,7 +294,7 @@ Il modello finale \textbf{MobileNetECA-Rep-AdvAug} presenta caratteristiche di e
 \end{table}
 
 Con soli \textbf{62,194 parametri} in fase di inferenza a parità di costo computazionale residuo (\textbf{9.4 Milioni di FLOPs}), il nostro modello finale non solo è \textbf{più snello del 20\% rispetto alla nostra stessa Baseline A} originaria (78k parametri), ma risulta circa \textbf{11 volte più compatto} e quasi \textbf{3 volte più efficiente} rispetto a una MobileNetV2 Standard proveniente dalla letteratura (scalata a 0.5x, con $\sim$0.70M parametri e 25.3M FLOPs).
-Il modello è inoltre oltre \textbf{4 volte più leggero} di una classica ResNet-20, potrebbe rendendolo idoneo all'esecuzione in real-time anche su microcontrollori di fascia molto bassa (es. STM32 o ESP32) che operano con budget di potenza nell'ordine dei milliwatt.
+Il modello è inoltre oltre \textbf{4 volte più leggero} di una classica ResNet-20, rendendolo idoneo all'esecuzione in real-time anche su microcontrollori di fascia molto bassa (es. STM32 o ESP32) che operano con budget di potenza nell'ordine dei milliwatt.
 
 \subsection{Decostruzione della Complessità: il Collasso dei Parametri}
 Un aspetto che merita particolare attenzione è la discrepanza numerica tra i parametri della rete originaria Baseline (MobileNetV2-Micro, $\sim$78k parametri), i parametri della nostra architettura durante la fase di training ($\sim$85k) e l'inaspettato crollo finale a sole \textbf{62,194 unità} in fase di deploy. 

@@ -1,11 +1,22 @@
-In questa tesi viene affrontato il problema di classificazione di immagini utilizzando il dataset CIFAR-10.
-L'obiettivo è analizzare e confrontare diverse architetture di Deep Learning, in particolare le Reti Neurali Convoluzionali (CNN), per valutare le loro prestazioni in termini di accuratezza e complessità computazionale.
+L'intelligenza artificiale, e in particolare il Deep Learning, ha rivoluzionato radicalmente il modo in cui le macchine percepiscono e interagiscono con il mondo esterno. Dalla computer vision al riconoscimento del linguaggio naturale, le reti neurali hanno oggi raggiunto prestazioni sovrumane in numerosi compiti complessi, diventando il cuore pulsante di tecnologie che fino a pochi anni fa appartenevano alla fantascienza. Tuttavia, questo straordinario progresso ha portato con sé una sfida critica: la richiesta di risorse computazionali sempre maggiori.
 
-Il lavoro è strutturato come segue:
+Il successo dei modelli allo stato dell'arte è stato spesso guidato da un aumento esponenziale della profondità delle reti e del numero di parametri, richiedendo hardware di calcolo estremamente potente e costoso. Questo approccio ``brute force'', sebbene efficace in laboratorio, si scontra con la realtà delle applicazioni pratiche, dove l'efficienza energetica e la velocità di esecuzione sono requisiti imprescindibili.
+
+Il settore dell'automotive e della guida autonoma rappresenta, in questo senso, il banco di prova più esigente per la computer vision. Un veicolo autonomo non è semplicemente un mezzo di trasporto, ma un sistema complesso di \textbf{``Sensor Fusion''} che deve interpretare istantaneamente una mole enorme di dati provenienti da telecamere ad alta risoluzione, LiDAR e Radar. In questo contesto, la capacità di riconoscere oggetti — distinguendo in millisecondi tra un pedone, un'auto o un ostacolo imprevisto — non è solo una questione di accuratezza, ma di sicurezza vitale.
+
+Per tali applicazioni, l'elaborazione dei dati non può fare affidamento sul cloud computing: la latenza introdotta dalla trasmissione dei dati via rete (anche in 5G) sarebbe incompatibile con i tempi di reazione necessari a 50 km/h, dove ogni frazione di secondo si traduce in metri percorsi. Il calcolo deve quindi avvenire \textbf{``al bordo'' (Edge Computing)}, direttamente sull'hardware del veicolo. Questo impone vincoli stringenti: i modelli devono essere estremamente leggeri, consumare poca energia (fondamentale per l'autonomia delle auto elettriche) e garantire una latenza minima.
+
+La ricerca si sta quindi spostando verso il paradigma della \textbf{TinyML} e delle architetture neurali ottimizzate. Invece di reti con milioni di parametri, l'obiettivo è progettare modelli compatti ed efficienti che mantengano alte prestazioni riducendo drasticamente il carico computazionale. È in questo solco che si inserisce il presente lavoro di tesi, focalizzato sull'implementazione e l'analisi della \textbf{Depthwise Separable Convolution}, una tecnica che permette di separare il calcolo spaziale da quello dei canali, riducendo drasticamente il numero di operazioni necessarie rispetto a una convoluzione standard.
+
+Attraverso la sperimentazione sul dataset \textbf{CIFAR-10} — un benchmark fondamentale che include categorie semantiche critiche per la mobilità, come automobili, camion e animali — questo studio mira a dimostrare come un'architettura ottimizzata da soli 62.000 parametri possa rispondere efficacemente alle sfide della classificazione d'immagine. L'obiettivo è validare un approccio che renda l'intelligenza artificiale non solo più potente, ma più democratica, sostenibile e applicabile ai dispositivi del mondo reale.
+
+\section*{Struttura della Tesi}
+Il resto dell'elaborato è organizzato come segue:
 \begin{itemize}
-    \item Il Capitolo 1 introduce i concetti fondamentali del Machine Learning e del Deep Learning.
-    \item Il Capitolo 2 descrive il dataset CIFAR-10 e le sue caratteristiche.
-    \item Il Capitolo 3 approfondisce le architetture delle Reti Neurali Convoluzionali.
-    \item Il Capitolo 4 presenta la metodologia sperimentale e l'implementazione dei modelli.
-    \item Il Capitolo 5 discute i risultati ottenuti.
+    \item Il \textbf{Capitolo 2} introduce il dataset CIFAR-10 e le tecniche di preprocessing utilizzate.
+    \item Il \textbf{Capitolo 3} fornisce i fondamenti teorici delle reti neurali, coprendo il neurone artificiale, le funzioni di attivazione e le tecniche di ottimizzazione.
+    \item Il \textbf{Capitolo 4} presenta lo stato dell'arte nella classificazione di immagini, con particolare attenzione alle architetture efficienti, ai meccanismi di attenzione e alla reparametrizzazione strutturale.
+    \item Il \textbf{Capitolo 5} descrive in dettaglio la progettazione e l'architettura del sistema proposto, le scelte implementative e le strategie di data augmentation.
+    \item Il \textbf{Capitolo 6} presenta i risultati sperimentali, l'ablation study, l'analisi degli errori e il confronto con lo stato dell'arte.
+    \item Infine, le \textbf{Conclusioni} riassumono i risultati ottenuti e delineano possibili sviluppi futuri.
 \end{itemize}

@@ -65,23 +65,20 @@ Questo processo viene ripetuto iterativamente per tutti i layer.
 \section{Ottimizzazione e Regolarizzazione}
 
 \subsection{Ottimizzatori}
-\subsubsection{Stochastic Gradient Descent (SGD) con Momentum}
+\subsubsection{Stochastic Gradient Descent (SGD)}
 L'algoritmo base aggiorna i pesi nella direzione opposta al gradiente:
-\begin{equation}
-    \theta_{t+1} = \theta_t - \eta \nabla_\theta L(\theta_t; x^{(i)}, y^{(i)})
-\end{equation}
-dove $\eta$ è il \textit{learning rate}. SGD usa un piccolo sottoinsieme di dati (mini-batch) per stimare il gradiente, introducendo rumore che aiuta a evadere minimi locali superficiali.
+$$ \theta_{t+1} = \theta_t - \eta \nabla_\theta L(\theta_t; x^{(i)}, y^{(i)}) $$
+dove $\eta$ è il \textit{learning rate}. SGD usa un piccolo sottoinsieme di dati (mini-batch) per stimare il gradiente, introducendo rumore che aiuta a evadere minimi locali superficiali e punti di sella.
 
-Per accelerare la convergenza e ridurre le oscillazioni si introduce il \textbf{Momentum}, che accumula una media mobile dei gradienti passati:
-\begin{equation}
-    v_{t+1} = \gamma v_t + \eta \nabla_\theta L(\theta_t)
-\end{equation}
-\begin{equation}
-    \theta_{t+1} = \theta_t - v_{t+1}
-\end{equation}
+\subsubsection{SGD con Momentum}
+Per accelerare la convergenza e ridurre le oscillazioni (specialmente in burroni stretti della loss surface), si introduce il \textit{momentum}, che accumula una media mobile dei gradienti passati:
+$$ v_{t+1} = \gamma v_t + \eta \nabla_\theta L(\theta_t) $$
+$$ \theta_{t+1} = \theta_t - v_{t+1} $$
+Il termine $\gamma$ (tipicamente 0.9) simula l'inerzia, permettendo all'algoritmo di mantenere la velocità nelle direzioni costanti e smorzare le oscillazioni.
+Nella nostra Grid Search (Capitolo~\ref{cap:capitolo6}), SGD con Momentum accoppiato a un Cosine Annealing schedule si è dimostrato superiore ad Adam per la generalizzazione del modello finale.
 
-Il termine $\gamma$ (tipicamente 0.9) simula l'inerzia. Sebbene esistano ottimizzatori più complessi come \textbf{Adam} (Adaptive Moment Estimation), che calcola learning rate adattivi per ogni parametro, in questo lavoro si è scelto di utilizzare SGD con Momentum. Questa decisione è supportata dalla letteratura scientifica nel campo della Computer Vision, la quale evidenzia come SGD, se correttamente calibrato con un sistema di \textit{Learning Rate Decay}, tenda a raggiungere minimi locali più ampi e generalizzabili rispetto agli ottimizzatori adattivi, portando ad un'accuratezza superiore sul set di test.
-
+\subsubsection{Adam (Adaptive Moment Estimation)}
+Adam calcola learning rate adattivi per ogni parametro basandosi sulle stime del primo momento (media) e del secondo momento (varianza non centrata) dei gradienti. Sebbene converga spesso più velocemente, recenti studi mostrano che SGD con Momentum ben calibrato, accoppiato con un Learning Rate Decay, può raggiungere una migliore generalizzazione finale su compiti di visione.
 
 \subsection{Tecniche di Regolarizzazione}
 \subsubsection{Batch Normalization}
@@ -96,12 +93,17 @@ Aggiunge una penalità alla loss function proporzionale alla norma quadrata dei 
 Come emergerà dalla nostra analisi sperimentale (Sezione~6.5), la relazione inversa tra capacità del modello e weight decay ottimale è particolarmente evidente in reti ultra-compatte come la nostra.
 
 \subsubsection{Exponential Moving Average dei Pesi (EMA)}
-L'\textbf{Exponential Moving Average (EMA)} dei pesi è una tecnica di regolarizzazione \textit{priva di parametri aggiuntivi} il cui principio risale alla teoria classica dell'ottimizzazione stocastica~\cite{polyak1992acceleration}, nota in letteratura anche come \textit{Polyak-Ruppert averaging}. 
-L'intuizione alla base di questa tecnica è che il percorso di ottimizzazione non procede in linea retta verso il minimo, ma subisce continue fluttuazioni dovute alla natura stocastica dei mini-batch. In altre parole, ad ogni iterazione i parametri della rete "oscillano" attorno a una traiettoria ideale a causa del rumore nei dati.
+L'\textbf{Exponential Moving Average (EMA)} dei pesi è una tecnica di regolarizzazione \textit{parameter-free} il cui principio risale alla teoria classica dell'ottimizzazione stocastica~\cite{polyak1992acceleration}, nota in letteratura anche come \textit{Polyak-Ruppert averaging}. 
+L'intuizione fondante è che il percorso di discesa del gradiente in uno spazio di parametri ad altissima dimensionalità non converga mai a un singolo punto fisso deterministico, bensì oscilli continuamente attorno a un minimo a causa della natura intrinsecamente stocastica dei mini-batch. La traiettoria media di tali oscillazioni nervose, tuttavia, rappresenta uno stimatore infinitamente più stabile, accurato e affidabile del minimo reale.
 
-Mantenendo una media mobile di queste posizioni, l'EMA funge da filtro che pulisce il rumore dell'addestramento. La media calcolata rappresenta uno stimatore molto più stabile e affidabile rispetto al valore istantaneo dei pesi all'ultima epoca, poiché cattura la tendenza centrale del processo di apprendimento anziché una sua singola fluttuazione momentanea.
+Formalmente, durante il ciclo di addestramento, il modello mantiene in memoria una copia "ombra" dei propri pesi. Ad ogni passo temporale $t$, i pesi storici EMA ($\tilde{\theta}_t$) vengono dolcemente aggiornati inglobando i pesi freschi dell'ottimizzatore corrente ($\theta_t$):
 
-\textbf{Il paradigma dei Minimi Piatti}. È noto in letteratura~\cite{keskar2016large} che l'operazione di media progessiva favorisce la convergenza verso regioni della \textit{loss surface} denominate \textbf{minimi piatti} (\textit{flat minima}). In queste zone, piccole variazioni nei pesi non causano grandi cambiamenti nell'errore della rete. Per il modello, posizionarsi in un minimo piatto significa avere una capacità di generalizzazione superiore: il modello diventa meno sensibile alle piccole differenze tra i dati di addestramento e i dati reali del test set.
+\begin{equation}
+    \tilde{\theta}_t = \lambda \cdot \tilde{\theta}_{t-1} + (1 - \lambda) \cdot \theta_t
+\end{equation}
 
-\textbf{Sinergia con la Knowledge Distillation}. Nel nostro setup, l'EMA funge da meccanismo di consolidamento. Mentre il modello "Studente" impara dal "Teacher" (Capitolo 4) seguendo un apprendimento dinamico, l'EMA ne stabilizza i progressi. Questa combinazione previene efficacemente l'overfitting nelle fasi finali del training, permettendo a una rete ultra-leggera come la nostra di mantenere prestazioni elevate e costanti.
+dove $\lambda \in [0, 1)$ è il \textit{decay rate} (impostato a $0.999$ nell'ambito sperimentale di questa tesi). Mantenendo un parametro inerziale prossimo a $1$, il modello EMA calcola una media esponenzialmente pesata degli storici dei gradienti acquisiti (circa $1000$ update), attenuando l'impatto del forte rumore stocastico e l'elevata varianza introdotta dall'aggiornamento dei pesi all'interno dei singoli mini-batch.
 
+\textbf{Il paradigma dei Minimi Piatti}. L'analisi delle dinamiche di ottimizzazione in architetture profonde~\cite{morales2024exponential} evidenzia che le soluzioni asintotiche dell'EMA presentano proprietà topologiche distinte rispetto alle iterazioni standard della discesa del gradiente stocastico. Nello specifico, l'operazione di media progressiva favorisce la convergenza verso \textbf{minimi ampi e piatti} (\textit{flat minima}) all'interno della \textit{loss surface}. Come dimostrato sia empiricamente che teoricamente~\cite{keskar2016large}, il consolidamento dei pesi in queste regioni piane incrementa significativamente la stabilità predittiva su dati non visti: lievi perturbazioni nei parametri producono oscillazioni trascurabili del valore della loss, garantendo così una superiore capacità di generalizzazione.
+
+\textbf{EMA come Regolarizzazione Implicita}. All'interno della pipeline di addestramento adottata, l'accumulatore EMA assolve alla funzione di uno \textit{shadow model} ausiliario. Nelle fasi di apprendimento iniziali, contraddistinte da valori di \textit{learning rate} marcatamente elevati e conseguente instabilità parametrica, il modello EMA esibisce performance di validazione intrinsecamente più stabili. Tale architettura temporale trova una sinergia ottimale con la tecnica \textit{Knowledge Distillation} (Capitolo 4): coerentemente al decremento progressivo del tasso di apprendimento regolato dal \textit{Cosine Annealing}, l'EMA consolida stabilmente la conoscenza trasferita dal modello Teacher. Questa stabilizzazione attenua efficacemente il fenomeno del \textit{late-stage overfitting}, un deperimento strutturale delle prestazioni che affligge tipicamente le reti a bassa capacità sottoposte a estensivi cicli di iterazioni.
